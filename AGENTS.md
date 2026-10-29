@@ -9,7 +9,7 @@ The real Good Internet product: "a library you can actually operate". Vite + Rea
 ## Start here
 
 - **Roadmap:** `docs/roadmap/ROADMAP.md`. Every piece of backend work is an issue (`GOOD-INTERNET-n`) with why, approach, and done-when. Open `docs/roadmap/index.html` in a browser for the tracker view.
-- **Branch:** until PR #4 is merged (GI-1), the current UI lives on `cursor/snapshot-kept-ui-a2a8`, not `main`. Build backend work on top of that branch, or on `main` once it's merged.
+- **Branch:** the current UI is on `main`. Branch from `main` for new work.
 
 ## Working the roadmap
 
