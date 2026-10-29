@@ -40,20 +40,24 @@ export function Status({ st, a }: { st: State; a: App }) {
   return <span className="ig-status" data-st={st}><i />{st === "on" ? "Connected" : st === "busy" ? "Connecting…" : a.kind === "key" ? "Needs a key" : "Not connected"}</span>;
 }
 
+// Defined outside the list so React keeps the same switch between renders and keyboard focus survives a toggle.
+function Row({ I, a, st, toggle }: { I: Icons; a: App; st: State; toggle: (id: string) => void }) {
+  return <div className="ig-li">
+    <Logo I={I} a={a} size={36} />
+    <span className="ig-li-t"><b>{a.name}</b><span>{st === "on" && a.account ? `Connected as ${a.account}${a.synced ? ` · synced ${a.synced}` : ""}` : a.desc}</span></span>
+    {a.kind === "key" && st === "off"
+      ? <button type="button" className="ig-btn" onClick={() => toggle(a.id)}>{I.key}Add key</button>
+      : <button type="button" role="switch" aria-checked={st !== "off"} aria-label={`${a.name} connection`} className="ig-switch" data-busy={st === "busy"} onClick={() => toggle(a.id)}><i /></button>}
+  </div>;
+}
+
 /** Settings rows with a switch, connected apps grouped first. API-key apps get an “Add key” button instead. */
 export function IntegrationsList({ I }: { I: Icons }) {
   const { s, toggle } = useConnections();
   const on = APPS.filter(a => s[a.id] !== "off"), off = APPS.filter(a => s[a.id] === "off");
-  const Row = ({ a }: { a: App }) => <div className="ig-li">
-    <Logo I={I} a={a} size={36} />
-    <span className="ig-li-t"><b>{a.name}</b><span>{s[a.id] === "on" && a.account ? `Connected as ${a.account}${a.synced ? ` · synced ${a.synced}` : ""}` : a.desc}</span></span>
-    {a.kind === "key" && s[a.id] === "off"
-      ? <button type="button" className="ig-btn" onClick={() => toggle(a.id)}>{I.key}Add key</button>
-      : <button type="button" role="switch" aria-checked={s[a.id] !== "off"} aria-label={`${a.name} connection`} className="ig-switch" data-busy={s[a.id] === "busy"} onClick={() => toggle(a.id)}><i /></button>}
-  </div>;
   return <div className="ig-page">
-    {on.length > 0 && <><h4 className="ig-h">Connected</h4><div className="ig-list">{on.map(a => <Row key={a.id} a={a} />)}</div></>}
-    <h4 className="ig-h">Available</h4><div className="ig-list">{off.map(a => <Row key={a.id} a={a} />)}</div>
+    {on.length > 0 && <><h4 className="ig-h">Connected</h4><div className="ig-list">{on.map(a => <Row key={a.id} I={I} a={a} st={s[a.id]} toggle={toggle} />)}</div></>}
+    <h4 className="ig-h">Available</h4><div className="ig-list">{off.map(a => <Row key={a.id} I={I} a={a} st={s[a.id]} toggle={toggle} />)}</div>
   </div>;
 }
 

@@ -11,8 +11,8 @@ export function Dashboard({ icons: I, initial }: { icons: Record<IconKey, ReactN
   const [area, setArea] = useState(initial?.area ?? "home");
   const [page, setPage] = useState<Record<string, string>>(() => ({ ...Object.fromEntries(Object.entries(groups).map(([k, g]) => [k, g[0].items[0].id])), ...(initial?.page ? { [initial.area]: initial.page } : {}) }));
   const [open, setOpen] = useState(true);
-  const [dark, setDark] = useState(false);
-  useEffect(() => { setDark(document.documentElement.classList.contains("ds-dark")); }, []);
+  // No server render here, so read the theme AdminApp already applied instead of syncing it after paint.
+  const [dark, setDark] = useState(() => document.documentElement.classList.contains("ds-dark"));
   const toggleTheme = () => { const d = !dark; setDark(d); document.documentElement.classList.toggle("ds-dark", d); try { localStorage.setItem(THEME_KEY, d ? "dark" : "light"); } catch {} };
 
   useEffect(() => {
