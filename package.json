@@ -8,7 +8,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "typecheck": "tsc",
-    "sync-kept-ui": "node scripts/sync-kept-ui.mjs"
+    "sync-kept-ui": "node scripts/sync-kept-ui.mjs",
+    "doctor": "npx react-doctor@latest"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
@@ -23,6 +24,7 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.1",
+    "react-doctor": "^0.9.18",
     "typescript": "~6.0.2",
     "vite": "^8.3.0"
   }
