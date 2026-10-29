@@ -6,3 +6,6 @@ dist
 .env.*
 !.env.example
 
+
+# /canvas reference recreations: other sites' designs stay off this public repo
+src/canvas/references/

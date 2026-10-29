@@ -1,0 +1,89 @@
+/* /canvas: a plain surface, quiet preview edges, and one small toolbar. Colors are Good Internet's tokens, so the theme menu covers the canvas too. */
+.cv {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  cursor: default;
+  touch-action: none;
+  overscroll-behavior: none;
+  outline: none;
+}
+.cv:focus-visible { box-shadow: inset 0 0 0 2px var(--color-foreground); }
+
+.cv-world { position: absolute; top: 0; left: 0; transform-origin: 0 0; --z: 1; }
+.cv-item { position: absolute; top: 0; left: 0; }
+.cv-frame { display: block; border: 0; background: var(--color-content); box-shadow: 0 0 0 1px var(--color-border); }
+
+/* The label row stays the same size on screen at every zoom. */
+.cv-head {
+  position: absolute;
+  left: 0;
+  bottom: 100%;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  transform: scale(calc(1 / var(--z)));
+  transform-origin: 0 100%;
+  white-space: nowrap;
+}
+.cv-handle, .cv-name {
+  border: 0;
+  background: none;
+  color: var(--gray-t1);
+  font: inherit;
+  cursor: default;
+  border-radius: var(--radius-4);
+  outline: none;
+}
+.cv-handle { flex: none; width: 20px; height: 22px; display: grid; place-items: center; padding: 0; touch-action: none; }
+.cv-handle svg { width: 8px; height: 13px; fill: currentColor; }
+.cv-handle:hover { color: var(--color-foreground); }
+.cv-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; padding: 3px 4px; }
+.cv-name:hover { color: var(--color-foreground); }
+.cv-handle:focus-visible, .cv-name:focus-visible { box-shadow: 0 0 0 2px var(--color-foreground); color: var(--color-foreground); }
+.cv-hint { display: none; color: var(--gray-p1); }
+.cv-name:hover + .cv-hint, .cv-name:focus-visible + .cv-hint { display: inline; }
+.cv-status:not(:empty) { color: var(--color-foreground); }
+/* Shown when the clipboard can't be used: the name, selected for copying by hand. */
+.cv-fallback { padding: 2px 6px; border-radius: var(--radius-4); background: var(--color-popup); box-shadow: 0 0 0 1px var(--color-border); user-select: all; }
+
+.cv-shield { position: absolute; inset: 0; display: none; }
+.cv-shield[data-on="true"] { display: block; }
+
+.cv-controls {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: var(--radius-8);
+  background: var(--color-popup);
+  box-shadow: 0 0 0 1px var(--color-border), 0 4px 16px -8px hsl(0deg 0% 0% / 20%);
+}
+.cv-controls button {
+  height: 28px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--radius-6);
+  background: none;
+  color: var(--color-foreground);
+  font: inherit;
+  cursor: default;
+}
+.cv-controls button:hover { background: var(--color-background); }
+.cv-controls button:focus-visible { outline: 2px solid var(--color-foreground); outline-offset: -2px; }
+/* Moon in light mode, sun in dark: the icon you'd switch to, crossfading with a quarter turn. */
+.cv-controls .cv-theme { width: 28px; padding: 0; display: grid; place-items: center; }
+.cv-theme svg { grid-area: 1 / 1; width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: opacity .2s, transform .3s cubic-bezier(.23, 1, .32, 1); }
+.cv-theme svg[data-on="false"] { opacity: 0; transform: rotate(-45deg) scale(.6); }
+@media (prefers-reduced-motion: reduce) { .cv-theme svg { transition: opacity .2s; } .cv-theme svg[data-on="false"] { transform: none; } }
+.cv-zoom { min-width: 44px; text-align: center; font-variant-numeric: tabular-nums; color: var(--gray-t1); }
+
+.cv-sr { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

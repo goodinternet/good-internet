@@ -7,6 +7,9 @@ import { getSession } from './good-internet/session.ts';
 // The in-house admin. Its own chunk, so the product bundle never loads it.
 const AdminApp = React.lazy(() => import('./admin/AdminApp.tsx'));
 
+// The landing reference canvas. Dev only: the production build drops it and its import entirely.
+const CanvasRoute = import.meta.env.DEV ? React.lazy(() => import('./canvas/CanvasRoute.tsx')) : null;
+
 // Admin needs a full sign-in (password and two-factor), like the library.
 function Admin() {
   const signedIn = getSession()?.aal === 'aal2';
@@ -45,5 +48,12 @@ function usePathRoute() {
 export default function App() {
   const route = usePathRoute();
   if (route === 'admin') return <Admin />;
+  if (CanvasRoute && route === 'canvas') {
+    return (
+      <React.Suspense fallback={null}>
+        <CanvasRoute />
+      </React.Suspense>
+    );
+  }
   return <GoodInternetApp route={route} />;
 }
