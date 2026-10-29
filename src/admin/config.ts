@@ -11,6 +11,9 @@ export const rail: { id: string; l: string; i: IconKey }[] = [
   { id: "people", l: "People", i: "users" },
 ];
 
+/** The public repo whose main branch the Changelog reads. */
+export const REPO = "goodinternet/good-internet";
+
 /** Where the admin remembers light or dark mode. */
 export const THEME_KEY = "goodinternet.admin.theme";
 
@@ -31,6 +34,7 @@ export const groups: Record<string, Group[]> = {
       { id: "overview", l: "Overview", i: "grid", d: "What needs your attention, picked for today." },
       { id: "activity", l: "Activity", i: "bolt", d: "New references, collections, boards, and sign-ins, newest first." },
       { id: "reports", l: "Reports", i: "chart", d: "References added, boards viewed, and invites sent over time." },
+      { id: "changelog", l: "Changelog", i: "note", d: "Everything that's shipped: each commit on main, newest first. Updates on its own every couple of minutes." },
     ] },
   ],
   kanban: [

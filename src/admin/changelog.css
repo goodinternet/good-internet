@@ -1,0 +1,37 @@
+/* Changelog: days of commits from main, in the admin's tokens from dashboard.css. */
+.cl { max-width: 720px; margin-top: 24px; font-size: 13px; }
+.cl a { color: inherit; }
+.cl-bar { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; margin-bottom: 20px; color: var(--mute); font-size: 12.5px; }
+.cl-bar a { text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+.cl-bar a:hover { color: var(--ink); text-decoration-color: currentColor; }
+.cl-checked { margin-left: auto; font-variant-numeric: tabular-nums; }
+.cl-live { width: 7px; height: 7px; border-radius: 50%; background: #3FBF7F; box-shadow: 0 0 0 3px #3FBF7F26; }
+.cl-live[data-loading="true"] { animation: cl-pulse 1s infinite ease-in-out; }
+@keyframes cl-pulse { 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .cl-live[data-loading="true"] { animation: none; opacity: .5; } }
+.db-main .cl-error, .db-main .cl-empty { margin: 0 0 16px; max-width: none; font-size: 13px; color: var(--sub); }
+.db-main .cl-error { color: #D9534F; }
+
+.cl-day { margin-bottom: 20px; border-radius: 14px; background: var(--bg); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
+.cl-day h3 { display: flex; justify-content: space-between; margin: 0; padding: 12px 14px 8px; font-size: 12.5px; font-weight: 500; color: var(--sub); }
+.cl-day h3 span { font-weight: 400; color: var(--mute); font-variant-numeric: tabular-nums; }
+.cl-day ol { list-style: none; margin: 0 2px 2px; padding: 0; border-radius: 12px; background: var(--panel); box-shadow: inset 0 0 0 1px var(--line); }
+.cl-item + .cl-item { border-top: 1px solid var(--line); }
+.cl-line { display: flex; align-items: baseline; gap: 12px; padding: 10px 12px; }
+.cl-time { flex: none; width: 64px; color: var(--mute); font-size: 12px; font-variant-numeric: tabular-nums; }
+.cl-main { flex: 1; min-width: 0; }
+.cl-title { display: block; padding: 0; border: 0; background: none; color: var(--ink); font: inherit; font-weight: 500; line-height: 1.45; text-align: left; text-wrap: pretty; }
+button.cl-title { cursor: pointer; }
+button.cl-title::after { content: "›"; margin-left: 6px; color: var(--mute); font-weight: 400; display: inline-block; transition: transform .15s; }
+button.cl-title[aria-expanded="true"]::after { transform: rotate(90deg); }
+button.cl-title:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.db-main .cl-body p { margin: 6px 0 0; max-width: none; font-size: 12.5px; line-height: 1.6; color: var(--sub); }
+.cl-sha { flex: none; font-family: var(--font-mono); font-size: 11px; color: var(--mute); text-decoration: none; padding: 1px 6px; border-radius: 5px; background: var(--hover); }
+.cl-sha:hover { color: var(--ink); }
+
+@media (max-width: 860px) {
+  .cl-line { flex-wrap: wrap; gap: 4px 10px; }
+  .cl-time { width: auto; }
+  .cl-main { order: 3; flex-basis: 100%; }
+  .cl-sha { margin-left: auto; }
+}

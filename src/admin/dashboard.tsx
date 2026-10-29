@@ -5,6 +5,7 @@ import { ProfileMenu } from "./profile-menu";
 import { IntegrationsList } from "./integrations";
 import { OverviewFeed } from "./feed";
 import { Kanban } from "./kanban";
+import { Changelog } from "./changelog";
 import { completed, greeting, suggestions, upNext } from "./feed-data";
 
 /** `initial` opens on a specific section and page (defaults to Home → first item). */
@@ -52,7 +53,7 @@ export function Dashboard({ icons: I, initial }: { icons: Record<IconKey, ReactN
         {list.length ? list.map(g => <div key={g.h} className="db-group">
           <h3>{g.h}</h3>
           {g.items.map(it => <button key={it.id} type="button" aria-current={page[area] === it.id ? "page" : undefined}
-            onClick={() => setPage(p => ({ ...p, [area]: it.id }))}>{I[it.i]}{it.l}</button>)}
+            onClick={() => { setPage(p => ({ ...p, [area]: it.id })); if (matchMedia("(max-width: 860px)").matches) setOpen(false); }}>{I[it.i]}{it.l}</button>)}
         </div>) : <p className="db-empty">Nothing here yet.</p>}
       </aside>
 
@@ -66,6 +67,7 @@ export function Dashboard({ icons: I, initial }: { icons: Record<IconKey, ReactN
         </div>
         <p>{cur?.d}</p>
         {area === settings.id && page[area] === "integrations" ? <IntegrationsList I={I} />
+          : area === "home" && page[area] === "changelog" ? <Changelog />
           : area === "kanban" ? <Kanban key={page[area]} prefix={sections.find(s => s.id === page[area])?.prefix} />
           : <div className="db-blank">Content coming soon</div>}
       </main>}
