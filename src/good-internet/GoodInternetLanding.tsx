@@ -20,7 +20,7 @@ export function GoodInternetLanding() {
   return (
     <>
       <section className="GoodInternetContents">
-        <h1 className="GoodInternetDisplay GoodInternetCol-hero">for the collectors, the researchers, the organizers, and the makers.</h1>
+        <h1 className="GoodInternetDisplay GoodInternetCol-hero">The workspace for the collectors, the researchers, the organizers, and the makers.</h1>
       </section>
 
       <section className="GoodInternetContents">

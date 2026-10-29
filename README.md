@@ -4,7 +4,7 @@
 
 > A cloud-based personal knowledge workspace, built around collecting, preserving, organizing, and connecting information.
 
-Official definition set by Wade on 2026-10-29. Home page headline: "for the collectors, the researchers, the organizers, and the makers."
+Official definition set by Wade on 2026-10-29. Home page headline: "The workspace for the collectors, the researchers, the organizers, and the makers."
 
 Good Internet is a personal reference database: a structured system for collecting,
 organizing, contextualizing, and retrieving visual references.

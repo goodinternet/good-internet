@@ -51,7 +51,7 @@ export function GoodInternetRoadmap() {
             organizing, and connecting information.
           </p>
           <p className="GoodInternetText1 GoodInternetMuted">
-            For the collectors, the researchers, the organizers, and the makers.
+            The workspace for the collectors, the researchers, the organizers, and the makers.
           </p>
         </div>
       </section>
