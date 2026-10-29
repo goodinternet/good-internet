@@ -39,7 +39,7 @@ Files that exist only here: `src/good-internet/tokens.css` (the tokens and base 
 - `/m/:token`: a published board (no sign-in)
 - `/map`, `/ios`: system map, Good Internet on iOS plan
 - `/todo`, `/settings`, `/referral`: account pages
-- `/admin`: the in-house dashboard (`src/admin/`, from madeofparts). Not linked anywhere, needs a full sign-in, loaded as its own chunk. Pages are placeholders.
+- `/admin`: the in-house dashboard (`src/admin/`, from madeofparts). Not linked anywhere, needs a full sign-in, loaded as its own chunk. Most pages are placeholders. Its Kanban tab renders `docs/admin/BACKLOG.md` in [Autobahn](https://github.com/rams-design/autobahn)'s card grammar; in `npm run dev`, dragging a card rewrites that file (prefixes are sections, e.g. `DASH` = Dashboard).
 
 ## Data
 

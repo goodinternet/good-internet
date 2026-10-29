@@ -6,6 +6,7 @@ export type Group = { h: string; items: Item[] };
 
 export const rail: { id: string; l: string; i: IconKey }[] = [
   { id: "home", l: "Home", i: "home" },
+  { id: "kanban", l: "Kanban", i: "list" },
   { id: "library", l: "Library", i: "layers" },
   { id: "people", l: "People", i: "users" },
 ];
@@ -15,6 +16,11 @@ export const THEME_KEY = "goodinternet.admin.theme";
 
 /** Opened from the avatar menu rather than the rail. */
 export const settings = { id: "settings", l: "Settings" };
+
+/** Kanban sections. A section is a card id prefix in docs/admin/BACKLOG.md; add one here to give it a page. */
+export const sections: (Item & { prefix: string })[] = [
+  { id: "dashboard", l: "Dashboard", i: "grid", prefix: "DASH", d: "What we're building into this admin. Drag a card to move it; the backlog file rewrites." },
+];
 
 /** Home's first item renders the feed instead of a page. */
 export const FEED = { area: "home", page: "overview" };
@@ -26,6 +32,12 @@ export const groups: Record<string, Group[]> = {
       { id: "activity", l: "Activity", i: "bolt", d: "New references, collections, boards, and sign-ins, newest first." },
       { id: "reports", l: "Reports", i: "chart", d: "References added, boards viewed, and invites sent over time." },
     ] },
+  ],
+  kanban: [
+    { h: "Board", items: [
+      { id: "all", l: "All cards", i: "list", d: "Every card in the admin backlog. Drag a card to move it; the backlog file rewrites." },
+    ] },
+    { h: "Sections", items: sections },
   ],
   library: [
     { h: "Library", items: [

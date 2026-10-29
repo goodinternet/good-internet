@@ -1,9 +1,10 @@
 import { useEffect, useState, type ReactNode } from "react";
 import type { IconKey } from "./icons";
-import { FEED, THEME_KEY, groups, rail, settings } from "./config";
+import { FEED, THEME_KEY, groups, rail, sections, settings } from "./config";
 import { ProfileMenu } from "./profile-menu";
 import { IntegrationsList } from "./integrations";
 import { OverviewFeed } from "./feed";
+import { Kanban } from "./kanban";
 import { completed, greeting, suggestions, upNext } from "./feed-data";
 
 /** `initial` opens on a specific section and page (defaults to Home → first item). */
@@ -64,7 +65,9 @@ export function Dashboard({ icons: I, initial }: { icons: Record<IconKey, ReactN
           <h1>{title}</h1>
         </div>
         <p>{cur?.d}</p>
-        {area === settings.id && page[area] === "integrations" ? <IntegrationsList I={I} /> : <div className="db-blank">Content coming soon</div>}
+        {area === settings.id && page[area] === "integrations" ? <IntegrationsList I={I} />
+          : area === "kanban" ? <Kanban key={page[area]} prefix={sections.find(s => s.id === page[area])?.prefix} />
+          : <div className="db-blank">Content coming soon</div>}
       </main>}
     </div>
   </div>;
