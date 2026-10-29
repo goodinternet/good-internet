@@ -20,7 +20,7 @@ npm run sync-kept-ui -- ../path/to/kept-ui
 ```
 
 Files that exist only here: `src/good-internet/tokens.css` (the tokens and base layers from kept-ui's
-`src/docs.css`, without the lab shell), `src/good-internet/navigate.ts` (history navigation) and `src/App.tsx`, plus `src/good-internet/inputs.css`.
+`src/docs.css`, without the lab shell), `src/good-internet/navigate.ts` (history navigation) and `src/App.tsx`, plus `src/good-internet/inputs.css` and the admin in `src/admin/`.
 
 ### Where good-internet differs from kept-ui
 
@@ -39,6 +39,7 @@ Files that exist only here: `src/good-internet/tokens.css` (the tokens and base 
 - `/m/:token`: a published board (no sign-in)
 - `/map`, `/ios`: system map, Good Internet on iOS plan
 - `/todo`, `/settings`, `/referral`: account pages
+- `/admin`: the in-house dashboard (`src/admin/`, from madeofparts). Not linked anywhere, needs a full sign-in, loaded as its own chunk. Pages are placeholders.
 
 ## Data
 
