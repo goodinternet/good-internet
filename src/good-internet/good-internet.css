@@ -1,0 +1,1437 @@
+/*
+ * Good Internet (lab recreation). Ported from the base-ui.com homepage: (website)/css/components/*.css
+ * plus the grid utilities its layout uses. Tokens come from src/docs.css; every class is Good Internet-prefixed.
+ * Breakpoints match the site: bp2 48rem, bp3 64rem, bp4 80rem.
+ */
+@layer components {
+  /* Body.css + layout padding (bui-p-6 bp2:bui-py-7 bp2:bui-px-9) */
+  .GoodInternetBody {
+    min-height: 100dvh;
+    padding: 1.5rem;
+    color: var(--gray-t2);
+    background-color: var(--gray-s1);
+
+    @media (min-width: 48rem) {
+      padding: 2rem 3rem;
+    }
+  }
+
+  /* bui-d-g bui-gtc-8 bui-g-8 bp2:bui-g-9, max 1480px */
+  .GoodInternetGrid {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 2.5rem;
+    max-width: 1480px;
+    margin-inline: auto;
+
+    @media (min-width: 48rem) {
+      gap: 3rem;
+    }
+  }
+
+  /* header / main / section / footer are transparent to the grid */
+  .GoodInternetContents {
+    display: contents;
+  }
+
+  /* ─── Grid placement ─── */
+  .GoodInternetCol-full,
+  .GoodInternetCol-hero,
+  .GoodInternetCol-label,
+  .GoodInternetCol-body,
+  .GoodInternetCol-separator {
+    grid-column: 1 / 9;
+  }
+
+  .GoodInternetCol-logo {
+    grid-column: 1 / 5;
+  }
+
+  .GoodInternetCol-nav {
+    grid-column: 5 / 9;
+
+    @media (min-width: 64rem) {
+      grid-column: 5 / 7;
+    }
+  }
+
+  .GoodInternetCol-status {
+    display: none;
+
+    @media (min-width: 64rem) {
+      display: block;
+      grid-column: 7 / 9;
+    }
+  }
+
+  .GoodInternetCol-hero {
+    @media (min-width: 80rem) {
+      grid-column: 1 / 5;
+    }
+  }
+
+  .GoodInternetCol-label {
+    @media (min-width: 48rem) {
+      grid-column: 1 / 3;
+    }
+  }
+
+  .GoodInternetCol-body {
+    @media (min-width: 48rem) {
+      grid-column: 3 / 9;
+    }
+
+    @media (min-width: 80rem) {
+      grid-column: 3 / 7;
+    }
+  }
+
+  .GoodInternetCol-separator {
+    @media (min-width: 64rem) {
+      grid-column: 3 / 9;
+    }
+  }
+
+  .GoodInternetStack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .GoodInternetStack-4 {
+    gap: 1rem;
+  }
+
+  /* ─── Text.css ─── */
+  .GoodInternetText1,
+  .GoodInternetText2,
+  .GoodInternetDisplay {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-weight: 400;
+    text-rendering: optimizeLegibility;
+    text-wrap: pretty;
+  }
+
+  .GoodInternetText1 {
+    font-size: 15px;
+    line-height: 22px;
+  }
+
+  .GoodInternetText2 {
+    font-size: 18px;
+    line-height: 25px;
+  }
+
+  /* sz-3, bp2:sz-4 */
+  .GoodInternetDisplay {
+    font-family: var(--font-sans-b);
+    font-size: 34px;
+    line-height: 34px;
+    text-wrap: balance;
+
+    @media (min-width: 48rem) {
+      font-size: 42px;
+      line-height: 44px;
+    }
+  }
+
+  .GoodInternetMuted {
+    color: var(--gray-t1);
+  }
+
+  .GoodInternetWordmark {
+    align-self: start;
+    width: fit-content;
+    font-family: var(--font-sans-b);
+    font-size: 15px;
+    line-height: 22px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: inherit;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+
+    &:active {
+      color: var(--gray-p1);
+    }
+
+    &:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+      border-radius: var(--radius-4);
+    }
+  }
+
+  /* ─── Link.css ─── */
+  .GoodInternetLink {
+    display: inline;
+    width: fit-content;
+    color: currentColor;
+    -webkit-tap-highlight-color: transparent;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+
+    &:active {
+      background-color: var(--gray-t2);
+      color: var(--gray-s1);
+    }
+
+    &:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+      border-radius: var(--radius-4);
+    }
+
+    /* You are here */
+    &[aria-current='page'] {
+      text-decoration: none;
+      color: var(--gray-t1);
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .GoodInternetLinkArrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    svg {
+      display: block;
+      flex-shrink: 0;
+    }
+
+    .GoodInternetArrowLine {
+      opacity: 0;
+      transition: opacity 100ms ease;
+    }
+
+    .GoodInternetArrowCaret {
+      transition: transform 100ms ease;
+    }
+
+    @media (hover: hover) {
+      &:hover .GoodInternetArrowLine {
+        opacity: 1;
+      }
+
+      &:hover .GoodInternetArrowCaret {
+        transform: translateX(4px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .GoodInternetArrowLine,
+      .GoodInternetArrowCaret {
+        transition: none;
+      }
+    }
+  }
+
+  /* ─── List.css (the team list) ─── */
+  .GoodInternetList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid var(--gray-t2);
+  }
+
+  .GoodInternetListItem {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.5rem;
+    padding-block: 12px;
+    border-bottom: 1px solid var(--gray-t2);
+
+    @media (min-width: 64rem) {
+      gap: 3rem;
+    }
+  }
+
+  /* ─── Separator.css ─── */
+  .GoodInternetSeparator {
+    height: 1px;
+    width: 32px;
+    background-color: var(--gray-s2);
+  }
+}
+
+/* ─── Forms (Auth shell): fields are rows of the ruled list ─── */
+@layer components {
+  .GoodInternetForm {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  /* Label over input on phones; label | input columns like the list from 48rem */
+  .GoodInternetField {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.25rem;
+
+    @media (min-width: 48rem) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 3rem;
+    }
+
+    /* The rule thickens under the field you're typing in */
+    &:has(:focus-visible) {
+      box-shadow: inset 0 -1px 0 var(--gray-t2);
+    }
+  }
+
+  .GoodInternetFieldLabel {
+    color: var(--gray-t1);
+
+    @media (min-width: 48rem) {
+      color: inherit;
+    }
+  }
+
+  .GoodInternetFieldBody {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  .GoodInternetInput {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+    outline: 0;
+    appearance: none;
+    /* 18px also keeps iOS Safari from zooming on focus */
+
+    &::placeholder {
+      color: var(--gray-p1);
+      opacity: 1;
+    }
+
+    /* Keep browser autofill from painting a yellow box */
+    &:-webkit-autofill {
+      -webkit-text-fill-color: var(--gray-t2);
+      box-shadow: inset 0 0 0 100px var(--gray-s1);
+      caret-color: var(--gray-t2);
+    }
+  }
+
+  .GoodInternetFieldError {
+    color: var(--poppy-t1);
+  }
+
+  .GoodInternetFormActions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  /* A Base UI Button that looks like the arrow link */
+  .GoodInternetButtonReset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 18px;
+    line-height: 25px;
+    cursor: pointer;
+
+    &[data-disabled] {
+      color: var(--gray-t1);
+      cursor: default;
+      text-decoration: none;
+
+      .GoodInternetArrowCaret {
+        transform: none;
+      }
+    }
+  }
+}
+
+@layer components {
+  /* A ruled list stretched to its column (the Access rows) */
+  .GoodInternetListFill {
+    align-self: stretch;
+  }
+}
+
+/* ─── App shell: Library ─── */
+@layer components {
+  .GoodInternetStack-0 {
+    gap: 0;
+  }
+
+  .GoodInternetStack-6 {
+    gap: 1.5rem;
+  }
+
+  /* Text-sized Base UI buttons (Sign out, New collection) */
+  .GoodInternetButtonText1 {
+    font-size: 15px;
+    line-height: 22px;
+  }
+
+  /* The figure grid spans wider than body copy, like "Made for the makers" */
+  .GoodInternetCol-wide {
+    grid-column: 1 / 9;
+    /* Search and tiles fill the column */
+    align-items: stretch;
+
+    @media (min-width: 64rem) {
+      grid-column: 3 / 9;
+    }
+  }
+
+  .GoodInternetSearch {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding-block: 12px;
+    border-top: 1px solid var(--gray-t2);
+    border-bottom: 1px solid var(--gray-t2);
+
+    &:has(:focus-visible) {
+      box-shadow: inset 0 -1px 0 var(--gray-t2);
+    }
+
+    .GoodInternetInput::-webkit-search-cancel-button {
+      appearance: none;
+    }
+  }
+
+  .GoodInternetSearchIcon {
+    flex-shrink: 0;
+    color: var(--gray-t1);
+  }
+
+  /* List.css + Figure.css: bui-gtc-2 bp2:bui-gtc-4 bp3:bui-gtc-6, gaps 2.5rem / 3rem */
+  .GoodInternetFigureGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @media (min-width: 48rem) {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 3rem;
+    }
+
+    @media (min-width: 64rem) {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+  }
+
+  .GoodInternetFigureLink {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    color: inherit;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    outline: 0;
+
+    &:focus-visible .GoodInternetMosaic {
+      outline: 2px solid var(--gray-t2);
+      outline-offset: 2px;
+    }
+
+    @media (hover: hover) {
+      &:hover .GoodInternetFigureName {
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 4px;
+      }
+    }
+
+    &:active .GoodInternetMosaicCell:not([data-empty]) {
+      background-color: var(--gray-c2);
+    }
+  }
+
+  /* Placeholder images: super light gray squares */
+  .GoodInternetMosaic {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3px;
+    aspect-ratio: 1 / 1;
+    user-select: none;
+  }
+
+  .GoodInternetMosaicCell {
+    background-color: var(--gray-c1);
+
+    &[data-empty] {
+      background-color: transparent;
+      box-shadow: inset 0 0 0 1px var(--gray-c1);
+    }
+  }
+
+  /* A just-created collection fades in once */
+  .GoodInternetFigureItem[data-new] {
+    animation: gi-fade-in 300ms ease-out;
+  }
+
+  @keyframes gi-fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .GoodInternetFigureItem[data-new] {
+      animation: none;
+    }
+  }
+
+  /* ─── Dialog ─── */
+  .GoodInternetDialogBackdrop {
+    position: fixed;
+    inset: 0;
+    min-height: 100dvh;
+    background-color: var(--gi-backdrop, rgb(0 0 0 / 8%));
+    transition: opacity 150ms ease-out;
+
+    @supports (-webkit-touch-callout: none) {
+      position: absolute;
+    }
+
+    &[data-starting-style],
+    &[data-ending-style] {
+      opacity: 0;
+    }
+  }
+
+  .GoodInternetDialogViewport {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 1.5rem;
+
+    @media (min-width: 48rem) {
+      align-items: center;
+    }
+  }
+
+  .GoodInternetDialogPopup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 28rem;
+    padding: 1.5rem;
+    background-color: var(--gray-s1);
+    color: var(--gray-t2);
+    border: 1px solid var(--gray-t2);
+    outline: 0;
+    transition:
+      opacity 150ms ease-out,
+      transform 150ms ease-out;
+
+    &[data-starting-style],
+    &[data-ending-style] {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: opacity 150ms ease-out;
+
+      &[data-starting-style],
+      &[data-ending-style] {
+        transform: none;
+      }
+    }
+
+    .GoodInternetForm {
+      margin-top: 1rem;
+      gap: 1.5rem;
+    }
+  }
+
+  /* Label above input even on desktop (narrow dialog) */
+  .GoodInternetFieldStacked {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.25rem;
+
+    @media (min-width: 48rem) {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.25rem;
+    }
+  }
+
+  .GoodInternetDialogActions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+/* ─── Collection + reference ─── */
+@layer components {
+  /* Back link / breadcrumb sitting just above a page title */
+  .GoodInternetHeading {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .GoodInternetCrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  /* Point the arrow icon back */
+  .GoodInternetFlip {
+    display: inline-flex;
+    transform: scaleX(-1);
+  }
+
+  .GoodInternetLinkArrow[data-direction='prev'] {
+    @media (hover: hover) {
+      &:hover .GoodInternetArrowCaret {
+        /* Mirrored, so this moves the caret left */
+        transform: translateX(4px);
+      }
+    }
+  }
+
+  .GoodInternetStretch {
+    align-self: stretch;
+    align-items: stretch;
+  }
+
+  /* Long source domains get an ellipsis instead of breaking mid-word */
+  .GoodInternetTruncate {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Segmented Grid / List toggle: current option reads like the current nav link */
+  .GoodInternetSegmented {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .GoodInternetSegmentedItem {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-size: 15px;
+    line-height: 22px;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+
+    &[data-pressed] {
+      color: var(--gray-t1);
+      text-decoration: none;
+      cursor: default;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+      border-radius: var(--radius-4);
+    }
+  }
+
+  /* A single placeholder image: a super light gray square */
+  .GoodInternetImage {
+    position: relative;
+    display: block;
+    aspect-ratio: 1 / 1;
+    background-color: var(--gray-c1);
+    user-select: none;
+  }
+
+  .GoodInternetImagePinCount {
+    position: absolute;
+    top: 0.375rem;
+    right: 0.375rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.125rem;
+    height: 1.125rem;
+    padding-inline: 0.25rem;
+    border-radius: 999px;
+    background-color: var(--gray-t2);
+    color: var(--gray-s1);
+    font-size: 11px;
+    line-height: 1;
+  }
+
+  .GoodInternetFigureLink:focus-visible .GoodInternetImage {
+    outline: 2px solid var(--gray-t2);
+    outline-offset: 2px;
+  }
+
+  .GoodInternetFigureLink:active .GoodInternetImage {
+    background-color: var(--gray-c2);
+  }
+
+  /* List view rows */
+  .GoodInternetRefRow {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    column-gap: 1rem;
+    align-items: center;
+    padding-block: 12px;
+    border-bottom: 1px solid var(--gray-t2);
+    color: inherit;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    outline: 0;
+
+    .GoodInternetImageThumb {
+      grid-row: span 2;
+    }
+
+    @media (min-width: 48rem) {
+      grid-template-columns: 2.5rem minmax(0, 2fr) minmax(0, 1.5fr) 4rem;
+
+      .GoodInternetImageThumb {
+        grid-row: auto;
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--gray-t2);
+      outline-offset: -2px;
+    }
+
+    @media (hover: hover) {
+      &:hover .GoodInternetFigureName {
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 4px;
+      }
+    }
+  }
+
+  .GoodInternetRefRowYear {
+    display: none;
+
+    @media (min-width: 48rem) {
+      display: block;
+      text-align: right;
+    }
+  }
+
+  /* Pager: "3 of 42" with Previous / Next */
+  .GoodInternetPager {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+  }
+
+  .GoodInternetPagerLinks {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .GoodInternetPagerDisabled {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--gray-p1);
+
+    svg {
+      display: block;
+    }
+
+    .GoodInternetArrowLine {
+      opacity: 0;
+    }
+  }
+
+  /* The large image and its pins */
+  .GoodInternetCanvas {
+    position: relative;
+  }
+
+  .GoodInternetImageLarge {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    cursor: crosshair;
+    -webkit-tap-highlight-color: transparent;
+
+    &:focus-visible {
+      outline: 2px solid var(--gray-t2);
+      outline-offset: 2px;
+    }
+  }
+
+  .GoodInternetPin {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background-color: var(--gray-t2);
+    color: var(--gray-s1);
+    font-family: var(--font-sans);
+    font-size: 12px;
+    line-height: 1;
+    translate: -50% -50%;
+    pointer-events: none;
+    transition: scale 150ms ease-out;
+    animation: gi-pin-drop 200ms ease-out;
+
+    &[data-active] {
+      scale: 1.35;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+      animation: none;
+    }
+  }
+
+  @keyframes gi-pin-drop {
+    from {
+      scale: 0.4;
+      opacity: 0;
+    }
+  }
+
+  .GoodInternetPinStatic {
+    position: static;
+    translate: none;
+    animation: none;
+  }
+
+  .GoodInternetPinRow {
+    grid-template-columns: 1.5rem minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: center;
+
+    @media (min-width: 64rem) {
+      gap: 1rem;
+    }
+  }
+
+  .GoodInternetPinField {
+    min-width: 0;
+  }
+
+  /* Details: same ruled rows, on a description list */
+  .GoodInternetDetails {
+    dt,
+    dd {
+      margin: 0;
+    }
+  }
+
+  .GoodInternetNotes {
+    padding-block: 12px;
+    border-top: 1px solid var(--gray-t2);
+    border-bottom: 1px solid var(--gray-t2);
+
+    &:has(:focus-visible) {
+      box-shadow: inset 0 -1px 0 var(--gray-t2);
+    }
+  }
+
+  .GoodInternetTextarea {
+    display: block;
+    resize: none;
+    min-height: 6.25rem;
+    /* Grows with its text where supported */
+    field-sizing: content;
+  }
+
+  .GoodInternetTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .GoodInternetTag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.125rem 0.375rem 0.125rem 0.625rem;
+    border: 1px solid var(--gray-t2);
+    border-radius: 999px;
+  }
+
+  .GoodInternetTagRemove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 50%;
+    color: var(--gray-t1);
+
+    @media (hover: hover) {
+      &:hover {
+        color: var(--gray-t2);
+        background-color: var(--gray-c1);
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--gray-t2);
+      outline-offset: 0;
+    }
+  }
+}
+
+/* ─── Sharing ─── */
+@layer components {
+  .GoodInternetStack-2 {
+    gap: 0.5rem;
+  }
+
+  /* "Share as a board ›" sitting inline in a sentence */
+  .GoodInternetInlineTrigger {
+    display: inline-flex;
+    vertical-align: bottom;
+    color: var(--gray-t2);
+  }
+
+  .GoodInternetDialogList {
+    margin-top: 1rem;
+  }
+
+  .GoodInternetCopyRow {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0;
+
+    .GoodInternetInput {
+      flex: 1;
+    }
+  }
+
+  .GoodInternetDialogSecondary {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .GoodInternetDialogFooter {
+    margin-top: 1.5rem;
+  }
+
+  .GoodInternetDanger {
+    color: var(--poppy-t1);
+  }
+
+  /* Disabled text buttons read as unavailable, not as links */
+  .GoodInternetButtonReset:disabled,
+  .GoodInternetButtonReset[data-disabled] {
+    color: var(--gray-p1);
+    text-decoration: none;
+    cursor: default;
+
+    .GoodInternetArrowLine {
+      opacity: 0;
+    }
+
+    .GoodInternetArrowCaret {
+      transform: none;
+    }
+  }
+}
+
+/* ─── Board shell (/m/:token) ─── */
+@layer components {
+  /* Full-bleed moodboard grid: tighter than the site grid so images read as one surface */
+  .GoodInternetBoardGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @media (min-width: 48rem) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 2rem 1.5rem;
+    }
+
+    @media (min-width: 64rem) {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    @media (min-width: 80rem) {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
+
+  .GoodInternetBoardItem {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: zoom-in;
+    -webkit-tap-highlight-color: transparent;
+    outline: 0;
+
+    &:focus-visible .GoodInternetImage {
+      outline: 2px solid var(--gray-t2);
+      outline-offset: 2px;
+    }
+
+    &:active .GoodInternetImage {
+      background-color: var(--gray-c2);
+    }
+
+    @media (hover: hover) {
+      &:hover .GoodInternetFigureName {
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 4px;
+      }
+    }
+  }
+
+  .GoodInternetBoardFooter {
+    padding-top: 1rem;
+  }
+
+  /* Lightbox: a full-screen Base UI Dialog */
+  .GoodInternetLightbox {
+    position: fixed;
+    inset: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background-color: var(--gray-s1);
+    color: var(--gray-t2);
+    outline: 0;
+    transition: opacity 150ms ease-out;
+
+    &[data-starting-style],
+    &[data-ending-style] {
+      opacity: 0;
+    }
+  }
+
+  .GoodInternetLightboxInner {
+    display: grid;
+    gap: 1.5rem;
+    max-width: 44rem;
+    min-height: 100%;
+    margin-inline: auto;
+    padding: 1.5rem;
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+    align-content: start;
+
+    @media (min-width: 48rem) {
+      padding: 2rem 3rem;
+    }
+  }
+
+  .GoodInternetLightboxBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .GoodInternetLightboxImage {
+    display: flex;
+    justify-content: center;
+  }
+
+  /* As large as fits, but always leave room to see the caption begin */
+  .GoodInternetLightboxSquare {
+    width: min(100%, 70dvh);
+  }
+
+  .GoodInternetLightboxText {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .GoodInternetLightboxPins {
+    margin-top: 0.5rem;
+  }
+
+  .GoodInternetPinRowStatic {
+    grid-template-columns: 1.5rem minmax(0, 1fr);
+  }
+
+  .GoodInternetLightboxNav {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 0.5rem;
+  }
+}
+
+@layer components {
+  /* A ruled list row with a single value */
+  .GoodInternetListSingle {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* File names and URLs wrap anywhere rather than overflow */
+  .GoodInternetBreakAll {
+    word-break: break-all;
+  }
+}
+
+/* ─── Real images ─── */
+@layer components {
+  /* The file fills its box; the gray behind it shows while it loads */
+  .GoodInternetImageFill {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .GoodInternetMosaicCell {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .GoodInternetImage {
+    overflow: hidden;
+  }
+
+  /* Pins and badges sit above the image */
+  .GoodInternetPin,
+  .GoodInternetImagePinCount {
+    z-index: 1;
+  }
+
+  /* Full image in its real shape, as large as the column allows but never taller than the screen */
+  .GoodInternetImageLarge {
+    width: min(100%, calc(80dvh * var(--gi-aspect, 1)));
+    overflow: visible;
+  }
+
+  .GoodInternetLightboxSquare {
+    width: min(100%, calc(70dvh * var(--gi-aspect, 1)));
+  }
+}
+
+@layer components {
+  /* Written text keeps its line breaks */
+  .GoodInternetPreLine {
+    white-space: pre-line;
+  }
+}
+
+/* ─── Wide detail lists ─── */
+@layer components {
+  /* Term | detail rows where the detail needs more room than the term */
+  .GoodInternetListWide .GoodInternetListItem {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 1.5rem;
+
+    @media (min-width: 48rem) {
+      gap: 3rem;
+    }
+  }
+
+}
+
+/* ─── Upload ─── */
+@layer components {
+  .GoodInternetDropzone {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    margin-top: 1rem;
+    padding: 2rem 1rem;
+    justify-content: center;
+    background-color: var(--gray-c1);
+    transition: background-color 150ms ease-out;
+  }
+
+  /* Dropping only makes sense with a pointer that can drag files */
+  .GoodInternetDropHint {
+    @media (hover: none) {
+      display: none;
+    }
+  }
+
+  .GoodInternetDialogPopup[data-dragging] .GoodInternetDropzone {
+    background-color: var(--gray-c2);
+    outline: 1px solid var(--gray-t2);
+    outline-offset: -1px;
+  }
+
+  .GoodInternetUploadList {
+    max-height: min(16rem, 40dvh);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .GoodInternetUploadRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    padding-block: 8px;
+  }
+
+  .GoodInternetUploadStatus {
+    &[data-status='added'] {
+      color: var(--gray-t2);
+    }
+
+    &[data-status='failed'] {
+      color: var(--poppy-t1);
+    }
+  }
+}
+
+@layer components {
+  /* A shorter notes box inside a form row */
+  .GoodInternetTextareaShort {
+    min-height: 4.75rem;
+  }
+}
+
+/* ─── Account menu ─── */
+@layer components {
+  .GoodInternetMenuTrigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+
+    &[data-popup-open] {
+      text-decoration: none;
+    }
+  }
+
+  .GoodInternetMenuCaret {
+    transition: rotate 150ms ease-out;
+
+    [data-popup-open] > & {
+      rotate: 180deg;
+    }
+  }
+
+  .GoodInternetMenuPositioner {
+    z-index: 10;
+    outline: 0;
+  }
+
+  .GoodInternetMenuPopup {
+    min-width: 13rem;
+    padding-block: 0.375rem;
+    background-color: var(--gray-s1);
+    color: var(--gray-t2);
+    border: 1px solid var(--gray-t2);
+    outline: 0;
+    transform-origin: var(--transform-origin);
+    transition:
+      opacity 120ms ease-out,
+      transform 120ms ease-out;
+
+    &[data-starting-style],
+    &[data-ending-style] {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      &[data-starting-style],
+      &[data-ending-style] {
+        transform: none;
+      }
+    }
+  }
+
+  .GoodInternetMenuItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+    color: inherit;
+    text-decoration: none;
+    cursor: default;
+    outline: 0;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+
+    &[data-highlighted] {
+      background-color: var(--gray-c1);
+    }
+  }
+
+  .GoodInternetMenuLabel {
+    padding: 0.375rem 1rem 0.25rem;
+    color: var(--gray-t1);
+  }
+
+  .GoodInternetMenuCheck {
+    display: flex;
+  }
+
+  .GoodInternetMenuSeparator {
+    height: 1px;
+    margin: 0.375rem 0;
+    background-color: var(--gray-c2);
+  }
+}
+
+@layer components {
+  /* Text buttons beside an input (Add) keep their width */
+  .GoodInternetSearch .GoodInternetButtonReset {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+}
+
+/* ─── Lab ─── */
+@layer components {
+  .GoodInternetLabNav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+  }
+
+  .GoodInternetLabRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: start;
+
+    @media (min-width: 64rem) {
+      grid-template-columns: minmax(0, 3fr) minmax(10rem, 2fr);
+      gap: 3rem;
+    }
+  }
+
+  .GoodInternetLabMain,
+  .GoodInternetLabMeta {
+    min-width: 0;
+  }
+
+  .GoodInternetLabTitle {
+    width: fit-content;
+  }
+
+  .GoodInternetLabMeta {
+    @media (min-width: 64rem) {
+      align-items: flex-end;
+      text-align: right;
+    }
+  }
+
+  .GoodInternetLabActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+
+    @media (min-width: 64rem) {
+      justify-content: flex-end;
+    }
+  }
+
+  .GoodInternetLabDialog {
+    max-height: calc(100dvh - 3rem);
+    overflow-y: auto;
+  }
+
+  .GoodInternetSelectTrigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    outline: 0;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+    }
+  }
+
+  .GoodInternetSelectPositioner {
+    z-index: 20;
+    outline: 0;
+  }
+
+  .GoodInternetSelectPopup {
+    min-width: var(--anchor-width);
+    padding-block: 0.375rem;
+    border: 1px solid var(--gray-t2);
+    background-color: var(--gray-s1);
+    color: var(--gray-t2);
+    outline: 0;
+  }
+
+  .GoodInternetSelectItem {
+    display: grid;
+    grid-template-columns: 1rem minmax(0, 1fr);
+    gap: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    cursor: default;
+    outline: 0;
+
+    &[data-highlighted] {
+      background-color: var(--gray-c1);
+    }
+  }
+}

@@ -69,7 +69,7 @@
       "name": "iOS capture",
       "order": 8,
       "short": "iOS capture",
-      "summary": "The reason the app exists: camera, photo library, and Share → Kept from Safari, Photos or Instagram, with an upload queue that survives losing signal.",
+      "summary": "The reason the app exists: camera, photo library, and Share → Good Internet from Safari, Photos or Instagram, with an upload queue that survives losing signal.",
       "target": "Capture from anywhere"
     },
     {
@@ -78,7 +78,7 @@
       "order": 9,
       "short": "Web ship",
       "summary": "Seed moode-matcha into Storage, set env and secrets, re-verify pixel parity and RLS, deploy the web app.",
-      "target": "kept.design"
+      "target": "goodinternetwww.com"
     },
     {
       "id": "p11",
@@ -109,7 +109,7 @@
           "label": "Edge Function `sign-in`"
         },
         {
-          "detail": "Each account's email is `username@users.kept.design`. No server code, but no real inbox for recovery or notices.",
+          "detail": "Each account's email is `username@users.goodinternetwww.com`. No server code, but no real inbox for recovery or notices.",
           "id": "synthetic",
           "label": "Synthetic emails"
         },
@@ -120,7 +120,7 @@
         }
       ],
       "order": 1,
-      "question": "Kept signs in by username, but Supabase Auth signs in by email. Something has to turn a username into an email without letting anyone look up whose account is whose.",
+      "question": "Good Internet signs in by username, but Supabase Auth signs in by email. Something has to turn a username into an email without letting anyone look up whose account is whose.",
       "recommended": "edge",
       "title": "How usernames sign in"
     },
@@ -193,7 +193,7 @@
       "key": "D-5",
       "options": [
         {
-          "detail": "Delete `public/collections/` from main once KEPT-28 has moved them into Storage. They stay in git history, but the app stops depending on them.",
+          "detail": "Delete `public/collections/` from main once GI-28 has moved them into Storage. They stay in git history, but the app stops depending on them.",
           "id": "remove",
           "label": "Remove them after the seed"
         },
@@ -224,7 +224,7 @@
           "label": "Native SwiftUI"
         },
         {
-          "detail": "The original `/ios` plan: the Vite build inside a WKWebView. By far the cheapest, and keeps one codebase. Rejected: a web view cannot hold 120fps on a 300-image grid or give interruptible gesture physics, and Kept is exactly that kind of app.",
+          "detail": "The original `/ios` plan: the Vite build inside a WKWebView. By far the cheapest, and keeps one codebase. Rejected: a web view cannot hold 120fps on a 300-image grid or give interruptible gesture physics, and Good Internet is exactly that kind of app.",
           "id": "capacitor",
           "label": "Capacitor wrapper"
         }
@@ -241,11 +241,11 @@
       "options": [
         {
           "detail": "Closes the question. Matches the domain, the repo and everything already written.",
-          "id": "kept",
-          "label": "Stay Kept — `design.kept.app`"
+          "id": "good-internet",
+          "label": "Stay Good Internet — `com.goodinternetwww.app`"
         },
         {
-          "detail": "If the name is going to change, this is the cheapest moment in the project's life to do it. Blocks KEPT-40 until it lands.",
+          "detail": "If the name is going to change, this is the cheapest moment in the project's life to do it. Blocks GI-40 until it lands.",
           "id": "rename-now",
           "label": "Rename before the Xcode project"
         },
@@ -337,7 +337,7 @@
       ],
       "blockedBy": [],
       "estimate": 8,
-      "key": "KEPT-0",
+      "key": "GI-0",
       "labels": [
         "ui"
       ],
@@ -346,12 +346,12 @@
       "project": "p0",
       "status": "done",
       "steps": [
-        "Synced `src/kept` with `scripts/sync-kept-ui.mjs`, which rewrites `#/kept/...` routes into paths.",
+        "Synced `src/good-internet` with `scripts/sync-kept-ui.mjs`, which rewrites `#/kept/...` routes into paths.",
         "Added `navigate.ts` and a `useSyncExternalStore` router so links don't reload and redirects aren't missed.",
         "Removed the legacy home and map pages; matched kept-ui's dependency versions; added a typecheck to the build."
       ],
-      "summary": "Every screen and state from the kept-ui lab now runs on real paths in kept-design, pixel-identical at 1440px and 390px in light and dark.",
-      "title": "Recreate the kept-ui UI in kept-design"
+      "summary": "Every screen and state from the kept-ui lab now runs on real paths in good-internet, pixel-identical at 1440px and 390px in light and dark.",
+      "title": "Recreate the kept-ui UI in good-internet"
     },
     {
       "acceptance": [
@@ -361,11 +361,11 @@
       ],
       "blockedBy": [],
       "estimate": 1,
-      "key": "KEPT-1",
+      "key": "GI-1",
       "labels": [
         "ops"
       ],
-      "notes": "Merged 2026-09-19 as 4248833; Vercel deploy succeeded and kept.design serves the new UI.",
+      "notes": "Merged 2026-09-19 as 4248833; Vercel deploy succeeded and goodinternetwww.com serves the new UI.",
       "priority": 1,
       "project": "p0",
       "status": "done",
@@ -384,7 +384,7 @@
       ],
       "blockedBy": [],
       "estimate": 1,
-      "key": "KEPT-2",
+      "key": "GI-2",
       "labels": [
         "decision",
         "auth"
@@ -402,7 +402,7 @@
       ],
       "blockedBy": [],
       "estimate": 1,
-      "key": "KEPT-3",
+      "key": "GI-3",
       "labels": [
         "decision",
         "storage"
@@ -420,7 +420,7 @@
       ],
       "blockedBy": [],
       "estimate": 1,
-      "key": "KEPT-4",
+      "key": "GI-4",
       "labels": [
         "decision",
         "infra"
@@ -438,7 +438,7 @@
       ],
       "blockedBy": [],
       "estimate": 1,
-      "key": "KEPT-5",
+      "key": "GI-5",
       "labels": [
         "decision"
       ],
@@ -456,10 +456,10 @@
         "README documents which files are synced, renamed, or owned here"
       ],
       "blockedBy": [
-        "KEPT-5"
+        "GI-5"
       ],
       "estimate": 2,
-      "key": "KEPT-6",
+      "key": "GI-6",
       "labels": [
         "data",
         "ops"
@@ -469,11 +469,11 @@
       "status": "todo",
       "steps": [
         "Sync kept-ui's `repository.ts` to `repository.mock.ts`, `session.ts` to `session.mock.ts`, and `uploads.ts` to `uploads.mock.ts` (rename on write), rewriting their relative imports.",
-        "kept-design owns `repository.ts` and `session.ts`: they re-export the types from the mocks and pick an implementation (D-4).",
+        "good-internet owns `repository.ts` and `session.ts`: they re-export the types from the mocks and pick an implementation (D-4).",
         "Screens keep importing `./repository.ts`; nothing in the synced screens changes.",
         "Keep `prepareUpload()` from the mock uploads module: the on-device resize is shared by both implementations."
       ],
-      "summary": "`npm run sync-kept-ui` copies every file in kept-ui's `src/kept`, including the mock `repository.ts`, `session.ts` and `uploads.ts`. Once those are real, one sync would silently put the mocks back.",
+      "summary": "`npm run sync-kept-ui` copies every file in kept-ui's `src/good-internet`, including the mock `repository.ts`, `session.ts` and `uploads.ts`. Once those are real, one sync would silently put the mocks back.",
       "title": "Stop the sync script from overwriting the data layer"
     },
     {
@@ -483,10 +483,10 @@
         "No keys are committed"
       ],
       "blockedBy": [
-        "KEPT-4"
+        "GI-4"
       ],
       "estimate": 2,
-      "key": "KEPT-7",
+      "key": "GI-7",
       "labels": [
         "infra"
       ],
@@ -495,7 +495,7 @@
       "status": "backlog",
       "steps": [
         "Create the project (per D-3) in the region closest to you.",
-        "Auth settings: disable signups, keep email confirmations on, set Site URL to `https://kept.design` and add `http://localhost:5173` to redirect URLs.",
+        "Auth settings: disable signups, keep email confirmations on, set Site URL to `https://goodinternetwww.com` and add `http://localhost:5173` to redirect URLs.",
         "`npx supabase init`, `supabase link`, migrations under `supabase/migrations/`.",
         "Add `.env.example` with `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`; real values in `.env.local` (git-ignored) and Vercel."
       ],
@@ -509,11 +509,11 @@
         "Migration is idempotent against a fresh project"
       ],
       "blockedBy": [
-        "KEPT-7"
+        "GI-7"
       ],
       "code": "profiles      id uuid pk → auth.users · username citext unique (2–32 [a-z0-9._-])\ncollections   id uuid pk · owner_id · slug text · name text (≤80) · description text\n              created_at · updated_at · unique (owner_id, slug)\nrefs          id uuid pk · public_id text unique · owner_id · collection_id → collections\n              title · notes · capture_url (null = uploaded) · added_at · updated_at\n              search tsvector generated\nassets        id uuid pk · ref_id → refs (cascade) · owner_id · path_full · path_thumb\n              file_name · file_type · width · height · bytes\ntags          id uuid pk · owner_id · name citext · unique (owner_id, name)\nref_tags      ref_id → refs · tag_id → tags · pk (ref_id, tag_id)\nannotations   id uuid pk · ref_id → refs (cascade) · owner_id · kind ('pin'|'box')\n              x · y · w · h (null for pins) · caption · position int\ncollection_shares  collection_id pk → collections (cascade) · token text unique\n                   published_at · rotated_at\ninvite_requests    id uuid pk · name · email citext unique · note (≤500)\n                   requested_at · status ('waiting'|'invited'|'declined')",
       "estimate": 5,
-      "key": "KEPT-8",
+      "key": "GI-8",
       "labels": [
         "db"
       ],
@@ -524,7 +524,7 @@
         "Write `0001_schema.sql` with the tables below; UUID primary keys, `owner_id` on every row for RLS.",
         "Collections keep a `slug` because the UI uses it as the collection id in URLs (`/library/moode-matcha`). References keep a short `public_id` for `/library/:c/:r`.",
         "`references` is a reserved word in SQL, so the table is `refs`.",
-        "Add `updated_at` triggers, and a generated `search` tsvector on refs for later server search (KEPT-34)."
+        "Add `updated_at` triggers, and a generated `search` tsvector on refs for later server search (GI-34)."
       ],
       "summary": "Turns the shapes in `repository.ts` into tables. A Reference is the unit of meaning; its Asset carries the file facts; v0 has one asset and one collection per reference.",
       "title": "Schema migration"
@@ -536,11 +536,11 @@
         "anon reads zero rows from every table"
       ],
       "blockedBy": [
-        "KEPT-8"
+        "GI-8"
       ],
       "code": "create policy \"own rows\" on refs for all to authenticated\n  using (owner_id = auth.uid()) with check (owner_id = auth.uid());\ncreate policy \"require mfa\" on refs as restrictive for all to authenticated\n  using ((auth.jwt() ->> 'aal') = 'aal2');",
       "estimate": 3,
-      "key": "KEPT-9",
+      "key": "GI-9",
       "labels": [
         "db",
         "security"
@@ -565,11 +565,11 @@
         "Another user's paths can't be signed"
       ],
       "blockedBy": [
-        "KEPT-7",
-        "KEPT-3"
+        "GI-7",
+        "GI-3"
       ],
       "estimate": 2,
-      "key": "KEPT-10",
+      "key": "GI-10",
       "labels": [
         "storage",
         "security"
@@ -578,7 +578,7 @@
       "project": "p1",
       "status": "backlog",
       "steps": [
-        "Bucket `kept-assets`, private, 10 MB limit, allowed types `image/jpeg`, `image/png`, `image/webp`.",
+        "Bucket `gi-assets`, private, 10 MB limit, allowed types `image/jpeg`, `image/png`, `image/webp`.",
         "Object paths `<owner_id>/<ref_id>/full.jpg` and `thumb.jpg`.",
         "Policies on `storage.objects`: `(storage.foldername(name))[1] = auth.uid()::text` plus aal2, for select, insert, update and delete."
       ],
@@ -591,10 +591,10 @@
         "App still runs on mocks with no env vars"
       ],
       "blockedBy": [
-        "KEPT-8"
+        "GI-8"
       ],
       "estimate": 1,
-      "key": "KEPT-11",
+      "key": "GI-11",
       "labels": [
         "data"
       ],
@@ -602,8 +602,8 @@
       "project": "p1",
       "status": "backlog",
       "steps": [
-        "`src/kept/supabase.ts` creates the client from `VITE_SUPABASE_URL` + `VITE_SUPABASE_PUBLISHABLE_KEY`, or exports `null` when they're missing (D-4).",
-        "`npm run db:types` runs `supabase gen types typescript` into `src/kept/db.types.ts`.",
+        "`src/good-internet/supabase.ts` creates the client from `VITE_SUPABASE_URL` + `VITE_SUPABASE_PUBLISHABLE_KEY`, or exports `null` when they're missing (D-4).",
+        "`npm run db:types` runs `supabase gen types typescript` into `src/good-internet/db.types.ts`.",
         "Add `@supabase/supabase-js` as the only new runtime dependency."
       ],
       "summary": "One client module the data layer shares, and types generated from the schema so column typos fail the build.",
@@ -616,11 +616,11 @@
         "10 bad attempts in a minute are refused"
       ],
       "blockedBy": [
-        "KEPT-2",
-        "KEPT-9"
+        "GI-2",
+        "GI-9"
       ],
       "estimate": 3,
-      "key": "KEPT-12",
+      "key": "GI-12",
       "labels": [
         "auth",
         "edge function",
@@ -647,10 +647,10 @@
         "Token refresh happens without a visible change"
       ],
       "blockedBy": [
-        "KEPT-11"
+        "GI-11"
       ],
       "estimate": 3,
-      "key": "KEPT-13",
+      "key": "GI-13",
       "labels": [
         "auth"
       ],
@@ -669,16 +669,16 @@
     {
       "acceptance": [
         "kept-ui has the approved screen and mock functions",
-        "kept-design matches it pixel for pixel after the sync"
+        "good-internet matches it pixel for pixel after the sync"
       ],
       "blockedBy": [],
       "estimate": 3,
-      "key": "KEPT-14",
+      "key": "GI-14",
       "labels": [
         "kept-ui first",
         "ui"
       ],
-      "notes": "This is the one issue that touches kept-ui. It's lab work done with your approval, like the other screens, not a change pushed from kept-design. Since D-6, there are two renderers: kept-ui remains the source for the web screen, and the native two-factor screen is designed separately under KEPT-42's information architecture. The seam functions (`getMfaStatus`, `startTotpEnrollment`, `verifyTotp`) are shared by both.",
+      "notes": "This is the one issue that touches kept-ui. It's lab work done with your approval, like the other screens, not a change pushed from good-internet. Since D-6, there are two renderers: kept-ui remains the source for the web screen, and the native two-factor screen is designed separately under GI-42's information architecture. The seam functions (`getMfaStatus`, `startTotpEnrollment`, `verifyTotp`) are shared by both.",
       "priority": 1,
       "project": "p2",
       "status": "backlog",
@@ -688,7 +688,7 @@
         "Errors in the existing style: “Enter the six-digit code.”, “That code didn’t work. Try the newest one.”",
         "Approve it in the lab, then `npm run sync-kept-ui`."
       ],
-      "summary": "`/login/mfa` is a placeholder in both projects. kept-ui is the source of truth, so the real screen is designed and approved there (with a mock) before kept-design wires it.",
+      "summary": "`/login/mfa` is a placeholder in both projects. kept-ui is the source of truth, so the real screen is designed and approved there (with a mock) before good-internet wires it.",
       "title": "Design the two-factor screen in kept-ui",
       "updatedAt": "2026-09-20T00:00:00.000000Z"
     },
@@ -696,14 +696,14 @@
       "acceptance": [
         "Fresh account: sign in → set up → library",
         "Next sign-in asks only for the code",
-        "An aal1 session can't read data even by calling the API directly (KEPT-9)"
+        "An aal1 session can't read data even by calling the API directly (GI-9)"
       ],
       "blockedBy": [
-        "KEPT-13",
-        "KEPT-14"
+        "GI-13",
+        "GI-14"
       ],
       "estimate": 3,
-      "key": "KEPT-15",
+      "key": "GI-15",
       "labels": [
         "auth",
         "security"
@@ -726,11 +726,11 @@
         "The lab password `1234` no longer works outside the mock fallback"
       ],
       "blockedBy": [
-        "KEPT-12",
-        "KEPT-15"
+        "GI-12",
+        "GI-15"
       ],
       "estimate": 1,
-      "key": "KEPT-16",
+      "key": "GI-16",
       "labels": [
         "auth",
         "ops"
@@ -741,9 +741,9 @@
       "steps": [
         "Dashboard → Authentication → Add user: your real email, a strong password, auto-confirm.",
         "Insert the profile: `insert into profiles (id, username) values ('<user id>', 'wade');`",
-        "Sign in, enroll TOTP, and confirm the library loads (empty until KEPT-28)."
+        "Sign in, enroll TOTP, and confirm the library loads (empty until GI-28)."
       ],
-      "summary": "Signups are off and Kept is invite-only, so accounts are made in the dashboard. This is also the procedure for approving invites.",
+      "summary": "Signups are off and Good Internet is invite-only, so accounts are made in the dashboard. This is also the procedure for approving invites.",
       "title": "Create your account by hand"
     },
     {
@@ -753,11 +753,11 @@
         "No screen file changes"
       ],
       "blockedBy": [
-        "KEPT-6",
-        "KEPT-11"
+        "GI-6",
+        "GI-11"
       ],
       "estimate": 2,
-      "key": "KEPT-17",
+      "key": "GI-17",
       "labels": [
         "data"
       ],
@@ -769,7 +769,7 @@
         "`repository.supabase.ts` holds the real implementations, one per exported function, with identical signatures.",
         "Shared helpers: slug ↔ uuid map for collections, public_id ↔ uuid for refs, signed-URL cache."
       ],
-      "summary": "Implements D-4 and KEPT-6's split. Screens import one module; it routes each call to Supabase or the mock.",
+      "summary": "Implements D-4 and GI-6's split. Screens import one module; it routes each call to Supabase or the mock.",
       "title": "Repository adapter structure"
     },
     {
@@ -778,10 +778,10 @@
         "Creating “Type specimens” twice gives `type-specimens` and `type-specimens-2`"
       ],
       "blockedBy": [
-        "KEPT-17"
+        "GI-17"
       ],
       "estimate": 3,
-      "key": "KEPT-18",
+      "key": "GI-18",
       "labels": [
         "data",
         "db"
@@ -806,11 +806,11 @@
         "Search still finds titles, tags, notes, source, file names and pin captions (it runs on the loaded list)"
       ],
       "blockedBy": [
-        "KEPT-17",
-        "KEPT-10"
+        "GI-17",
+        "GI-10"
       ],
       "estimate": 5,
-      "key": "KEPT-19",
+      "key": "GI-19",
       "labels": [
         "data",
         "storage"
@@ -833,10 +833,10 @@
         "Two quick tag edits never leave a half-applied state"
       ],
       "blockedBy": [
-        "KEPT-19"
+        "GI-19"
       ],
       "estimate": 3,
-      "key": "KEPT-20",
+      "key": "GI-20",
       "labels": [
         "data",
         "db"
@@ -860,10 +860,10 @@
         "Nothing is written to IndexedDB any more"
       ],
       "blockedBy": [
-        "KEPT-19"
+        "GI-19"
       ],
       "estimate": 5,
-      "key": "KEPT-21",
+      "key": "GI-21",
       "labels": [
         "data",
         "storage"
@@ -886,7 +886,7 @@
       ],
       "blockedBy": [],
       "estimate": 1,
-      "key": "KEPT-22",
+      "key": "GI-22",
       "labels": [
         "data"
       ],
@@ -894,7 +894,7 @@
       "project": "p3",
       "status": "backlog",
       "steps": [],
-      "summary": "`ReferenceBrowser` filters the loaded list, which is instant at this size. No backend work until a library outgrows it; the tsvector column is already there for KEPT-34.",
+      "summary": "`ReferenceBrowser` filters the loaded list, which is instant at this size. No backend work until a library outgrows it; the tsvector column is already there for GI-34.",
       "title": "Keep search client-side for v0"
     },
     {
@@ -903,10 +903,10 @@
         "A rotated token 404s on the next board load"
       ],
       "blockedBy": [
-        "KEPT-17"
+        "GI-17"
       ],
       "estimate": 2,
-      "key": "KEPT-23",
+      "key": "GI-23",
       "labels": [
         "data",
         "db"
@@ -931,11 +931,11 @@
         "The response contains no owner email or ids beyond what the board shows"
       ],
       "blockedBy": [
-        "KEPT-23",
-        "KEPT-3"
+        "GI-23",
+        "GI-3"
       ],
       "estimate": 3,
-      "key": "KEPT-24",
+      "key": "GI-24",
       "labels": [
         "edge function",
         "storage",
@@ -956,13 +956,13 @@
     },
     {
       "acceptance": [
-        "Links copied from production are `https://kept.design/m/…`"
+        "Links copied from production are `https://goodinternetwww.com/m/…`"
       ],
       "blockedBy": [
-        "KEPT-23"
+        "GI-23"
       ],
       "estimate": 1,
-      "key": "KEPT-25",
+      "key": "GI-25",
       "labels": [
         "ui"
       ],
@@ -970,11 +970,11 @@
       "project": "p4",
       "status": "backlog",
       "steps": [
-        "Add `VITE_PUBLIC_ORIGIN` (`https://kept.design` in production) and fall back to `window.location.origin`.",
-        "This is a kept-design-only helper; the sync rewrite keeps pointing kept-ui's share URL at it."
+        "Add `VITE_PUBLIC_ORIGIN` (`https://goodinternetwww.com` in production) and fall back to `window.location.origin`.",
+        "This is a good-internet-only helper; the sync rewrite keeps pointing kept-ui's share URL at it."
       ],
       "summary": "`boardAbsoluteUrl()` builds links from the current origin, so preview deployments hand out preview URLs.",
-      "title": "Share links use kept.design"
+      "title": "Share links use goodinternetwww.com"
     },
     {
       "acceptance": [
@@ -982,10 +982,10 @@
         "anon still can't select from `invite_requests`"
       ],
       "blockedBy": [
-        "KEPT-9"
+        "GI-9"
       ],
       "estimate": 2,
-      "key": "KEPT-26",
+      "key": "GI-26",
       "labels": [
         "db",
         "security"
@@ -1006,10 +1006,10 @@
         "A test request reaches your inbox within a minute"
       ],
       "blockedBy": [
-        "KEPT-26"
+        "GI-26"
       ],
       "estimate": 2,
-      "key": "KEPT-27",
+      "key": "GI-27",
       "labels": [
         "edge function",
         "ops"
@@ -1019,7 +1019,7 @@
       "status": "backlog",
       "steps": [
         "Database webhook on `invite_requests` insert → Edge Function `notify-invite` → email to you via Resend (or a Slack webhook).",
-        "Approving = KEPT-16's steps for their account, then set `status = 'invited'`."
+        "Approving = GI-16's steps for their account, then set `status = 'invited'`."
       ],
       "summary": "A request nobody sees is the same as no request.",
       "title": "Tell you when someone asks for an invite"
@@ -1030,12 +1030,12 @@
         "`/m/mm7q2x9kfa` works signed out"
       ],
       "blockedBy": [
-        "KEPT-21",
-        "KEPT-23",
-        "KEPT-16"
+        "GI-21",
+        "GI-23",
+        "GI-16"
       ],
       "estimate": 3,
-      "key": "KEPT-28",
+      "key": "GI-28",
       "labels": [
         "data",
         "ops"
@@ -1058,10 +1058,10 @@
         "Previews without secrets fall back to the mocks (D-4)"
       ],
       "blockedBy": [
-        "KEPT-7"
+        "GI-7"
       ],
       "estimate": 1,
-      "key": "KEPT-29",
+      "key": "GI-29",
       "labels": [
         "infra",
         "security"
@@ -1083,12 +1083,12 @@
         "All three pass on the production project before the domain switch"
       ],
       "blockedBy": [
-        "KEPT-28",
-        "KEPT-24",
-        "KEPT-26"
+        "GI-28",
+        "GI-24",
+        "GI-26"
       ],
       "estimate": 3,
-      "key": "KEPT-30",
+      "key": "GI-30",
       "labels": [
         "security",
         "ui"
@@ -1099,7 +1099,7 @@
       "steps": [
         "Re-run the pixel sweep against kept-ui with the same collection seeded: every route and state identical (share URLs excepted).",
         "End to end: sign in → TOTP → create collection → upload → pin → tag → notes → publish → open board signed out → New link → Unpublish → invite request.",
-        "RLS tests from KEPT-9 pass against the deployed project.",
+        "RLS tests from GI-9 pass against the deployed project.",
         "Log a health run (`health/log.csv`) for the release."
       ],
       "summary": "Real data mustn't change how anything looks, and the security model needs proof, not assumption.",
@@ -1108,15 +1108,15 @@
     },
     {
       "acceptance": [
-        "kept.design serves the real app with real data"
+        "goodinternetwww.com serves the real app with real data"
       ],
       "blockedBy": [
-        "KEPT-30",
-        "KEPT-29",
-        "KEPT-1"
+        "GI-30",
+        "GI-29",
+        "GI-1"
       ],
       "estimate": 1,
-      "key": "KEPT-31",
+      "key": "GI-31",
       "labels": [
         "ops"
       ],
@@ -1125,18 +1125,18 @@
       "status": "backlog",
       "steps": [
         "Merge to main → Vercel production deploy.",
-        "Point `kept.design` at the project; check `/`, `/library` (signed in), and a board signed out.",
-        "Tick “Ship to kept.design” in Kept's own To do page."
+        "Point `goodinternetwww.com` at the project; check `/`, `/library` (signed in), and a board signed out.",
+        "Tick “Ship to goodinternetwww.com” in Good Internet's own To do page."
       ],
       "summary": "The finish line for v0.",
-      "title": "Ship the web app to kept.design",
+      "title": "Ship the web app to goodinternetwww.com",
       "updatedAt": "2026-09-20T00:00:00.000000Z"
     },
     {
       "acceptance": [],
       "blockedBy": [],
       "estimate": 5,
-      "key": "KEPT-32",
+      "key": "GI-32",
       "labels": [
         "kept-ui first",
         "ui"
@@ -1152,7 +1152,7 @@
       "acceptance": [],
       "blockedBy": [],
       "estimate": 2,
-      "key": "KEPT-33",
+      "key": "GI-33",
       "labels": [
         "kept-ui first",
         "ui"
@@ -1168,7 +1168,7 @@
       "acceptance": [],
       "blockedBy": [],
       "estimate": 5,
-      "key": "KEPT-34",
+      "key": "GI-34",
       "labels": [
         "db",
         "ui"
@@ -1184,7 +1184,7 @@
       "acceptance": [],
       "blockedBy": [],
       "estimate": 3,
-      "key": "KEPT-35",
+      "key": "GI-35",
       "labels": [
         "edge function"
       ],
@@ -1199,7 +1199,7 @@
       "acceptance": [],
       "blockedBy": [],
       "estimate": 3,
-      "key": "KEPT-36",
+      "key": "GI-36",
       "labels": [
         "storage",
         "infra"
@@ -1219,7 +1219,7 @@
       ],
       "blockedBy": [],
       "estimate": 1,
-      "key": "KEPT-37",
+      "key": "GI-37",
       "labels": [
         "decision",
         "ios"
@@ -1230,9 +1230,9 @@
       "status": "todo",
       "steps": [
         "Record the call in D-6 with the reasoning, not just the choice.",
-        "Rewrite `src/kept/KeptIos.tsx` so `/ios` describes the real plan. Four things in it are already wrong: it says hash routes work unchanged (kept-design uses real paths), it says `pnpm` (this repo is npm), it points at `kept-ui.vercel.app` as \"today\", and it hardcodes a LAN IP in a public repo.",
+        "Rewrite `src/good-internet/GoodInternetIos.tsx` so `/ios` describes the real plan. Four things in it are already wrong: it says hash routes work unchanged (good-internet uses real paths), it says `pnpm` (this repo is npm), it points at `kept-ui.vercel.app` as \"today\", and it hardcodes a LAN IP in a public repo.",
         "Rewrite the AGENTS.md rule that kept-ui is the single source of truth for the UI: true for web, false once a second renderer exists.",
-        "Write down the condition that would reopen D-6, so it is a test rather than a mood: KEPT-44 failing its frame budget on device."
+        "Write down the condition that would reopen D-6, so it is a test rather than a mood: GI-44 failing its frame budget on device."
       ],
       "summary": "The `/ios` page in the app still describes a Capacitor wrapper, chosen when the goal was \"don't rebuild the UI\". The goal is now an app that feels native in the hand, which points somewhere else (D-6). The old plan has to be retired in writing or it will keep resurfacing.",
       "title": "Confirm the native framework and retire the Capacitor plan",
@@ -1246,7 +1246,7 @@
       ],
       "blockedBy": [],
       "estimate": 1,
-      "key": "KEPT-38",
+      "key": "GI-38",
       "labels": [
         "decision",
         "ios",
@@ -1258,10 +1258,10 @@
       "status": "todo",
       "steps": [
         "Settle D-7.",
-        "Pick the reverse-DNS identifier (`design.kept.app` if the name stands) and write it down in exactly one place that the Xcode project, the App Group, the associated domain and App Store Connect all read from.",
-        "Reserve the name in App Store Connect once KEPT-39 is done — reservation is first-come and free."
+        "Pick the reverse-DNS identifier (`com.goodinternetwww.app` if the name stands) and write it down in exactly one place that the Xcode project, the App Group, the associated domain and App Store Connect all read from.",
+        "Reserve the name in App Store Connect once GI-39 is done — reservation is first-come and free."
       ],
-      "summary": "A bundle identifier is permanent once the app is public. Changing it after release means a new App Store listing, new reviews, and no upgrade path for anyone who already installed it. The name question has been open and low-priority; for iOS it stops being low-priority at KEPT-40.",
+      "summary": "A bundle identifier is permanent once the app is public. Changing it after release means a new App Store listing, new reviews, and no upgrade path for anyone who already installed it. The name question has been open and low-priority; for iOS it stops being low-priority at GI-40.",
       "title": "Settle the app name and bundle identifier",
       "updatedAt": "2026-09-20T00:00:00.000000Z"
     },
@@ -1271,10 +1271,10 @@
         "App Store Connect has the app record with the agreed bundle identifier"
       ],
       "blockedBy": [
-        "KEPT-38"
+        "GI-38"
       ],
       "estimate": 1,
-      "key": "KEPT-39",
+      "key": "GI-39",
       "labels": [
         "ios",
         "ops"
@@ -1286,9 +1286,9 @@
       "steps": [
         "Enroll. Individual or company changes the seller name shown publicly on the App Store; switching afterwards is a support process, not a settings toggle.",
         "Two-factor on the Apple ID is mandatory for App Store Connect.",
-        "Create the app record in App Store Connect and reserve the name from KEPT-38."
+        "Create the app record in App Store Connect and reserve the name from GI-38."
       ],
-      "summary": "$99 a year. Required for TestFlight, the App Store, Universal Links, App Groups and push. A free Apple ID can only sideload to your own device, and the install expires after seven days — enough to prove KEPT-44, not enough to live with the app.",
+      "summary": "$99 a year. Required for TestFlight, the App Store, Universal Links, App Groups and push. A free Apple ID can only sideload to your own device, and the install expires after seven days — enough to prove GI-44, not enough to live with the app.",
       "title": "Join the Apple Developer Program",
       "updatedAt": "2026-09-20T00:00:00.000000Z"
     },
@@ -1296,15 +1296,15 @@
       "acceptance": [
         "A development build runs on your iPhone over the cable",
         "A test animation measurably runs above 60fps on device",
-        "The bundle identifier matches KEPT-38 everywhere it appears"
+        "The bundle identifier matches GI-38 everywhere it appears"
       ],
       "blockedBy": [
-        "KEPT-37",
-        "KEPT-38"
+        "GI-37",
+        "GI-38"
       ],
-      "code": "app.config.ts\n  ios.bundleIdentifier   design.kept.app          (D-7)\n  ios.infoPlist          CADisableMinimumFrameDurationOnPhone: true\n  ios.supportsTablet     false                    (iPad is a later bet)\n  plugins                expo-dev-client, expo-font, expo-image,\n                         expo-secure-store, expo-image-picker",
+      "code": "app.config.ts\n  ios.bundleIdentifier   com.goodinternetwww.app          (D-7)\n  ios.infoPlist          CADisableMinimumFrameDurationOnPhone: true\n  ios.supportsTablet     false                    (iPad is a later bet)\n  plugins                expo-dev-client, expo-font, expo-image,\n                         expo-secure-store, expo-image-picker",
       "estimate": 3,
-      "key": "KEPT-40",
+      "key": "GI-40",
       "labels": [
         "ios",
         "native"
@@ -1314,10 +1314,10 @@
       "status": "backlog",
       "steps": [
         "`npx create-expo-app` with the TypeScript template; add `expo-dev-client` so custom native code is possible from day one.",
-        "Set the bundle identifier from KEPT-38 in `app.config.ts`.",
+        "Set the bundle identifier from GI-38 in `app.config.ts`.",
         "Set `CADisableMinimumFrameDurationOnPhone` to `YES` in Info.plist. Without it iOS caps the app at 60fps on ProMotion devices and every animation silently loses half its frames.",
         "EAS build profiles: `development` (dev client on device), `preview` (internal distribution), `production` (TestFlight and App Store).",
-        "Decide repo layout: a sibling repo, or a folder in a monorepo alongside the web app. The only thing that genuinely needs sharing is tokens (KEPT-41) and the data contract (KEPT-45)."
+        "Decide repo layout: a sibling repo, or a folder in a monorepo alongside the web app. The only thing that genuinely needs sharing is tokens (GI-41) and the data contract (GI-45)."
       ],
       "summary": "The project itself: Expo with a development build (D-8), TypeScript strict, the agreed bundle identifier, and the one Info.plist flag without which the app is capped at 60fps on a 120Hz phone.",
       "title": "Create the React Native app",
@@ -1331,7 +1331,7 @@
       ],
       "blockedBy": [],
       "estimate": 3,
-      "key": "KEPT-41",
+      "key": "GI-41",
       "labels": [
         "ui",
         "ios",
@@ -1342,7 +1342,7 @@
       "project": "p8",
       "status": "backlog",
       "steps": [
-        "Extract `src/kept/tokens.css` into `tokens.json`: colour (light and dark), spacing scale, radii, type scale, weights, and the motion constants from KEPT-44.",
+        "Extract `src/good-internet/tokens.css` into `tokens.json`: colour (light and dark), spacing scale, radii, type scale, weights, and the motion constants from GI-44.",
         "A generator emits CSS custom properties for the web app and a typed TS object for native.",
         "The web app keeps importing the generated CSS, so nothing changes visually and the pixel sweep still passes.",
         "Lint rule or review habit: no raw hex, no magic spacing numbers in native screen code."
@@ -1358,13 +1358,13 @@
       ],
       "blockedBy": [],
       "estimate": 3,
-      "key": "KEPT-42",
+      "key": "GI-42",
       "labels": [
         "ios",
         "ui",
         "kept-ui first"
       ],
-      "notes": "Kept's job on a phone is capture and browse. The long tail of account screens can be thin or absent without hurting the product.",
+      "notes": "Good Internet's job on a phone is capture and browse. The long tail of account screens can be thin or absent without hurting the product.",
       "priority": 1,
       "project": "p8",
       "status": "backlog",
@@ -1372,7 +1372,7 @@
         "Decide the root: a tab bar (Library · Search · Add · You) or a single stack with a prominent capture action.",
         "Map each of the 16 web routes to a native screen, a sheet, or explicitly nothing. `/map`, `/ios`, `/todo` and `/referral` are almost certainly nothing.",
         "Decide what a modal sheet is and what is a pushed screen — a rule, applied consistently, not a per-screen judgement call.",
-        "Design it before building it. Whether that is kept-ui, Figma or paper matters less than it being approved before KEPT-46 starts."
+        "Design it before building it. Whether that is kept-ui, Figma or paper matters less than it being approved before GI-46 starts."
       ],
       "summary": "The web app is a three-pane desktop layout across 16 routes. A phone is not a small desktop: the screens have to be re-planned, not ported. Getting this wrong is expensive because every later screen sits inside it.",
       "title": "Native information architecture",
@@ -1386,7 +1386,7 @@
       ],
       "blockedBy": [],
       "estimate": 2,
-      "key": "KEPT-43",
+      "key": "GI-43",
       "labels": [
         "ui",
         "ios"
@@ -1396,7 +1396,7 @@
       "status": "backlog",
       "steps": [
         "Load Geist and Geist Mono with `expo-font`; fall back to the system face while they load rather than flashing.",
-        "Light and dark from `useColorScheme`, reading the same tokens as the web (KEPT-41).",
+        "Light and dark from `useColorScheme`, reading the same tokens as the web (GI-41).",
         "Safe areas with `react-native-safe-area-context` — the notch, the home indicator, and the keyboard.",
         "Decide the Dynamic Type position: full support, or a capped scale. Accessibility text sizes will break a dense image grid if ignored entirely."
       ],
@@ -1412,7 +1412,7 @@
       ],
       "blockedBy": [],
       "estimate": 5,
-      "key": "KEPT-44",
+      "key": "GI-44",
       "labels": [
         "ios",
         "motion",
@@ -1442,18 +1442,18 @@
       ],
       "blockedBy": [],
       "estimate": 3,
-      "key": "KEPT-45",
+      "key": "GI-45",
       "labels": [
         "data",
         "ios"
       ],
-      "notes": "Depends on KEPT-11 only for the generated types. Everything else here can start immediately.",
+      "notes": "Depends on GI-11 only for the generated types. Everything else here can start immediately.",
       "priority": 1,
       "project": "p8",
       "status": "backlog",
       "steps": [
         "Same function names and return shapes as the web: `listCollections`, `getCollection`, `listReferences`, `updateReference`, `addUploads`, `getSession`, `signInWithPassword`.",
-        "Share the generated database types from KEPT-11 rather than redeclaring them; a drift here should fail a typecheck, not surface as a bug.",
+        "Share the generated database types from GI-11 rather than redeclaring them; a drift here should fail a typecheck, not surface as a bug.",
         "`supabase-js` in React Native needs `react-native-url-polyfill` and a storage adapter for auth — the keychain one from D-10.",
         "Port the mock repository so every screen in p9 can be built and demoed before p3 lands."
       ],
@@ -1463,17 +1463,17 @@
     },
     {
       "acceptance": [
-        "Matches the approved KEPT-42 design",
+        "Matches the approved GI-42 design",
         "Runs entirely on mocks",
         "Cold open to interactive in under a second on device"
       ],
       "blockedBy": [
-        "KEPT-42",
-        "KEPT-44",
-        "KEPT-45"
+        "GI-42",
+        "GI-44",
+        "GI-45"
       ],
       "estimate": 3,
-      "key": "KEPT-46",
+      "key": "GI-46",
       "labels": [
         "ios",
         "ui"
@@ -1487,7 +1487,7 @@
         "Create a collection from here, as a sheet.",
         "Open transition into a collection uses the shared spring, not a stock push."
       ],
-      "summary": "The root screen: your collections, and a way into All references. The first screen built on the KEPT-42 navigation and the KEPT-44 primitives, so it is also where both get proven.",
+      "summary": "The root screen: your collections, and a way into All references. The first screen built on the GI-42 navigation and the GI-44 primitives, so it is also where both get proven.",
       "title": "Collections home",
       "updatedAt": "2026-09-20T00:00:00.000000Z"
     },
@@ -1498,11 +1498,11 @@
         "A cold open with a warm disk cache shows images without a flash"
       ],
       "blockedBy": [
-        "KEPT-44",
-        "KEPT-46"
+        "GI-44",
+        "GI-46"
       ],
       "estimate": 8,
-      "key": "KEPT-47",
+      "key": "GI-47",
       "labels": [
         "ios",
         "ui",
@@ -1520,7 +1520,7 @@
         "Set an explicit memory ceiling for the image cache and test against the largest collection, not a demo one.",
         "Fixed aspect tiles or a measured masonry layout — decide before building, since masonry with recycling is materially harder."
       ],
-      "summary": "The screen Kept lives or dies on, and the one a web view could never do properly: hundreds of images, scrolled fast, at 120fps, without the app being killed for memory. moode-matcha alone is 320 files.",
+      "summary": "The screen Good Internet lives or dies on, and the one a web view could never do properly: hundreds of images, scrolled fast, at 120fps, without the app being killed for memory. moode-matcha alone is 320 files.",
       "title": "The reference grid",
       "updatedAt": "2026-09-20T00:00:00.000000Z"
     },
@@ -1532,10 +1532,10 @@
         "Holds 120fps throughout on device"
       ],
       "blockedBy": [
-        "KEPT-47"
+        "GI-47"
       ],
       "estimate": 8,
-      "key": "KEPT-48",
+      "key": "GI-48",
       "labels": [
         "ios",
         "motion"
@@ -1562,10 +1562,10 @@
         "Zoomed panning never accidentally pages"
       ],
       "blockedBy": [
-        "KEPT-48"
+        "GI-48"
       ],
       "estimate": 5,
-      "key": "KEPT-49",
+      "key": "GI-49",
       "labels": [
         "ios",
         "motion"
@@ -1574,7 +1574,7 @@
       "project": "p9",
       "status": "backlog",
       "steps": [
-        "Horizontal paging within the viewer, sharing the zoom state machine from KEPT-48 so a zoomed image pans instead of paging.",
+        "Horizontal paging within the viewer, sharing the zoom state machine from GI-48 so a zoomed image pans instead of paging.",
         "Preload the neighbours on both sides; release images more than two away.",
         "Keep the grid's scroll position in sync, so dismissing returns you to the reference you ended on rather than the one you started from."
       ],
@@ -1589,10 +1589,10 @@
         "Captions are readable and editable with the keyboard up"
       ],
       "blockedBy": [
-        "KEPT-48"
+        "GI-48"
       ],
       "estimate": 5,
-      "key": "KEPT-50",
+      "key": "GI-50",
       "labels": [
         "ios",
         "ui"
@@ -1618,10 +1618,10 @@
         "Tags created on the phone appear on the web and the reverse"
       ],
       "blockedBy": [
-        "KEPT-46"
+        "GI-46"
       ],
       "estimate": 3,
-      "key": "KEPT-51",
+      "key": "GI-51",
       "labels": [
         "ios",
         "ui"
@@ -1645,10 +1645,10 @@
         "Results match the web app for the same query"
       ],
       "blockedBy": [
-        "KEPT-47"
+        "GI-47"
       ],
       "estimate": 3,
-      "key": "KEPT-52",
+      "key": "GI-52",
       "labels": [
         "ios",
         "ui"
@@ -1661,7 +1661,7 @@
         "Debounced, running off the main thread if the library is large.",
         "Recent searches; an empty state that offers something rather than shrugging."
       ],
-      "summary": "Matches the web app's v0 position (KEPT-22): filter what is already loaded rather than build server search. Revisit with KEPT-34 when either client outgrows it.",
+      "summary": "Matches the web app's v0 position (GI-22): filter what is already loaded rather than build server search. Revisit with GI-34 when either client outgrows it.",
       "title": "Search on device",
       "updatedAt": "2026-09-20T00:00:00.000000Z"
     },
@@ -1672,11 +1672,11 @@
         "No default-looking transitions remain"
       ],
       "blockedBy": [
-        "KEPT-48",
-        "KEPT-50"
+        "GI-48",
+        "GI-50"
       ],
       "estimate": 5,
-      "key": "KEPT-53",
+      "key": "GI-53",
       "labels": [
         "ios",
         "motion"
@@ -1704,10 +1704,10 @@
         "The cache respects its ceiling over a week of real use"
       ],
       "blockedBy": [
-        "KEPT-47"
+        "GI-47"
       ],
       "estimate": 5,
-      "key": "KEPT-54",
+      "key": "GI-54",
       "labels": [
         "ios",
         "storage"
@@ -1732,13 +1732,13 @@
         "RLS holds from the native client, tested with a second account"
       ],
       "blockedBy": [
-        "KEPT-45",
-        "KEPT-19",
-        "KEPT-21",
-        "KEPT-13"
+        "GI-45",
+        "GI-19",
+        "GI-21",
+        "GI-13"
       ],
       "estimate": 5,
-      "key": "KEPT-55",
+      "key": "GI-55",
       "labels": [
         "ios",
         "data"
@@ -1747,7 +1747,7 @@
       "project": "p9",
       "status": "backlog",
       "steps": [
-        "Swap the mock adapter for the Supabase implementation behind the KEPT-45 contract — one module, no screen changes.",
+        "Swap the mock adapter for the Supabase implementation behind the GI-45 contract — one module, no screen changes.",
         "Sign-in through the same `sign-in` Edge Function as the web, then TOTP to reach AAL2.",
         "Session in the keychain (D-10), with refresh handled on resume so the app is not signed out after a week in the background.",
         "Verify row-level security from the device: a second account must see nothing of yours."
@@ -1763,10 +1763,10 @@
         "Uploads from the phone are byte-comparable to the same file uploaded on the web"
       ],
       "blockedBy": [
-        "KEPT-55"
+        "GI-55"
       ],
       "estimate": 5,
-      "key": "KEPT-56",
+      "key": "GI-56",
       "labels": [
         "ios",
         "storage"
@@ -1776,7 +1776,7 @@
       "status": "backlog",
       "steps": [
         "`expo-image-picker` for camera and library, with multi-select from the library.",
-        "Permission strings in Info.plist written in Kept's voice — they are user-facing copy, not boilerplate.",
+        "Permission strings in Info.plist written in Good Internet's voice — they are user-facing copy, not boilerplate.",
         "Use the limited photo library selection properly; do not nag for full access.",
         "Reuse the existing on-device resize (1600px full, 480px thumb, metadata stripped) so phone uploads match web uploads exactly.",
         "Strip location metadata. A reference library has no business recording where a photo was taken."
@@ -1787,22 +1787,22 @@
     },
     {
       "acceptance": [
-        "Share → Kept works from Safari, Photos and Instagram",
+        "Share → Good Internet works from Safari, Photos and Instagram",
         "A shared URL lands as a reference with its capture URL set",
         "Sharing ten large photos at once does not crash the extension",
         "The destination collection can be chosen without opening the app"
       ],
       "blockedBy": [
-        "KEPT-58",
-        "KEPT-56"
+        "GI-58",
+        "GI-56"
       ],
       "estimate": 8,
-      "key": "KEPT-57",
+      "key": "GI-57",
       "labels": [
         "ios",
         "native"
       ],
-      "notes": "The biggest single piece of native work in the plan, and the one that most changes how Kept is used day to day.",
+      "notes": "The biggest single piece of native work in the plan, and the one that most changes how Good Internet is used day to day.",
       "priority": 1,
       "project": "p10",
       "status": "backlog",
@@ -1811,9 +1811,9 @@
         "Accept images, URLs and text. A shared URL becomes a reference with `capture_url` set, matching the web's captured references.",
         "Pick a destination collection inside the extension, without launching the app.",
         "Extensions get a hard memory limit — around 120MB — and are killed without ceremony. Hand large images off rather than processing them in the extension.",
-        "The extension UI is small: it must still look like Kept, using the shared tokens."
+        "The extension UI is small: it must still look like Good Internet, using the shared tokens."
       ],
-      "summary": "The single best reason for this app to exist. Share → Kept from Safari, Photos or Instagram is how a visual reference library actually gets filled, and it is also what makes the app more than a website in a wrapper under App Store guideline 4.2.",
+      "summary": "The single best reason for this app to exist. Share → Good Internet from Safari, Photos or Instagram is how a visual reference library actually gets filled, and it is also what makes the app more than a website in a wrapper under App Store guideline 4.2.",
       "title": "Share extension",
       "updatedAt": "2026-09-20T00:00:00.000000Z"
     },
@@ -1824,11 +1824,11 @@
         "Nothing accumulates indefinitely in the shared container"
       ],
       "blockedBy": [
-        "KEPT-40",
-        "KEPT-55"
+        "GI-40",
+        "GI-55"
       ],
       "estimate": 3,
-      "key": "KEPT-58",
+      "key": "GI-58",
       "labels": [
         "ios",
         "native",
@@ -1838,7 +1838,7 @@
       "project": "p10",
       "status": "backlog",
       "steps": [
-        "Create the App Group identifier alongside the bundle identifier (KEPT-38); like the bundle id, it is painful to change later.",
+        "Create the App Group identifier alongside the bundle identifier (GI-38); like the bundle id, it is painful to change later.",
         "Shared container for handed-off files; shared defaults for the queue.",
         "The extension writes to the container and enqueues; the app drains the queue on next launch or resume.",
         "Share the auth session across the group so the extension knows who is signed in without its own sign-in flow.",
@@ -1856,11 +1856,11 @@
         "One corrupt file fails alone, with no orphan rows or objects"
       ],
       "blockedBy": [
-        "KEPT-56",
-        "KEPT-21"
+        "GI-56",
+        "GI-21"
       ],
       "estimate": 8,
-      "key": "KEPT-59",
+      "key": "GI-59",
       "labels": [
         "ios",
         "storage"
@@ -1883,14 +1883,14 @@
     {
       "acceptance": [
         "Sharing a board offers Messages, Mail and the rest",
-        "The shared link is the public kept.design URL"
+        "The shared link is the public goodinternetwww.com URL"
       ],
       "blockedBy": [
-        "KEPT-55",
-        "KEPT-23"
+        "GI-55",
+        "GI-23"
       ],
       "estimate": 2,
-      "key": "KEPT-60",
+      "key": "GI-60",
       "labels": [
         "ios",
         "ui"
@@ -1900,7 +1900,7 @@
       "status": "backlog",
       "steps": [
         "The native share sheet for a published board link.",
-        "Links use `https://kept.design/m/…` (KEPT-25), never a local or preview origin.",
+        "Links use `https://goodinternetwww.com/m/…` (GI-25), never a local or preview origin.",
         "Keep copy-to-clipboard as the secondary action, with the native haptic confirmation."
       ],
       "summary": "Publishing a board on the phone should hand you the system share sheet, not a copy-to-clipboard toast borrowed from the web.",
@@ -1914,11 +1914,11 @@
         "The association file validates"
       ],
       "blockedBy": [
-        "KEPT-24",
-        "KEPT-31"
+        "GI-24",
+        "GI-31"
       ],
       "estimate": 3,
-      "key": "KEPT-61",
+      "key": "GI-61",
       "labels": [
         "ios",
         "infra"
@@ -1927,8 +1927,8 @@
       "project": "p11",
       "status": "backlog",
       "steps": [
-        "Serve `apple-app-site-association` from `https://kept.design/.well-known/`, as JSON, no extension, no redirect, correct content type.",
-        "Associated Domains entitlement (`applinks:kept.design`) in the app.",
+        "Serve `apple-app-site-association` from `https://goodinternetwww.com/.well-known/`, as JSON, no extension, no redirect, correct content type.",
+        "Associated Domains entitlement (`applinks:goodinternetwww.com`) in the app.",
         "Handle `/m/:token` as a cold start, not just while running — the common bug is only handling the warm case.",
         "Anyone without the app must still get the web board. The link is public and sign-in-free by design.",
         "Test from Messages and Notes; Safari's address bar deliberately does not trigger Universal Links."
@@ -1945,7 +1945,7 @@
       ],
       "blockedBy": [],
       "estimate": 3,
-      "key": "KEPT-62",
+      "key": "GI-62",
       "labels": [
         "ios",
         "security"
@@ -1961,7 +1961,7 @@
         "Published boards die with the account.",
         "Decide and state the retention position — immediate, or a grace period — and make the copy match what actually happens."
       ],
-      "summary": "App Store guideline 5.1.1(v): an app that supports account creation must let people delete the account from inside the app. Kept is invite-only and accounts are made by hand, which does not exempt it. This is a common rejection.",
+      "summary": "App Store guideline 5.1.1(v): an app that supports account creation must let people delete the account from inside the app. Good Internet is invite-only and accounts are made by hand, which does not exempt it. This is a common rejection.",
       "title": "Delete your account, in the app",
       "updatedAt": "2026-09-20T00:00:00.000000Z"
     },
@@ -1973,7 +1973,7 @@
       ],
       "blockedBy": [],
       "estimate": 3,
-      "key": "KEPT-63",
+      "key": "GI-63",
       "labels": [
         "ios",
         "security"
@@ -1985,8 +1985,8 @@
         "`PrivacyInfo.xcprivacy` declaring data types collected and the reasons for any required-reason APIs.",
         "Check the manifests of every third-party SDK that ships in the binary; they aggregate into yours.",
         "Answer the App Store Connect privacy questions honestly: user content, identifiers, what is linked to the user, what is used for tracking (nothing).",
-        "A privacy policy at a stable URL on kept.design; the listing requires one.",
-        "If location metadata is stripped at import (KEPT-56), say so — it is a genuine selling point."
+        "A privacy policy at a stable URL on goodinternetwww.com; the listing requires one.",
+        "If location metadata is stripped at import (GI-56), say so — it is a genuine selling point."
       ],
       "summary": "Apple requires a privacy manifest and accurate data-collection answers. Getting these wrong is both a rejection risk and a trust problem, since the answers are shown publicly on the listing.",
       "title": "Privacy manifest and App Store privacy answers",
@@ -1999,11 +1999,11 @@
         "Screenshots show the real app"
       ],
       "blockedBy": [
-        "KEPT-38",
-        "KEPT-53"
+        "GI-38",
+        "GI-53"
       ],
       "estimate": 3,
-      "key": "KEPT-64",
+      "key": "GI-64",
       "labels": [
         "ios",
         "ui"
@@ -2016,7 +2016,7 @@
         "Launch screen that matches the app's first frame so launch reads as instant rather than as a flash.",
         "App Store screenshots for the required device sizes, showing real collections rather than lorem ipsum.",
         "Listing copy: name, subtitle, description, keywords. The subtitle does a lot of work.",
-        "Decide whether the icon reflects the KEPT wordmark or stands apart from it."
+        "Decide whether the icon reflects the GOOD INTERNET wordmark or stands apart from it."
       ],
       "summary": "The first thing anyone sees, and the last thing anyone leaves time for.",
       "title": "App icon, launch screen and store assets",
@@ -2028,10 +2028,10 @@
         "Reviewer notes include working credentials and a populated demo account"
       ],
       "blockedBy": [
-        "KEPT-57"
+        "GI-57"
       ],
       "estimate": 2,
-      "key": "KEPT-65",
+      "key": "GI-65",
       "labels": [
         "ios",
         "app store"
@@ -2042,7 +2042,7 @@
       "status": "backlog",
       "steps": [
         "Write down the native capabilities the website cannot have: share extension, camera capture, offline library, Universal Links, haptics, background uploads.",
-        "Confirm the app is not merely a mirror of kept.design — the IA from KEPT-42 should already differ.",
+        "Confirm the app is not merely a mirror of goodinternetwww.com — the IA from GI-42 should already differ.",
         "Prepare reviewer notes explaining the invite-only model, with a working demo account. Invite-only apps get rejected for being untestable far more often than for anything else.",
         "Make sure the demo account has real content; an empty library looks broken to a reviewer."
       ],
@@ -2057,14 +2057,14 @@
         "At least a handful of testers have used it on a real library"
       ],
       "blockedBy": [
-        "KEPT-53",
-        "KEPT-59",
-        "KEPT-62",
-        "KEPT-63",
-        "KEPT-64"
+        "GI-53",
+        "GI-59",
+        "GI-62",
+        "GI-63",
+        "GI-64"
       ],
       "estimate": 3,
-      "key": "KEPT-66",
+      "key": "GI-66",
       "labels": [
         "ios",
         "ops"
@@ -2089,12 +2089,12 @@
         "A phone-only user can be invited, sign in and build a library end to end"
       ],
       "blockedBy": [
-        "KEPT-66",
-        "KEPT-65",
-        "KEPT-61"
+        "GI-66",
+        "GI-65",
+        "GI-61"
       ],
       "estimate": 3,
-      "key": "KEPT-67",
+      "key": "GI-67",
       "labels": [
         "ios",
         "app store"
@@ -2107,7 +2107,7 @@
         "Age rating, export compliance (the app uses HTTPS, which is the usual answer), content rights.",
         "Submit, then expect a round of review feedback rather than being surprised by it.",
         "Plan the release: manual release rather than automatic, so the launch happens when you choose.",
-        "Tick it off in Kept's own To do page."
+        "Tick it off in Good Internet's own To do page."
       ],
       "summary": "The finish line for iOS v1.",
       "title": "App Store submission",
@@ -2119,17 +2119,17 @@
       ],
       "blockedBy": [],
       "estimate": 8,
-      "key": "KEPT-68",
+      "key": "GI-68",
       "labels": [
         "ios",
         "decision"
       ],
-      "notes": "Deliberately parked, not rejected. Reopening this without a concrete failing test from KEPT-44 or KEPT-53 is relitigating D-6.",
+      "notes": "Deliberately parked, not rejected. Reopening this without a concrete failing test from GI-44 or GI-53 is relitigating D-6.",
       "priority": 0,
       "project": "p7",
       "status": "backlog",
       "steps": [],
-      "summary": "React Native gets very close to native feel and is not native. If KEPT-53 keeps finding things that cannot be fixed from JavaScript, the ceiling is real and this is the escape hatch.",
+      "summary": "React Native gets very close to native feel and is not native. If GI-53 keeps finding things that cannot be fixed from JavaScript, the ceiling is real and this is the escape hatch.",
       "title": "Revisit SwiftUI if the feel ceiling is hit",
       "updatedAt": "2026-09-20T00:00:00.000000Z"
     },
@@ -2139,7 +2139,7 @@
       ],
       "blockedBy": [],
       "estimate": 5,
-      "key": "KEPT-69",
+      "key": "GI-69",
       "labels": [
         "ios",
         "ui"
@@ -2158,7 +2158,7 @@
       ],
       "blockedBy": [],
       "estimate": 5,
-      "key": "KEPT-70",
+      "key": "GI-70",
       "labels": [
         "ios",
         "native"
@@ -2167,7 +2167,7 @@
       "project": "p7",
       "status": "backlog",
       "steps": [],
-      "summary": "A widget showing a rotating reference from a collection is an obvious fit for a visual library, and Shortcuts would let Kept be scripted into other capture flows.",
+      "summary": "A widget showing a rotating reference from a collection is an obvious fit for a visual library, and Shortcuts would let Good Internet be scripted into other capture flows.",
       "title": "Widgets, Live Activities and Shortcuts",
       "updatedAt": "2026-09-20T00:00:00.000000Z"
     },
@@ -2177,7 +2177,7 @@
       ],
       "blockedBy": [],
       "estimate": 8,
-      "key": "KEPT-71",
+      "key": "GI-71",
       "labels": [
         "native"
       ],

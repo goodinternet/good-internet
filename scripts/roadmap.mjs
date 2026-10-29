@@ -40,42 +40,42 @@ const doneCount = live.filter((i) => i.status === 'done').length;
 
 // ── Markdown ──
 const md = [];
-md.push('# Kept backend roadmap', '');
+md.push('# Good Internet backend roadmap', '');
 md.push('> Generated from `docs/roadmap/roadmap.json` by `node scripts/roadmap.mjs`. Edit the JSON, not this file.', '');
-md.push('Wire Kept\'s finished UI (a pixel copy of the kept-ui lab) to Supabase: Postgres, Auth, Storage and two Edge Functions, behind the exact functions the screens already call, so no screen changes.', '');
+md.push('Wire Good Internet\'s finished UI (a pixel copy of the kept-ui lab) to Supabase: Postgres, Auth, Storage and two Edge Functions, behind the exact functions the screens already call, so no screen changes.', '');
 md.push(`**Progress:** ${doneCount} of ${live.length} issues done.`, '');
 
 md.push('## How it fits together', '', '```text',
-  'Browser · kept.design (Vite SPA, same screens as kept-ui)',
+  'Browser · goodinternetwww.com (Vite SPA, same screens as kept-ui)',
   '│',
   '├── supabase-js  (publishable key, user JWT)',
   '│     ├── Auth      password + TOTP → AAL2; signup off',
   '│     ├── Postgres  RLS on every table: owner_id = auth.uid() AND aal2',
-  '│     └── Storage   private bucket kept-assets/<owner>/<ref>/{full,thumb}.jpg',
+  '│     └── Storage   private bucket gi-assets/<owner>/<ref>/{full,thumb}.jpg',
   '│',
   '├── Edge Function  sign-in   username → email, then password sign-in',
   '└── Edge Function  board     /m/:token → rows + short-lived signed image URLs',
   '                             (the only path that works signed out)',
   '```', '');
 
-md.push('## The seam', '', 'What each function in `src/kept/session.ts` and `src/kept/repository.ts` becomes.', '',
+md.push('## The seam', '', 'What each function in `src/good-internet/session.ts` and `src/good-internet/repository.ts` becomes.', '',
   '| Function | Backed by | Issue |', '| --- | --- | --- |',
-  '| `getSession()` | Cached Supabase session + AAL, read synchronously after boot | KEPT-13 |',
-  '| `signInWithPassword(username, password)` | Edge Function `sign-in` → `auth.setSession()` | KEPT-12 |',
-  '| `completeMfaForLab()` | Replaced by TOTP enroll / verify | KEPT-15 |',
-  '| `signOut()` | `auth.signOut()` | KEPT-13 |',
-  '| `listCollections()` · `getCollection(id)` | `collection_summaries` view, slug as the id | KEPT-18 |',
-  '| `createCollection(name)` · `updateCollection(id, patch)` | RPC `create_collection` · update on `collections` | KEPT-18 |',
-  '| `listReferences(id)` · `listAllReferences()` | One nested select + batched signed URLs | KEPT-19 |',
-  '| `updateReference(cid, rid, patch)` | Notes update; RPCs `set_ref_tags`, `set_ref_pins` | KEPT-20 |',
-  '| `addUploads(cid, files, onProgress)` | On-device resize → rows → Storage uploads | KEPT-21 |',
-  '| `getShare` · `publishCollection` · `rotateShare` · `unpublishCollection` | `collection_shares` + token RPCs | KEPT-23 |',
-  '| `getBoard(token)` | Edge Function `board` (no sign-in) | KEPT-24 |',
-  '| `requestInvite(request)` | RPC `request_invite` (anon) | KEPT-26 |', '');
+  '| `getSession()` | Cached Supabase session + AAL, read synchronously after boot | GI-13 |',
+  '| `signInWithPassword(username, password)` | Edge Function `sign-in` → `auth.setSession()` | GI-12 |',
+  '| `completeMfaForLab()` | Replaced by TOTP enroll / verify | GI-15 |',
+  '| `signOut()` | `auth.signOut()` | GI-13 |',
+  '| `listCollections()` · `getCollection(id)` | `collection_summaries` view, slug as the id | GI-18 |',
+  '| `createCollection(name)` · `updateCollection(id, patch)` | RPC `create_collection` · update on `collections` | GI-18 |',
+  '| `listReferences(id)` · `listAllReferences()` | One nested select + batched signed URLs | GI-19 |',
+  '| `updateReference(cid, rid, patch)` | Notes update; RPCs `set_ref_tags`, `set_ref_pins` | GI-20 |',
+  '| `addUploads(cid, files, onProgress)` | On-device resize → rows → Storage uploads | GI-21 |',
+  '| `getShare` · `publishCollection` · `rotateShare` · `unpublishCollection` | `collection_shares` + token RPCs | GI-23 |',
+  '| `getBoard(token)` | Edge Function `board` (no sign-in) | GI-24 |',
+  '| `requestInvite(request)` | RPC `request_invite` (anon) | GI-26 |', '');
 
 md.push('## Ground rules', '',
   '- kept-ui is the source of truth and is never written to from here. New screens (two-factor, later box annotations and renaming) are designed there first, then synced.',
-  '- `npm run sync-kept-ui` must never overwrite the real data layer (KEPT-6).',
+  '- `npm run sync-kept-ui` must never overwrite the real data layer (GI-6).',
   '- Same function names and return shapes. If kept-ui changes a shape, the typecheck fails before anything ships.',
   '- Only the publishable key reaches the browser. The service-role key lives in Edge Function secrets and a local seed script, never behind a `VITE_` prefix.',
   '- Without Supabase env vars the app falls back to the mocks (D-4).',

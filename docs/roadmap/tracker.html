@@ -1,4 +1,4 @@
-<title>Kept Backend Roadmap</title>
+<title>Good Internet Backend Roadmap</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
@@ -427,7 +427,7 @@
     const item = (view, label, ico, count) =>
       `<button class="nav-item" data-view="${view}" aria-current="${state.view === view}">${ico}<span>${esc(label)}</span>${count != null ? `<span class="count">${count}</span>` : ''}</button>`;
     $('side').innerHTML = `
-      <div class="ws"><div class="ws-mark">K</div><div><div class="ws-name">Kept</div><div class="ws-sub">Backend roadmap</div></div></div>
+      <div class="ws"><div class="ws-mark">K</div><div><div class="ws-name">Good Internet</div><div class="ws-sub">Backend roadmap</div></div></div>
       <div class="nav-group">
         ${item('overview', 'Overview', icon.overview)}
         ${item('decisions', 'Decisions', icon.decisions, state.loaded ? openDecisions || null : null)}
@@ -495,18 +495,18 @@
   }
 
   const SEAM = [
-    ['session.ts', 'getSession()', 'Cached Supabase session + AAL, read synchronously after boot', 'KEPT-13'],
-    ['session.ts', 'signInWithPassword(username, password)', 'Edge Function `sign-in` → `auth.setSession()`', 'KEPT-12'],
-    ['session.ts', 'completeMfaForLab()', 'Replaced by TOTP enroll / verify', 'KEPT-15'],
-    ['session.ts', 'signOut()', '`auth.signOut()`', 'KEPT-13'],
-    ['repository.ts', 'listCollections() · getCollection(id)', '`collection_summaries` view, slug as the id', 'KEPT-18'],
-    ['repository.ts', 'createCollection(name) · updateCollection(id, patch)', 'RPC `create_collection` · update on `collections`', 'KEPT-18'],
-    ['repository.ts', 'listReferences(id) · listAllReferences()', 'One nested select + batched signed URLs', 'KEPT-19'],
-    ['repository.ts', 'updateReference(cid, rid, patch)', 'Notes update; RPCs `set_reference_tags`, `set_reference_pins`', 'KEPT-20'],
-    ['repository.ts', 'addUploads(cid, files, onProgress)', 'On-device resize → rows → Storage uploads', 'KEPT-21'],
-    ['repository.ts', 'getShare · publishCollection · rotateShare · unpublishCollection', '`collection_shares` + token RPCs', 'KEPT-23'],
-    ['repository.ts', 'getBoard(token)', 'Edge Function `board` (no sign-in)', 'KEPT-24'],
-    ['repository.ts', 'requestInvite(request)', 'RPC `request_invite` (anon)', 'KEPT-26'],
+    ['session.ts', 'getSession()', 'Cached Supabase session + AAL, read synchronously after boot', 'GI-13'],
+    ['session.ts', 'signInWithPassword(username, password)', 'Edge Function `sign-in` → `auth.setSession()`', 'GI-12'],
+    ['session.ts', 'completeMfaForLab()', 'Replaced by TOTP enroll / verify', 'GI-15'],
+    ['session.ts', 'signOut()', '`auth.signOut()`', 'GI-13'],
+    ['repository.ts', 'listCollections() · getCollection(id)', '`collection_summaries` view, slug as the id', 'GI-18'],
+    ['repository.ts', 'createCollection(name) · updateCollection(id, patch)', 'RPC `create_collection` · update on `collections`', 'GI-18'],
+    ['repository.ts', 'listReferences(id) · listAllReferences()', 'One nested select + batched signed URLs', 'GI-19'],
+    ['repository.ts', 'updateReference(cid, rid, patch)', 'Notes update; RPCs `set_reference_tags`, `set_reference_pins`', 'GI-20'],
+    ['repository.ts', 'addUploads(cid, files, onProgress)', 'On-device resize → rows → Storage uploads', 'GI-21'],
+    ['repository.ts', 'getShare · publishCollection · rotateShare · unpublishCollection', '`collection_shares` + token RPCs', 'GI-23'],
+    ['repository.ts', 'getBoard(token)', 'Edge Function `board` (no sign-in)', 'GI-24'],
+    ['repository.ts', 'requestInvite(request)', 'RPC `request_invite` (anon)', 'GI-26'],
   ];
   const keyLink = (k) => `<button class="link-btn" data-key="${k}">${k}</button>`;
 
@@ -516,27 +516,27 @@
     const done = total.filter((i) => i.status === 'done').length;
     return `<div class="doc">
       <section>
-        <h2>Wire Kept to a real backend</h2>
-        <p class="lede">The UI is finished: kept-design matches the kept-ui lab pixel for pixel, but every screen still reads from browser mocks. This roadmap replaces those mocks with Supabase (Postgres, Auth, Storage and two Edge Functions) behind the exact functions the screens already call, so no screen changes.</p>
+        <h2>Wire Good Internet to a real backend</h2>
+        <p class="lede">The UI is finished: good-internet matches the kept-ui lab pixel for pixel, but every screen still reads from browser mocks. This roadmap replaces those mocks with Supabase (Postgres, Auth, Storage and two Edge Functions) behind the exact functions the screens already call, so no screen changes.</p>
       </section>
       <section>
         <h3>Where things stand</h3>
         <dl class="kv">
           <dt>UI</dt><dd>Done. All 16 routes and their states are pixel-identical to kept-ui (commit <code>7e9ddba</code>).</dd>
-          <dt>Main branch</dt><dd>PR #4 is open against <code>main</code> and needs merging first (${keyLink('KEPT-1')}).</dd>
-          <dt>Data</dt><dd>Mocked in <code>src/kept/repository.ts</code> and <code>session.ts</code>: localStorage, sessionStorage and IndexedDB, all device-local.</dd>
+          <dt>Main branch</dt><dd>PR #4 is open against <code>main</code> and needs merging first (${keyLink('GI-1')}).</dd>
+          <dt>Data</dt><dd>Mocked in <code>src/good-internet/repository.ts</code> and <code>session.ts</code>: localStorage, sessionStorage and IndexedDB, all device-local.</dd>
           <dt>Stack call</dt><dd>From the v0 spec: Vite + React + Base UI, Supabase for data, sign-in and files. No Next.js.</dd>
           <dt>Progress</dt><dd>${state.loaded ? `${done} of ${total.length} issues done` : '—'}</dd>
         </dl>
       </section>
       <section>
         <h3>How it fits together</h3>
-<pre class="diagram">Browser · kept.design (Vite SPA, same screens as kept-ui)
+<pre class="diagram">Browser · goodinternetwww.com (Vite SPA, same screens as kept-ui)
 │
 ├── supabase-js  (publishable key, user JWT)
 │     ├── Auth      password + TOTP → AAL2; signup off
 │     ├── Postgres  RLS on every table: owner_id = auth.uid() AND aal2
-│     └── Storage   private bucket kept-assets/&lt;owner&gt;/&lt;ref&gt;/{full,thumb}.jpg
+│     └── Storage   private bucket gi-assets/&lt;owner&gt;/&lt;ref&gt;/{full,thumb}.jpg
 │
 ├── Edge Function  sign-in   username → email, then password sign-in
 └── Edge Function  board     /m/:token → rows + short-lived signed image URLs
@@ -553,7 +553,7 @@
         <h3>Ground rules</h3>
         <ul class="plain">
           <li>kept-ui stays the source of truth and is never written to. New screens (two-factor, later box annotations and renaming) are designed there first, then synced.</li>
-          <li><code>npm run sync-kept-ui</code> must never overwrite the real data layer again (${keyLink('KEPT-6')}).</li>
+          <li><code>npm run sync-kept-ui</code> must never overwrite the real data layer again (${keyLink('GI-6')}).</li>
           <li>Same function names and return shapes. If kept-ui changes a shape, the typecheck fails before anything ships.</li>
           <li>Only the publishable key reaches the browser. The service-role key lives in Edge Function secrets and a local seed script, never behind a <code>VITE_</code> prefix.</li>
           <li>Without Supabase env vars the app falls back to the mocks, so previews and the lab flow keep working.</li>

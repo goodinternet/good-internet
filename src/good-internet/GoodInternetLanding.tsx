@@ -1,0 +1,92 @@
+import { ArrowLink, Separator } from './parts.tsx';
+
+const ACTIONS = [
+  ['Capture', 'Create a record.'],
+  ['Index', 'Give it structure.'],
+  ['Annotate', 'Add meaning.'],
+  ['Organize', 'Put it into collections / relationships.'],
+  ['Query', 'Search and filter it.'],
+  ['Retrieve', 'Actually find it again.'],
+  ['Connect', 'Relate one reference to another.'],
+];
+
+const PROJECT = [
+  ['DF.4.2', 'Visual working surface'],
+  ['RG.001', 'Reference system'],
+  ['Status', 'Active'],
+];
+
+export function GoodInternetLanding() {
+  return (
+    <>
+      <section className="GoodInternetContents">
+        <h1 className="GoodInternetDisplay GoodInternetCol-hero">A working library for visual research.</h1>
+      </section>
+
+      <section className="GoodInternetContents">
+        <p className="GoodInternetText2 GoodInternetCol-body">
+          A structured system for collecting, organizing, contextualizing, and retrieving visual
+          references.
+        </p>
+      </section>
+
+      <Separator />
+      <section className="GoodInternetContents" aria-labelledby="gi-access">
+        <h2 id="gi-access" className="GoodInternetText2 GoodInternetCol-label">
+          Access
+        </h2>
+        <div className="GoodInternetStack GoodInternetStack-4 GoodInternetCol-body">
+          <p className="GoodInternetText2">Good Internet is in early development.</p>
+          <ul className="GoodInternetList GoodInternetListFill">
+            <li className="GoodInternetListItem">
+              <span className="GoodInternetText2">Members</span>
+              <span className="GoodInternetText2">
+                <ArrowLink href="/login">Sign in</ArrowLink>
+              </span>
+            </li>
+            <li className="GoodInternetListItem">
+              <span className="GoodInternetText2">Roadmap</span>
+              <span className="GoodInternetText2">
+                <ArrowLink href="/roadmap">See what’s being built</ArrowLink>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <Separator />
+      <section className="GoodInternetContents" aria-labelledby="gi-actions">
+        <h2 id="gi-actions" className="GoodInternetText2 GoodInternetCol-label">
+          Fundamental actions
+        </h2>
+        <div className="GoodInternetCol-body">
+          <ul className="GoodInternetList">
+            {ACTIONS.map(([term, detail]) => (
+              <li key={term} className="GoodInternetListItem">
+                <span className="GoodInternetText2">{term}</span>
+                <span className="GoodInternetText2">{detail}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <Separator />
+      <section className="GoodInternetContents" aria-labelledby="gi-project">
+        <h2 id="gi-project" className="GoodInternetText2 GoodInternetCol-label">
+          The project
+        </h2>
+        <div className="GoodInternetCol-body">
+          <ul className="GoodInternetList">
+            {PROJECT.map(([term, detail]) => (
+              <li key={term} className="GoodInternetListItem">
+                <span className="GoodInternetText2">{term}</span>
+                <span className="GoodInternetText2">{detail}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    </>
+  );
+}
