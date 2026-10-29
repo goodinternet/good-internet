@@ -1,19 +1,19 @@
 import { ArrowLink, Separator } from './parts.tsx';
 
 const ACTIONS = [
-  ['Capture', 'Create a record.'],
-  ['Index', 'Give it structure.'],
-  ['Annotate', 'Add meaning.'],
-  ['Organize', 'Put it into collections / relationships.'],
-  ['Query', 'Search and filter it.'],
-  ['Retrieve', 'Actually find it again.'],
-  ['Connect', 'Relate one reference to another.'],
+  ['Capture', 'URLs, images, PDFs, notes, uploads.'],
+  ['Preserve', 'Original content where supported, with clear retention and backup behavior.'],
+  ['Organize', 'Folders, collections, tags, metadata.'],
+  ['Annotate', 'Notes, highlights, comments tied to resources.'],
+  ['Connect', 'Relationships between items, ideas, and projects.'],
+  ['Retrieve', 'Fast filtering and full-text search, then semantic search.'],
+  ['Share', 'Controlled access to resources or collections.'],
 ];
 
 const PROJECT = [
-  ['DF.4.2', 'Visual working surface'],
-  ['RG.001', 'Reference system'],
-  ['Status', 'Active'],
+  ['Storage', 'Your information lives somewhere reliable.'],
+  ['Knowledge', 'It gains context, relationships, and meaning.'],
+  ['Retrieval', 'You can find it and work with it again.'],
 ];
 
 export function GoodInternetLanding() {

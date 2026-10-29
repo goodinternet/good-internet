@@ -1,15 +1,16 @@
 # Good Internet
 
-## Product definition
+> The workspace for the collectors, the researchers, the organizers, and the makers.
 
-> A cloud-based personal knowledge workspace, built around collecting, preserving, organizing, and connecting information.
+Good Internet is a cloud-based personal knowledge workspace, built around collecting, preserving,
+organizing, and connecting information. It's made of three layers:
 
-Official definition set by Wade on 2026-10-29. Home page headline: "The workspace for the collectors, the researchers, the organizers, and the makers."
+- **Storage:** your information lives somewhere reliable.
+- **Knowledge:** it gains context, relationships, and meaning.
+- **Retrieval:** you can find it and work with it again.
 
-Good Internet is a personal reference database: a structured system for collecting,
-organizing, contextualizing, and retrieving visual references.
-
-> A library you can actually operate.
+It's in early development. Today it's a library for visual references; links, PDFs, notes and the rest
+of the phases are on the public roadmap at [`/roadmap`](https://goodinternetwww.com/roadmap).
 
 ## Where the UI comes from
 
@@ -39,8 +40,10 @@ Files that exist only here: `src/good-internet/tokens.css` (the tokens and base 
 ## Routes
 
 - `/`: landing
+- `/roadmap`: the public roadmap
 - `/login`, `/login/mfa`, `/request`: sign in, two-factor (placeholder), request an invite
 - `/library`: collections and All references
+- `/lab`: the lab, references and experiments for what Good Internet builds next
 - `/library/:collectionId`, `/library/:collectionId/:referenceId`: a collection, one reference
 - `/m/:token`: a published board (no sign-in)
 - `/map`, `/ios`: system map, Good Internet on iOS plan
