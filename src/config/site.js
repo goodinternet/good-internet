@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "GOOD INTERNET",
-  description: "A working library for visual research.",
+  description: "A cloud-based personal knowledge workspace, built around collecting, preserving, organizing, and connecting information.",
   status: "",
   accent: "#FA586A",
   href: "/",

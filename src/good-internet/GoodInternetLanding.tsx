@@ -20,13 +20,12 @@ export function GoodInternetLanding() {
   return (
     <>
       <section className="GoodInternetContents">
-        <h1 className="GoodInternetDisplay GoodInternetCol-hero">A working library for visual research.</h1>
+        <h1 className="GoodInternetDisplay GoodInternetCol-hero">for the collectors, the researchers, the organizers, and the makers.</h1>
       </section>
 
       <section className="GoodInternetContents">
         <p className="GoodInternetText2 GoodInternetCol-body">
-          A structured system for collecting, organizing, contextualizing, and retrieving visual
-          references.
+          A cloud-based personal knowledge workspace, built around collecting, preserving, organizing, and connecting information.
         </p>
       </section>
 

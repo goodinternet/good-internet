@@ -22,18 +22,16 @@ import { navigate } from './navigate.ts';
 
 type Shell = 'marketing' | 'auth' | 'app' | 'board';
 
-const MARKETING_NAV = [
-  { href: '/', label: 'Landing', route: '' },
-  { href: '/roadmap', label: 'Roadmap', route: 'roadmap' },
-];
-const AUTH_NAV = MARKETING_NAV.slice(0, 1);
+// Landing/Roadmap link pair removed from marketing pages per Wade (2026-10-29); /roadmap route still works.
+const MARKETING_NAV: { href: string; label: string; route: string }[] = [];
+const AUTH_NAV = [{ href: '/', label: 'Landing', route: '' }];
 const APP_NAV = [
   { href: '/library', label: 'Library', route: 'library' },
   { href: '/lab', label: 'Lab', route: 'lab' },
 ];
 
 const TITLES: Record<string, string> = {
-  '': 'GOOD INTERNET — A working library for visual research.',
+  '': 'Good Internet — a cloud-based personal knowledge workspace',
   login: 'Sign in · GOOD INTERNET',
   'login/mfa': 'Two-factor · GOOD INTERNET',
   request: 'Request an invite · GOOD INTERNET',
