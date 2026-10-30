@@ -3,11 +3,11 @@
  *
  * kept-ui draws these fields as ruled rows with no box. Here each control is an outlined Base UI
  * input instead. This file isn't in kept-ui, so `npm run sync-kept-ui` never overwrites it, and it
- * is keyed off `data-gi-route` (set in App.tsx) rather than class changes in the synced screens.
+ * is keyed off `data-good-internet-route` (set in App.tsx) rather than class changes in the synced screens.
  * The New collection dialog and every other form keep kept-ui's ruled look.
  */
 @layer components {
-  :is([data-gi-route='login'], [data-gi-route='request']) .GoodInternetForm {
+  :is([data-good-internet-route='login'], [data-good-internet-route='request']) .GoodInternetForm {
     /* Rows are separated by space, not rules */
     .GoodInternetList {
       display: flex;
