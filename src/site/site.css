@@ -23,7 +23,7 @@
   }
 
   /* :where keeps the reset at zero specificity so .SiteDisplay can size the headline */
-  & :where(h1, h2, h3, p, ol, ul) {
+  & :where(h1, h2, h3, h4, p, ol, ul) {
     margin: 0;
     font: inherit;
   }
@@ -251,12 +251,18 @@
   }
 }
 
+.SiteCardItem {
+  display: grid;
+}
+
 .SiteCard {
   display: flex;
   flex-direction: column;
   padding: 16px 16px 18px;
   border-radius: 12px;
-  scroll-margin-top: 5rem;
+  color: inherit;
+  text-decoration: none;
+  outline: none;
   transition: background-color 200ms var(--site-ease);
 
   @media (hover: hover) {
@@ -272,6 +278,10 @@
   & .SiteAscii {
     transition: color 200ms var(--site-ease);
   }
+}
+
+.SiteCard:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--gray-t2);
 }
 
 .SiteCardHead {
@@ -297,6 +307,83 @@
   & .SiteTag {
     margin-left: 0;
   }
+}
+
+/* Each phase in full, under the cards: number, name and status on the left, the detail on the right */
+.SiteUnderline {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.SitePhases {
+  margin-top: 1.5rem;
+}
+
+.SitePhase {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.75rem 0;
+  border-top: 1px solid var(--gray-c2);
+  scroll-margin-top: 5rem;
+
+  @media (min-width: 64rem) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 2rem;
+  }
+}
+
+.SitePhaseHead {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+
+  & .SiteCardTitle {
+    margin-bottom: 0;
+  }
+
+  & .SiteTag {
+    margin-left: 0;
+  }
+
+  @media (min-width: 64rem) {
+    position: sticky;
+    top: 6rem;
+    align-self: start;
+  }
+}
+
+.SitePhaseBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 64ch;
+}
+
+.SitePhaseList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+
+  & li {
+    position: relative;
+    padding-left: 1.125rem;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 11px;
+      left: 2px;
+      width: 6px;
+      height: 1px;
+      background-color: var(--gray-t1);
+    }
+  }
+}
+
+.SitePhaseNote {
+  padding: 0.625rem 0.875rem;
+  border-radius: 10px;
+  background-color: var(--gray-c1);
 }
 
 .SiteFieldRow {

@@ -71,9 +71,27 @@ export function Site({ route }: { route: string }) {
         </Section>
 
         <Section id="roadmap" label="Roadmap">
+          <div className="SiteStack">
+            <p>Nothing to buy, back, or invest in.</p>
+            <p className="SiteMuted SiteProse">
+              Good Internet isn’t taking money from anyone. Getting updates takes an email address and nothing
+              else. This is the plan we’re actually building from: for each phase, what it means for you, how
+              it works, and how we’ll know it’s done. The order may change as we learn, and when it does, this
+              page changes with it. The code is public on{' '}
+              <a className="SiteLink SiteUnderline" href="https://github.com/goodinternet/good-internet">
+                GitHub
+              </a>
+              .
+            </p>
+          </div>
           <ol className="SiteCards">
             {PHASES.map((phase, i) => (
               <PhaseCard key={phase.number} phase={phase} mark={PHASE_MARKS[i]} />
+            ))}
+          </ol>
+          <ol className="SitePhases">
+            {PHASES.map((phase) => (
+              <PhaseDetail key={phase.number} phase={phase} />
             ))}
           </ol>
         </Section>
@@ -105,23 +123,64 @@ export function Site({ route }: { route: string }) {
 }
 
 // One roadmap phase as a card: mark and number, name, what it is, and where it stands.
+// The card jumps to the phase's full entry below.
 function PhaseCard({ phase, mark }: { phase: Phase; mark: string[] }) {
   const { active, handlers } = useActive();
   return (
-    <li className="SiteCard" id={`phase-${phase.number}`} {...handlers}>
-      <div className="SiteCardHead">
-        <AsciiMark lines={mark} active={active} />
+    <li className="SiteCardItem">
+      <a className="SiteCard" href={`/#phase-${phase.number}`} {...handlers}>
+        <div className="SiteCardHead">
+          <AsciiMark lines={mark} active={active} />
+          <span className="SiteMuted">{phase.number}</span>
+        </div>
+        <h3 className="SiteCardTitle">{phase.name}</h3>
+        <p className="SiteCardText">{phase.detail}</p>
+        <p className="SiteCardStatus">
+          {phase.now ? (
+            <span className="SiteTag">In progress</span>
+          ) : (
+            <span className="SiteMuted">Planned</span>
+          )}
+        </p>
+      </a>
+    </li>
+  );
+}
+
+// One phase in full: what it means for you, how it works, and how we'll know it's done.
+function PhaseDetail({ phase }: { phase: Phase }) {
+  const lists: [label: string, items: string[]][] = [
+    ['What you’ll be able to do', phase.youCan],
+    ['How it works', phase.building],
+    ['Done when', phase.doneWhen],
+  ];
+  return (
+    <li className="SitePhase" id={`phase-${phase.number}`} aria-labelledby={`phase-${phase.number}-name`}>
+      <div className="SitePhaseHead">
         <span className="SiteMuted">{phase.number}</span>
-      </div>
-      <h3 className="SiteCardTitle">{phase.name}</h3>
-      <p className="SiteCardText">{phase.detail}</p>
-      <p className="SiteCardStatus">
+        <h3 className="SiteCardTitle" id={`phase-${phase.number}-name`}>
+          {phase.name}
+        </h3>
         {phase.now ? (
           <span className="SiteTag">In progress</span>
         ) : (
           <span className="SiteMuted">Planned</span>
         )}
-      </p>
+      </div>
+      <div className="SitePhaseBody">
+        <p>{phase.detail}</p>
+        {lists.map(([label, items]) => (
+          <div key={label} className="SitePhaseList">
+            <h4 className="SiteMuted">{label}</h4>
+            <ul>
+              {items.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+        {phase.note && <p className="SiteMuted SitePhaseNote">{phase.note}</p>}
+      </div>
     </li>
   );
 }
