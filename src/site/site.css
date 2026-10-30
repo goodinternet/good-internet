@@ -32,8 +32,7 @@
     list-style: none;
   }
 
-  & button,
-  & input {
+  & :where(button, input) {
     font: inherit;
     letter-spacing: inherit;
     text-transform: inherit;
@@ -256,48 +255,30 @@
   border-top: 1px solid var(--gray-c3);
 }
 
-/* ---------- Nav ---------- */
+/* ---------- Nav, shared ---------- */
 
-.SiteNav {
-  position: fixed;
-  z-index: 10;
-  top: 1rem;
-  inset-inline: 1rem;
-  display: flex;
-  justify-content: center;
-  pointer-events: none;
-}
-
-.SiteNavRoot {
-  pointer-events: auto;
-}
-
-.SiteNavList {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  margin: 0;
-  padding: 4px;
-  list-style: none;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-pill);
-  background-color: color-mix(in oklab, var(--color-content) 86%, transparent);
-  backdrop-filter: blur(12px);
-  box-shadow:
-    0 1px 2px hsl(0deg 0% 0% / 4%),
-    0 6px 20px -8px hsl(0deg 0% 0% / 12%);
+/* On :root, not .Site: the desktop dropdown renders in a portal outside the page */
+:root {
+  --nav-ease: cubic-bezier(0.33, 1, 0.68, 1);
+  --nav-frost: color-mix(in oklab, var(--gray-s2) 90%, transparent);
+  --nav-bar-shadow:
+    0 1px 1px 0 hsl(240deg 6% 16% / 10%), 0 0 0 1px hsl(240deg 6% 16% / 4%),
+    0 2px 12px -4px hsl(240deg 6% 16% / 16%);
+  --nav-card-shadow:
+    0 1px 1px 0 hsl(240deg 6% 16% / 8%), 0 4px 12px -6px hsl(240deg 6% 16% / 12%),
+    0 0 0 1px hsl(240deg 6% 16% / 4%);
 }
 
 .SiteNavWordmark,
 .SiteNavItem,
-.SiteNavButton {
+.SiteNavButton,
+.SiteMobileBack,
+.SiteMobileToggle,
+.SiteMobileRow {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  height: 32px;
-  padding: 0 12px;
   border: 0;
-  border-radius: var(--radius-pill);
   background: none;
   color: inherit;
   font: inherit;
@@ -307,7 +288,6 @@
   white-space: nowrap;
   cursor: pointer;
   outline: none;
-  user-select: none;
   -webkit-tap-highlight-color: transparent;
 
   &:focus-visible {
@@ -316,38 +296,38 @@
 }
 
 .SiteNavWordmark {
-  margin-right: 10px;
-  padding-left: 10px;
   font-weight: 600;
   letter-spacing: 0.04em;
 }
 
 .SiteNavItem {
-  color: var(--gray-t1);
-  transition:
-    color 200ms var(--site-ease),
-    background-color 200ms var(--site-ease);
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 6px;
+  color: var(--gray-t2);
+  transition: background-color 200ms var(--nav-ease);
 
   @media (hover: hover) {
     &:hover {
-      color: var(--gray-t2);
       background-color: var(--gray-c1);
     }
   }
 
   &[data-popup-open] {
-    color: var(--gray-t2);
     background-color: var(--gray-c1);
   }
 }
 
 .SiteNavButton {
-  margin-left: 6px;
+  justify-content: center;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 6px;
   background-color: var(--gray-t2);
   color: var(--gray-s1);
   transition:
-    opacity 200ms var(--site-ease),
-    transform 200ms var(--site-ease);
+    opacity 200ms var(--nav-ease),
+    transform 200ms var(--nav-ease);
 
   @media (hover: hover) {
     &:hover {
@@ -367,58 +347,100 @@
 
 .SiteNavCaret {
   display: inline-flex;
-  transition: transform 300ms var(--site-ease);
+  color: var(--gray-p1);
+  transition: transform 300ms var(--nav-ease);
 
   &[data-popup-open] {
     transform: rotate(180deg);
   }
 }
 
+.SiteNavCellTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+
+  & .SiteTag {
+    margin-left: 0;
+  }
+}
+
+.SiteNavCellText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.SiteAscii {
+  margin: 0;
+  font: inherit;
+  font-size: 11px;
+  line-height: 13px;
+  letter-spacing: 0;
+  color: var(--gray-p1);
+  white-space: pre;
+}
+
+/* ---------- Desktop ---------- */
+
 .SiteNavDesktop {
+  position: fixed;
+  z-index: 10;
+  top: 1rem;
+  inset-inline: 1rem;
   display: none;
-
-  @media (min-width: 48rem) {
-    display: block;
-  }
-}
-
-.SiteNavMobile {
-  display: block;
-
-  @media (min-width: 48rem) {
-    display: none;
-  }
-}
-
-.SiteNavMenuButton {
-  width: 32px;
-  padding: 0;
   justify-content: center;
+  pointer-events: none;
 
-  & path {
-    transition: transform 300ms var(--site-ease);
-    transform-origin: center;
-  }
-
-  &[data-popup-open] .SiteNavBurgerTop {
-    transform: translateY(2.5px) rotate(45deg);
-  }
-
-  &[data-popup-open] .SiteNavBurgerBottom {
-    transform: translateY(-2.5px) rotate(-45deg);
+  @media (min-width: 48rem) {
+    display: flex;
   }
 }
 
-/* The shared popup: moves and resizes between panels instead of closing and reopening */
+.SiteNavRoot {
+  pointer-events: auto;
+}
+
+.SiteNavBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4rem;
+  min-width: 640px;
+  padding: 6px 8px 6px 20px;
+  border-radius: 13px;
+  background-color: color-mix(in oklab, var(--color-content) 90%, transparent);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--nav-bar-shadow);
+}
+
+.SiteNavList {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  & .SiteNavWordmark {
+    margin-right: 14px;
+  }
+}
+
+.SiteNavActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* The dropdown: as wide as the bar, resizing in height between panels */
 .SiteNavPositioner {
   z-index: 20;
-  box-sizing: border-box;
+  width: var(--anchor-width);
   height: var(--positioner-height);
-  width: var(--positioner-width);
-  max-width: var(--available-width);
-  transition-property: top, left, right, bottom;
-  transition-duration: 300ms;
-  transition-timing-function: var(--site-ease);
+  transition: top 300ms var(--nav-ease);
 
   &[data-instant] {
     transition: none;
@@ -426,163 +448,377 @@
 }
 
 .SiteNavPopup {
-  position: relative;
   box-sizing: border-box;
+  width: var(--anchor-width);
   height: var(--popup-height);
-  width: var(--popup-width);
-  overflow: hidden;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-12);
-  background-color: var(--color-popup);
+  padding: 4px;
+  border-radius: 16px;
+  background-color: var(--nav-frost);
+  backdrop-filter: blur(8px);
+  box-shadow:
+    0 24px 40px -20px hsl(240deg 6% 16% / 30%),
+    0 10px 24px 0 hsl(240deg 6% 16% / 6%),
+    0 1px 1px 0 hsl(240deg 6% 16% / 16%),
+    0 0 0 1px hsl(240deg 6% 16% / 5%);
   color: var(--gray-t2);
   font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
   font-size: 13px;
   line-height: 20px;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  box-shadow:
-    0 1px 2px hsl(0deg 0% 0% / 4%),
-    0 12px 32px -12px hsl(0deg 0% 0% / 18%);
-  transform-origin: var(--transform-origin);
-  transition-property: opacity, transform, width, height, scale, translate;
-  transition-duration: 300ms;
-  transition-timing-function: var(--site-ease);
+  transform-origin: top center;
+  transition:
+    opacity 300ms ease-out,
+    transform 300ms ease-out,
+    height 300ms var(--nav-ease);
 
   &[data-starting-style],
   &[data-ending-style] {
     opacity: 0;
-    transform: scale(0.96) translateY(-4px);
-  }
-
-  &[data-ending-style] {
-    transition-duration: 200ms;
+    transform: scale(0.9);
   }
 }
 
 .SiteNavViewport {
   position: relative;
-  overflow: hidden;
   width: 100%;
   height: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  background-color: var(--color-content);
+  box-shadow: var(--nav-card-shadow);
 }
 
-/* Panels cross-fade and slide a little in the direction you moved */
 .SiteNavContent {
   box-sizing: border-box;
+  width: 100%;
   transition:
-    opacity 200ms var(--site-ease),
-    transform 300ms var(--site-ease);
+    opacity 250ms var(--nav-ease),
+    transform 300ms var(--nav-ease);
 
-  &[data-starting-style] {
-    opacity: 0;
-  }
-
+  &[data-starting-style],
   &[data-ending-style] {
     opacity: 0;
   }
 
   &[data-starting-style][data-activation-direction='right'],
   &[data-ending-style][data-activation-direction='left'] {
-    transform: translateX(24px);
+    transform: translateX(80px);
   }
 
   &[data-starting-style][data-activation-direction='left'],
   &[data-ending-style][data-activation-direction='right'] {
-    transform: translateX(-24px);
+    transform: translateX(-80px);
   }
 }
 
-.SiteNavPanel {
-  margin: 0;
-  padding: 6px;
-  list-style: none;
-}
-
-.SiteNavPanel-project {
+/* Cells with 2px rules between them */
+.SiteNavCells {
   display: grid;
-  grid-template-columns: repeat(3, 13rem);
   gap: 2px;
+  background-color: var(--gray-c2);
 }
 
-.SiteNavPanel-roadmap {
-  display: grid;
-  grid-template-columns: repeat(2, 12rem);
-  grid-auto-flow: column;
-  grid-template-rows: repeat(4, auto);
-  gap: 2px 4px;
+.SiteNavCells-project {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.SiteNavPanelFoot {
-  grid-column: 1 / -1;
-  border-top: 1px solid var(--gray-c2);
-  padding-top: 4px;
+.SiteNavCells-roadmap {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-.SiteNavCard,
-.SiteNavRow {
+.SiteNavCell {
   display: flex;
-  border-radius: var(--radius-8);
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  background-color: var(--color-content);
   color: inherit;
   text-decoration: none;
   outline: none;
-  transition: background-color 200ms var(--site-ease);
+  transition: background-color 200ms var(--nav-ease);
+
+  &[data-wide] {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+  }
 
   @media (hover: hover) {
     &:hover {
-      background-color: var(--gray-c1);
+      background-color: var(--gray-s1);
+    }
+
+    &:hover .SiteAscii {
+      color: var(--gray-t2);
     }
   }
 
   &:focus-visible {
-    background-color: var(--gray-c1);
-    box-shadow: inset 0 0 0 1px var(--gray-t2);
+    box-shadow: inset 0 0 0 2px var(--gray-t2);
+  }
+
+  & .SiteAscii {
+    transition: color 200ms var(--nav-ease);
   }
 }
 
-.SiteNavCard {
-  flex-direction: column;
-  gap: 2px;
+/* ---------- Phones ---------- */
+
+.SiteMobileNav {
+  position: fixed;
+  z-index: 10;
+  top: 4px;
+  inset-inline: 4px;
+  display: grid;
+
+  & > * {
+    grid-area: 1 / 1;
+  }
+
+  @media (min-width: 48rem) {
+    display: none;
+  }
+}
+
+/* The frosted shell sits inset while closed and grows to the edges when open */
+.SiteMobileShellPad {
+  padding: 12px 4px 8px;
+  transition: padding 270ms var(--nav-ease);
+
+  [data-open] > & {
+    padding: 0;
+  }
+}
+
+.SiteMobileShell {
   height: 100%;
-  padding: 10px 12px;
   box-sizing: border-box;
-}
+  padding: 4px;
+  border-radius: 16px;
+  background-color: color-mix(in oklab, var(--color-content) 90%, transparent);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--nav-bar-shadow);
+  transition: background-color 270ms var(--nav-ease);
 
-.SiteNavRow {
-  align-items: center;
-  gap: 12px;
-  padding: 8px 12px;
-
-  & .SiteTag {
-    margin-left: auto;
+  [data-open] & {
+    background-color: var(--nav-frost);
   }
 }
 
-.SiteNavRow > .SiteMuted:last-child:not(:first-child) {
-  margin-left: auto;
+.SiteMobileCard {
+  position: relative;
+  max-height: calc(100dvh - 8px);
+  display: grid;
+  overflow: hidden;
+  border-radius: 12px;
+  background-color: var(--color-content);
+  box-shadow: var(--nav-card-shadow);
+  opacity: 0;
+  transition:
+    opacity 270ms var(--nav-ease),
+    height 270ms var(--nav-ease);
+
+  [data-open] & {
+    opacity: 1;
+    overflow-y: auto;
+  }
+
+  [data-submenu] & {
+    transition-duration: 270ms, 500ms;
+  }
 }
 
-/* Phones: the menu button's links */
-.SiteNavSheet {
-  width: min(16rem, var(--available-width));
-  height: auto;
-  padding: 6px;
+/* Panels share one cell; the main one drops away below, submenus wait above */
+.SiteMobilePanel {
+  grid-area: 1 / 1;
+  align-self: start;
+  padding: 68px 16px 24px;
+  transition:
+    transform 270ms var(--nav-ease),
+    opacity 270ms var(--nav-ease);
+
+  &[data-state='below'] {
+    transform: translateY(104px);
+    opacity: 0;
+  }
+
+  &[data-state='above'] {
+    transform: translateY(-104px);
+    opacity: 0;
+  }
+}
+
+.SiteMobileSub {
+  padding: 60px 0 8px;
+
+  & ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  & li + li {
+    border-top: 2px solid var(--gray-c1);
+  }
+}
+
+.SiteMobileRows {
   display: flex;
   flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.SiteMobileRow {
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 0;
+  font-size: 15px;
+  line-height: 24px;
+  font-weight: 500;
+}
+
+.SiteMobileChevron {
+  color: var(--gray-p1);
+
+  &[data-back] {
+    transform: rotate(180deg);
+    color: var(--gray-t1);
+  }
+}
+
+.SiteMobileDivider {
+  height: 2px;
+  margin-top: 20px;
+  background-color: var(--gray-c1);
+}
+
+.SiteMobileActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 20px;
+
+  & > * {
+    justify-content: center;
+    height: 40px;
+  }
+}
+
+.SiteMobileItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 16px;
+  color: inherit;
+  text-decoration: none;
+
+  & .SiteAscii {
+    flex: 0 0 9ch;
+    padding-top: 3px;
+  }
+}
+
+/* The bar row: wordmark or Back on the left, the menu toggle on the right */
+.SiteMobileBar {
+  position: relative;
+  align-self: start;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 14px 16px 20px;
+  pointer-events: none;
+
+  & > * {
+    pointer-events: auto;
+  }
+}
+
+.SiteMobileBarLeft {
+  display: grid;
+  align-items: center;
+
+  & > * {
+    grid-area: 1 / 1;
+  }
+}
+
+.SiteMobileSwap {
+  opacity: 0;
+  transform: scale(0.9);
+  transform-origin: left center;
+  pointer-events: none;
+  transition:
+    opacity 200ms ease-out,
+    transform 200ms ease-out;
+
+  &[data-shown] {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+    transition-delay: 50ms;
+  }
+}
+
+.SiteMobileBack {
+  gap: 6px;
+  padding: 0;
+}
+
+.SiteMobileToggle {
+  display: grid;
+  padding: 6px;
+  margin: -6px 0;
+  border-radius: 8px;
+  color: var(--gray-t1);
+
+  & > * {
+    grid-area: 1 / 1;
+  }
+}
+
+.SiteMobileIcon {
+  opacity: 0;
+  transform: scale(0.75);
+  transition:
+    opacity 200ms ease-out,
+    transform 200ms ease-out;
+
+  &[data-shown] {
+    opacity: 1;
+    transform: scale(1);
+    transition-delay: 50ms;
+  }
+}
+
+.SiteMobileBarRule {
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  bottom: -1px;
+  height: 2px;
+  background-color: var(--gray-c1);
+  opacity: 0;
+  transition: opacity 300ms ease-out 100ms;
+  pointer-events: none;
+
+  [data-submenu] & {
+    opacity: 1;
+    transition-duration: 200ms;
+    transition-delay: 0ms;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .Site *,
   .SiteNavPositioner,
   .SiteNavPopup,
-  .SiteNavContent,
-  .SiteNavCaret,
-  .SiteNavMenuButton path {
+  .SiteNavPopup * {
     transition-duration: 0ms !important;
-  }
-
-  .SiteNavPopup[data-starting-style],
-  .SiteNavPopup[data-ending-style],
-  .SiteNavContent[data-starting-style],
-  .SiteNavContent[data-ending-style] {
-    transform: none;
+    transition-delay: 0ms !important;
   }
 }
