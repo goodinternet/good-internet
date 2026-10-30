@@ -83,13 +83,37 @@
 }
 
 .SiteHero {
+  display: grid;
+  gap: 3rem;
+  padding: 7rem 0 4rem;
+
+  @media (min-width: 48rem) {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    align-items: center;
+    padding: 8rem 0 5rem;
+  }
+}
+
+.SiteHeroText {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  padding: 7rem 0 5rem;
+}
+
+/* The globe's colors; the canvas reads these each frame, so they follow light and dark */
+.SiteGlobe {
+  --globe-strong: var(--gray-t2);
+  --globe-mid: var(--gray-p1);
+  --globe-faint: var(--gray-c3);
+  --globe-mark: var(--gray-s1);
+
+  display: block;
+  width: min(100%, 22rem);
+  aspect-ratio: 1;
+  justify-self: center;
 
   @media (min-width: 48rem) {
-    padding: 11rem 0 7rem;
+    justify-self: end;
   }
 }
 

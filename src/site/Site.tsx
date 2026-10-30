@@ -4,6 +4,7 @@ import { Form } from '@base-ui/react/form';
 import { onNavigate } from '../good-internet/navigate.ts';
 import { requestInvite } from '../good-internet/repository.ts';
 import { PHASES, PROJECT, PROMISES } from './content.ts';
+import { Globe } from './Globe.tsx';
 import { SiteNav } from './SiteNav.tsx';
 import './site.css';
 
@@ -25,14 +26,17 @@ export function Site({ route }: { route: string }) {
 
       <main className="SiteMain">
         <section className="SiteHero">
-          <span className="SiteMuted">Early development</span>
-          <h1 className="SiteDisplay">
-            The workspace for the collectors, the researchers, the organizers, and the makers.
-          </h1>
-          <p className="SiteMuted SiteLede">
-            A cloud-based personal knowledge workspace, built around collecting, preserving, organizing, and
-            connecting information.
-          </p>
+          <div className="SiteHeroText">
+            <span className="SiteMuted">Early development</span>
+            <h1 className="SiteDisplay">
+              The workspace for the collectors, the researchers, the organizers, and the makers.
+            </h1>
+            <p className="SiteMuted SiteLede">
+              A cloud-based personal knowledge workspace, built around collecting, preserving, organizing, and
+              connecting information.
+            </p>
+          </div>
+          <Globe className="SiteGlobe" />
         </section>
 
         <Section id="project" label="The project">
@@ -131,14 +135,20 @@ function UpdatesForm() {
         setPending(true);
         const email = String(values.email).trim().toLowerCase();
         try {
-          const { alreadyRequested } = await requestInvite({ name: '', email, note: 'Updates' });
+          const { alreadyRequested } = await requestInvite({
+            name: '',
+            email,
+            note: 'Updates',
+          });
           setSent({ email, already: alreadyRequested });
         } finally {
           setPending(false);
         }
       }}
     >
-      <p className="SiteMuted SiteProse">Good Internet is in early development. Get a note when there’s something to try.</p>
+      <p className="SiteMuted SiteProse">
+        Good Internet is in early development. Get a note when there’s something to try.
+      </p>
       <Field.Root name="email" className="SiteField">
         <Field.Label className="SiteVisuallyHidden">Email</Field.Label>
         <div className="SiteFieldRow">
