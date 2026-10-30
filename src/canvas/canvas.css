@@ -1,9 +1,25 @@
 /* /canvas: a plain surface, quiet preview edges, and one small toolbar. Colors are Good Internet's tokens, so the theme menu covers the canvas too. */
+/* Light mode: a white surface, and #FAFAF9 behind any frame that doesn't paint its own background. */
+:root {
+  --cv-surface: #ffffff;
+  --cv-frame: #fafaf9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --cv-surface: var(--color-background);
+    --cv-frame: var(--color-content);
+  }
+}
+:root[data-theme='dark'] {
+  --cv-surface: var(--color-background);
+  --cv-frame: var(--color-content);
+}
+
 .cv {
   position: fixed;
   inset: 0;
   overflow: hidden;
-  background: var(--color-background);
+  background: var(--cv-surface);
   color: var(--color-foreground);
   font-family: var(--font-sans);
   font-size: 12px;
@@ -16,7 +32,7 @@
 
 .cv-world { position: absolute; top: 0; left: 0; transform-origin: 0 0; --z: 1; }
 .cv-item { position: absolute; top: 0; left: 0; }
-.cv-frame { display: block; border: 0; background: var(--color-content); box-shadow: 0 0 0 1px var(--color-border); }
+.cv-frame { display: block; border: 0; background: var(--cv-frame); box-shadow: 0 0 0 1px var(--color-border); }
 
 /* The label row stays the same size on screen at every zoom. */
 .cv-head {

@@ -24,12 +24,15 @@ const ID = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
 const landing = () => import('./previews/GoodInternetLanding.tsx');
 const site = () => import('./previews/GoodInternetSite.tsx');
+const navWorking = () => import('./previews/nav/index.tsx');
 
 const builtIn: CanvasItem[] = [
   { id: 'gi-landing-desktop', name: 'Good Internet landing · desktop', width: 1440, height: 900, x: 0, y: 0, load: landing },
   { id: 'gi-landing-mobile', name: 'Good Internet landing · mobile', width: 390, height: 844, x: 1440 + GAP, y: 0, load: landing },
   { id: 'gi-site-desktop', name: 'Good Internet site · desktop', width: 1440, height: 7285, x: 1440 + GAP + 390 + GAP, y: 0, load: site },
   { id: 'gi-site-mobile', name: 'Good Internet site · mobile', width: 390, height: 10889, x: 1440 + GAP + 390 + GAP + 1440 + GAP, y: 0, load: site },
+  { id: 'nav-working-desktop', name: 'Nav · Working · Desktop', width: 1440, height: 900, x: 6548, y: 0, load: navWorking },
+  { id: 'nav-working-mobile', name: 'Nav · Working · Mobile', width: 390, height: 844, x: 6548 + 1440 + GAP, y: 0, load: navWorking },
 ];
 
 // Reference recreations live in references/<folder>/, which is git-ignored so other sites' designs
