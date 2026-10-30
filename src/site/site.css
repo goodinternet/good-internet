@@ -4,6 +4,9 @@
  * Motion: 300ms on --site-ease for the popup's size and position, 200ms for fades and hovers.
  */
 .Site {
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
   --site-ease: cubic-bezier(0.33, 1, 0.68, 1);
   --site-font: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
 
@@ -22,7 +25,7 @@
   }
 
   /* :where keeps the reset at zero specificity so .SiteDisplay can size the headline */
-  & :where(h1, h2, p, ol, ul) {
+  & :where(h1, h2, h3, p, ol, ul) {
     margin: 0;
     font: inherit;
   }
@@ -76,20 +79,86 @@
 
 /* ---------- Page ---------- */
 
+/*
+ * The stage: a gradient behind the hero, bled to the window edges. It stays in color past the
+ * globe, then fades into the page inside the hero's bottom padding (--stage-fade), so the sections
+ * below sit on the plain page. Swap the stops to change the mood.
+ */
+.SiteStage {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 50%;
+  width: 100vw;
+  height: 100%;
+  transform: translateX(-50%);
+  background-image: linear-gradient(
+    #2a3cf5 0%,
+    #3a54f7 calc((100% - var(--stage-fade)) * 0.25),
+    #6a6cf2 calc((100% - var(--stage-fade)) * 0.55),
+    #9a72ef calc((100% - var(--stage-fade)) * 0.85),
+    #a774ee calc(100% - var(--stage-fade)),
+    color-mix(in oklab, #d5a9f0 70%, var(--gray-s1)) calc(100% - var(--stage-fade) * 0.55),
+    var(--gray-s1) 100%
+  );
+  pointer-events: none;
+}
+
+.SiteStageGrain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.3;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mask-image: linear-gradient(#000 0%, #000 70%, transparent 98%);
+  mix-blend-mode: overlay;
+}
+
+/* On the gradient: white type, and a white globe */
+.SiteHero {
+  --hero-ink: #fff;
+
+  color: var(--hero-ink);
+
+  & .SiteMuted {
+    color: color-mix(in oklab, var(--hero-ink) 82%, transparent);
+  }
+
+  & .SiteGlobe {
+    --globe-strong: #fff;
+    --globe-mid: color-mix(in oklab, #fff 78%, transparent);
+    --globe-faint: color-mix(in oklab, #fff 45%, transparent);
+  }
+}
+
+.SiteChip {
+  align-self: flex-start;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  background-color: color-mix(in oklab, #fff 90%, transparent);
+  color: #111;
+  font-size: 12px;
+  line-height: 20px;
+}
+
 .SiteMain {
   max-width: 1200px;
   margin: 0 auto;
 }
 
 .SiteHero {
+  --stage-fade: 10rem;
+
+  position: relative;
   display: grid;
+  align-content: center;
   gap: 3rem;
-  padding: 7rem 0 4rem;
+  min-height: min(92svh, 860px);
+  padding: 7rem 0 calc(var(--stage-fade) + 1rem);
 
   @media (min-width: 48rem) {
     grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
     align-items: center;
-    padding: 8rem 0 5rem;
+    padding: 6rem 0 var(--stage-fade);
   }
 }
 
@@ -188,29 +257,67 @@
   }
 }
 
-.SitePhase {
+/* Roadmap cards: borderless, the mark and number up top, status pinned to the bottom */
+.SiteCards {
   display: grid;
-  grid-template-columns: 3ch minmax(0, 1fr);
-  column-gap: 1rem;
-  row-gap: 0.25rem;
-  scroll-margin-top: 5rem;
+  gap: 6px;
+  margin-inline: -16px;
 
-  & > .SiteProse {
-    grid-column: 2;
+  @media (min-width: 40rem) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  @media (min-width: 48rem) {
-    grid-template-columns: 3ch 18ch minmax(0, 1fr);
-    column-gap: 2rem;
-
-    & > .SiteProse {
-      grid-column: 3;
-    }
+  @media (min-width: 72rem) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
-.SitePhaseName {
-  white-space: nowrap;
+.SiteCard {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 16px 18px;
+  border-radius: 12px;
+  scroll-margin-top: 5rem;
+  transition: background-color 200ms var(--site-ease);
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: var(--gray-c1);
+    }
+
+    &:hover .SiteAscii {
+      color: var(--gray-t2);
+    }
+  }
+
+  & .SiteAscii {
+    transition: color 200ms var(--site-ease);
+  }
+}
+
+.SiteCardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.SiteCardTitle {
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.SiteCardText {
+  color: var(--gray-t2);
+}
+
+.SiteCardStatus {
+  margin-top: auto;
+  padding-top: 20px;
+
+  & .SiteTag {
+    margin-left: 0;
+  }
 }
 
 .SiteFieldRow {

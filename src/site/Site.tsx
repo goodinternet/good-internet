@@ -5,6 +5,8 @@ import { onNavigate } from '../good-internet/navigate.ts';
 import { requestInvite } from '../good-internet/repository.ts';
 import { PHASES, PROJECT, PROMISES } from './content.ts';
 import { Globe } from './Globe.tsx';
+import { AsciiMark, PHASE_MARKS, useActive } from './AsciiMark.tsx';
+import type { Phase } from './content.ts';
 import { SiteNav } from './SiteNav.tsx';
 import './site.css';
 
@@ -26,8 +28,11 @@ export function Site({ route }: { route: string }) {
 
       <main className="SiteMain">
         <section className="SiteHero">
+          <div className="SiteStage" aria-hidden="true">
+            <div className="SiteStageGrain" />
+          </div>
           <div className="SiteHeroText">
-            <span className="SiteMuted">Early development</span>
+            <span className="SiteChip">Early development</span>
             <h1 className="SiteDisplay">
               The workspace for the collectors, the researchers, the organizers, and the makers.
             </h1>
@@ -63,16 +68,9 @@ export function Site({ route }: { route: string }) {
         </Section>
 
         <Section id="roadmap" label="Roadmap">
-          <ol className="SiteRows">
-            {PHASES.map((phase) => (
-              <li key={phase.number} id={`phase-${phase.number}`} className="SitePhase">
-                <span className="SiteMuted">{phase.number}</span>
-                <span className="SitePhaseName">
-                  {phase.name}
-                  {phase.now && <span className="SiteTag">Now</span>}
-                </span>
-                <span className="SiteMuted SiteProse">{phase.detail}</span>
-              </li>
+          <ol className="SiteCards">
+            {PHASES.map((phase, i) => (
+              <PhaseCard key={phase.number} phase={phase} mark={PHASE_MARKS[i]} />
             ))}
           </ol>
         </Section>
@@ -100,6 +98,28 @@ export function Site({ route }: { route: string }) {
         </span>
       </footer>
     </div>
+  );
+}
+
+// One roadmap phase as a card: mark and number, name, what it is, and where it stands.
+function PhaseCard({ phase, mark }: { phase: Phase; mark: string[] }) {
+  const { active, handlers } = useActive();
+  return (
+    <li className="SiteCard" id={`phase-${phase.number}`} {...handlers}>
+      <div className="SiteCardHead">
+        <AsciiMark lines={mark} active={active} />
+        <span className="SiteMuted">{phase.number}</span>
+      </div>
+      <h3 className="SiteCardTitle">{phase.name}</h3>
+      <p className="SiteCardText">{phase.detail}</p>
+      <p className="SiteCardStatus">
+        {phase.now ? (
+          <span className="SiteTag">In progress</span>
+        ) : (
+          <span className="SiteMuted">Planned</span>
+        )}
+      </p>
+    </li>
   );
 }
 
