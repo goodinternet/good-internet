@@ -7,6 +7,7 @@ import './good-internet/inputs.css';
 import './good-internet/plex.css';
 import { currentRoute, interceptLinks, navigate, onNavigate } from './good-internet/navigate.ts';
 import { getSession } from './good-internet/session.ts';
+import { Site } from './site/Site.tsx';
 
 // The in-house admin. Its own chunk, so the product bundle never loads it.
 const AdminApp = React.lazy(() => import('./admin/AdminApp.tsx'));
@@ -59,5 +60,7 @@ export default function App() {
       </React.Suspense>
     );
   }
+  // The public one-page site; /roadmap and /request jump to their sections on it.
+  if (route === '' || route === 'roadmap' || route === 'request') return <Site route={route} />;
   return <GoodInternetApp route={route} />;
 }

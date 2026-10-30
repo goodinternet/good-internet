@@ -1,0 +1,564 @@
+/*
+ * The public one-page site and its floating nav. good-internet only.
+ * Type: IBM Plex Mono, all caps, one 13px size except the headline (same as the plex.css pass).
+ * Motion: 300ms on --site-ease for the popup's size and position, 200ms for fades and hovers.
+ */
+.Site {
+  --site-ease: cubic-bezier(0.33, 1, 0.68, 1);
+  --site-font: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+
+  min-height: 100dvh;
+  padding: 0 1rem;
+  color: var(--gray-t2);
+  background-color: var(--gray-s1);
+  font-family: var(--site-font);
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+
+  @media (min-width: 48rem) {
+    padding: 0 3rem;
+  }
+
+  /* :where keeps the reset at zero specificity so .SiteDisplay can size the headline */
+  & :where(h1, h2, p, ol, ul) {
+    margin: 0;
+    font: inherit;
+  }
+
+  & :where(ol, ul) {
+    padding: 0;
+    list-style: none;
+  }
+
+  & button,
+  & input {
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+  }
+}
+
+.SiteMuted {
+  color: var(--gray-t1);
+}
+
+.SiteVisuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.SiteLink {
+  color: inherit;
+  text-decoration: none;
+
+  @media (hover: hover) {
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+  }
+}
+
+.SiteTag {
+  display: inline-block;
+  margin-left: 0.75rem;
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  background-color: var(--gray-c2);
+  font-size: 11px;
+  line-height: 18px;
+}
+
+/* ---------- Page ---------- */
+
+.SiteMain {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.SiteHero {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 7rem 0 5rem;
+
+  @media (min-width: 48rem) {
+    padding: 11rem 0 7rem;
+  }
+}
+
+.SiteDisplay {
+  max-width: 34ch;
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 500;
+  letter-spacing: 0;
+
+  @media (min-width: 48rem) {
+    font-size: 28px;
+    line-height: 38px;
+  }
+}
+
+.SiteLede,
+.SiteProse {
+  max-width: 64ch;
+}
+
+.SiteSection {
+  display: grid;
+  gap: 1rem;
+  padding: 2rem 0;
+  border-top: 1px solid var(--gray-c3);
+  scroll-margin-top: 5rem;
+
+  @media (min-width: 48rem) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+    gap: 3rem;
+    padding: 2.5rem 0;
+  }
+}
+
+.SiteStack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.SiteSteps {
+  display: grid;
+  gap: 1.5rem;
+
+  @media (min-width: 48rem) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem;
+  }
+}
+
+.SiteStep {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.SiteRows {
+  display: flex;
+  flex-direction: column;
+
+  & > li {
+    padding: 0.625rem 0;
+    border-bottom: 1px solid var(--gray-c2);
+
+    &:first-child {
+      padding-top: 0;
+    }
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+}
+
+.SitePhase {
+  display: grid;
+  grid-template-columns: 3ch minmax(0, 1fr);
+  column-gap: 1rem;
+  row-gap: 0.25rem;
+  scroll-margin-top: 5rem;
+
+  & > .SiteProse {
+    grid-column: 2;
+  }
+
+  @media (min-width: 48rem) {
+    grid-template-columns: 3ch 18ch minmax(0, 1fr);
+    column-gap: 2rem;
+
+    & > .SiteProse {
+      grid-column: 3;
+    }
+  }
+}
+
+.SitePhaseName {
+  white-space: nowrap;
+}
+
+.SiteFieldRow {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 32rem;
+}
+
+.SiteInput {
+  flex: 1;
+  min-width: 0;
+  height: 36px;
+  padding: 0 0.875rem;
+  border: 1px solid var(--gray-c3);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-content);
+  color: inherit;
+  outline: none;
+  transition: border-color 200ms var(--site-ease);
+
+  &::placeholder {
+    color: var(--gray-p1);
+  }
+
+  &:focus-visible {
+    border-color: var(--gray-t2);
+  }
+}
+
+.SiteError {
+  margin-top: 0.5rem;
+  color: var(--poppy-t1);
+}
+
+.SiteFooter {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 1200px;
+  margin: 4rem auto 0;
+  padding: 1.5rem 0 2rem;
+  border-top: 1px solid var(--gray-c3);
+}
+
+/* ---------- Nav ---------- */
+
+.SiteNav {
+  position: fixed;
+  z-index: 10;
+  top: 1rem;
+  inset-inline: 1rem;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.SiteNavRoot {
+  pointer-events: auto;
+}
+
+.SiteNavList {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background-color: color-mix(in oklab, var(--color-content) 86%, transparent);
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 1px 2px hsl(0deg 0% 0% / 4%),
+    0 6px 20px -8px hsl(0deg 0% 0% / 12%);
+}
+
+.SiteNavWordmark,
+.SiteNavItem,
+.SiteNavButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+
+  &:focus-visible {
+    box-shadow: 0 0 0 2px var(--gray-t2);
+  }
+}
+
+.SiteNavWordmark {
+  margin-right: 10px;
+  padding-left: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.SiteNavItem {
+  color: var(--gray-t1);
+  transition:
+    color 200ms var(--site-ease),
+    background-color 200ms var(--site-ease);
+
+  @media (hover: hover) {
+    &:hover {
+      color: var(--gray-t2);
+      background-color: var(--gray-c1);
+    }
+  }
+
+  &[data-popup-open] {
+    color: var(--gray-t2);
+    background-color: var(--gray-c1);
+  }
+}
+
+.SiteNavButton {
+  margin-left: 6px;
+  background-color: var(--gray-t2);
+  color: var(--gray-s1);
+  transition:
+    opacity 200ms var(--site-ease),
+    transform 200ms var(--site-ease);
+
+  @media (hover: hover) {
+    &:hover {
+      opacity: 0.86;
+    }
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.SiteNavCaret {
+  display: inline-flex;
+  transition: transform 300ms var(--site-ease);
+
+  &[data-popup-open] {
+    transform: rotate(180deg);
+  }
+}
+
+.SiteNavDesktop {
+  display: none;
+
+  @media (min-width: 48rem) {
+    display: block;
+  }
+}
+
+.SiteNavMobile {
+  display: block;
+
+  @media (min-width: 48rem) {
+    display: none;
+  }
+}
+
+.SiteNavMenuButton {
+  width: 32px;
+  padding: 0;
+  justify-content: center;
+
+  & path {
+    transition: transform 300ms var(--site-ease);
+    transform-origin: center;
+  }
+
+  &[data-popup-open] .SiteNavBurgerTop {
+    transform: translateY(2.5px) rotate(45deg);
+  }
+
+  &[data-popup-open] .SiteNavBurgerBottom {
+    transform: translateY(-2.5px) rotate(-45deg);
+  }
+}
+
+/* The shared popup: moves and resizes between panels instead of closing and reopening */
+.SiteNavPositioner {
+  z-index: 20;
+  box-sizing: border-box;
+  height: var(--positioner-height);
+  width: var(--positioner-width);
+  max-width: var(--available-width);
+  transition-property: top, left, right, bottom;
+  transition-duration: 300ms;
+  transition-timing-function: var(--site-ease);
+
+  &[data-instant] {
+    transition: none;
+  }
+}
+
+.SiteNavPopup {
+  position: relative;
+  box-sizing: border-box;
+  height: var(--popup-height);
+  width: var(--popup-width);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-12);
+  background-color: var(--color-popup);
+  color: var(--gray-t2);
+  font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  box-shadow:
+    0 1px 2px hsl(0deg 0% 0% / 4%),
+    0 12px 32px -12px hsl(0deg 0% 0% / 18%);
+  transform-origin: var(--transform-origin);
+  transition-property: opacity, transform, width, height, scale, translate;
+  transition-duration: 300ms;
+  transition-timing-function: var(--site-ease);
+
+  &[data-starting-style],
+  &[data-ending-style] {
+    opacity: 0;
+    transform: scale(0.96) translateY(-4px);
+  }
+
+  &[data-ending-style] {
+    transition-duration: 200ms;
+  }
+}
+
+.SiteNavViewport {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+/* Panels cross-fade and slide a little in the direction you moved */
+.SiteNavContent {
+  box-sizing: border-box;
+  transition:
+    opacity 200ms var(--site-ease),
+    transform 300ms var(--site-ease);
+
+  &[data-starting-style] {
+    opacity: 0;
+  }
+
+  &[data-ending-style] {
+    opacity: 0;
+  }
+
+  &[data-starting-style][data-activation-direction='right'],
+  &[data-ending-style][data-activation-direction='left'] {
+    transform: translateX(24px);
+  }
+
+  &[data-starting-style][data-activation-direction='left'],
+  &[data-ending-style][data-activation-direction='right'] {
+    transform: translateX(-24px);
+  }
+}
+
+.SiteNavPanel {
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+}
+
+.SiteNavPanel-project {
+  display: grid;
+  grid-template-columns: repeat(3, 13rem);
+  gap: 2px;
+}
+
+.SiteNavPanel-roadmap {
+  display: grid;
+  grid-template-columns: repeat(2, 12rem);
+  grid-auto-flow: column;
+  grid-template-rows: repeat(4, auto);
+  gap: 2px 4px;
+}
+
+.SiteNavPanelFoot {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--gray-c2);
+  padding-top: 4px;
+}
+
+.SiteNavCard,
+.SiteNavRow {
+  display: flex;
+  border-radius: var(--radius-8);
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+  transition: background-color 200ms var(--site-ease);
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: var(--gray-c1);
+    }
+  }
+
+  &:focus-visible {
+    background-color: var(--gray-c1);
+    box-shadow: inset 0 0 0 1px var(--gray-t2);
+  }
+}
+
+.SiteNavCard {
+  flex-direction: column;
+  gap: 2px;
+  height: 100%;
+  padding: 10px 12px;
+  box-sizing: border-box;
+}
+
+.SiteNavRow {
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+
+  & .SiteTag {
+    margin-left: auto;
+  }
+}
+
+.SiteNavRow > .SiteMuted:last-child:not(:first-child) {
+  margin-left: auto;
+}
+
+/* Phones: the menu button's links */
+.SiteNavSheet {
+  width: min(16rem, var(--available-width));
+  height: auto;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .SiteNavPositioner,
+  .SiteNavPopup,
+  .SiteNavContent,
+  .SiteNavCaret,
+  .SiteNavMenuButton path {
+    transition-duration: 0ms !important;
+  }
+
+  .SiteNavPopup[data-starting-style],
+  .SiteNavPopup[data-ending-style],
+  .SiteNavContent[data-starting-style],
+  .SiteNavContent[data-ending-style] {
+    transform: none;
+  }
+}
