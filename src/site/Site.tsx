@@ -8,6 +8,9 @@ import { Globe } from './Globe.tsx';
 import { AsciiMark, PHASE_MARKS, useActive } from './AsciiMark.tsx';
 import type { Phase } from './content.ts';
 import { SiteNav } from './SiteNav.tsx';
+import 'gen-interface-jp/display-400.css';
+import 'gen-interface-jp/display-500.css';
+import 'gen-interface-jp/display-600.css';
 import './site.css';
 
 // The public site: one page (/), with /roadmap and /request kept as jumps to their sections.

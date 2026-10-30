@@ -29,8 +29,8 @@ function DesktopNav() {
         <div className="SiteNavBar" ref={barRef}>
           <NavigationMenu.List className="SiteNavList">
             <NavigationMenu.Item>
-              <NavigationMenu.Link className="SiteNavWordmark" href="/#top">
-                Good Internet
+              <NavigationMenu.Link className="SiteNavWordmark" href="/#top" aria-label="Good Internet">
+                <Logo />
               </NavigationMenu.Link>
             </NavigationMenu.Item>
 
@@ -318,8 +318,9 @@ function MobileNav() {
             href="/#top"
             onClick={close}
             inert={!!submenu}
+            aria-label="Good Internet"
           >
-            Good Internet
+            <Logo />
           </a>
           <button
             className="SiteMobileBack SiteMobileSwap"
@@ -403,6 +404,11 @@ function MobileItem({
       </a>
     </li>
   );
+}
+
+// The Good Internet wordmark (public/brand/), drawn in the text color through a mask so it follows the theme.
+function Logo() {
+  return <span className="SiteLogo" aria-hidden="true" />;
 }
 
 function Caret() {
