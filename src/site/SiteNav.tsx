@@ -2,6 +2,7 @@ import * as React from 'react';
 import { NavigationMenu } from '@base-ui/react/navigation-menu';
 import { APPROACH_MARK, AsciiMark, PHASE_MARKS, PROJECT_MARKS, useActive } from './AsciiMark.tsx';
 import { PHASES, PROJECT } from './content.ts';
+import { ThemeSwitch } from './ThemeSwitch.tsx';
 
 // The site nav. Studied from a reference's interaction and built by hand:
 // - Desktop: a rounded bar; one shared dropdown as wide as the bar (a frosted shell around a white
@@ -89,6 +90,7 @@ function DesktopNav() {
           </NavigationMenu.List>
 
           <div className="SiteNavActions">
+            <ThemeSwitch />
             <a className="SiteNavItem" href="/login">
               Sign in
             </a>
@@ -242,6 +244,10 @@ function MobileNav() {
                   </a>
                 </li>
               </ul>
+              <div className="SiteMobileThemeRow">
+                <span className="SiteMuted">Theme</span>
+                <ThemeSwitch labels />
+              </div>
               <div className="SiteMobileDivider" />
               <div className="SiteMobileActions">
                 <a className="SiteNavItem" href="/login" onClick={close}>

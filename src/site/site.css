@@ -383,6 +383,75 @@
   white-space: pre;
 }
 
+/* Theme switch: a thumb slides under the chosen option */
+.SiteTheme {
+  --theme-option: 28px;
+
+  position: relative;
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-auto-columns: var(--theme-option);
+  padding: 2px;
+  border-radius: 8px;
+  background-color: var(--gray-c1);
+
+  &[data-labels] {
+    --theme-option: 80px;
+  }
+}
+
+.SiteThemeThumb {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 2px;
+  width: var(--theme-option);
+  border-radius: 6px;
+  background-color: var(--color-content);
+  box-shadow: var(--nav-card-shadow);
+  transform: translateX(calc(var(--theme-index) * 100%));
+  transition: transform 270ms var(--nav-ease);
+}
+
+.SiteThemeOption {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--gray-t1);
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 200ms var(--nav-ease);
+
+  &[aria-checked='true'] {
+    color: var(--gray-t2);
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      color: var(--gray-t2);
+    }
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 2px var(--gray-t2);
+  }
+
+  [data-labels] & {
+    height: 32px;
+  }
+}
+
 /* ---------- Desktop ---------- */
 
 .SiteNavDesktop {
@@ -689,6 +758,14 @@
     transform: rotate(180deg);
     color: var(--gray-t1);
   }
+}
+
+.SiteMobileThemeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
 }
 
 .SiteMobileDivider {
