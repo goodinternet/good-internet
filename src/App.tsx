@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { GoodInternetApp } from './good-internet/GoodInternetApp.tsx';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '@fontsource/ibm-plex-mono/600.css';
 import './good-internet/inputs.css';
+import './good-internet/plex.css';
 import { currentRoute, interceptLinks, navigate, onNavigate } from './good-internet/navigate.ts';
 import { getSession } from './good-internet/session.ts';
 
