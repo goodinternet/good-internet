@@ -13,6 +13,7 @@ export interface CanvasPage {
 export const pages: CanvasPage[] = [
   { id: 'page-1', name: 'Page 1' },
   { id: 'page-2', name: 'Page 2' },
+  { id: 'page-3', name: 'Page 3' },
 ];
 
 export interface CanvasItem {
