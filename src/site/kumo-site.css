@@ -1,0 +1,214 @@
+/* Page layout for the Kumo-built site. Colors, type and components come from Kumo's tokens. */
+
+.KSite {
+  min-height: 100vh;
+  background-color: var(--color-kumo-canvas);
+  color: var(--text-color-kumo-default);
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  scroll-behavior: auto;
+}
+
+.KSite :where(h1, h2, h3, p, ol, ul) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.KHeader {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--color-kumo-hairline);
+  background-color: color-mix(in srgb, var(--color-kumo-canvas) 85%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.KHeaderInner,
+.KMain,
+.KFooter {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  box-sizing: border-box;
+}
+
+@media (min-width: 48rem) {
+  .KHeaderInner,
+  .KMain,
+  .KFooter {
+    padding-inline: 2rem;
+  }
+}
+
+.KHeaderInner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  min-height: 3.5rem;
+}
+
+.KWordmark {
+  font-weight: 600;
+  font-size: 1rem;
+  color: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.KNav {
+  display: none;
+  gap: 1.25rem;
+  font-size: 0.875rem;
+
+  & a {
+    color: var(--text-color-kumo-subtle);
+    text-decoration: none;
+  }
+
+  & a:hover {
+    color: var(--text-color-kumo-default);
+  }
+
+  @media (min-width: 40rem) {
+    display: flex;
+  }
+}
+
+.KHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.KThemeTabs {
+  display: none;
+
+  @media (min-width: 30rem) {
+    display: inline-flex;
+  }
+}
+
+.KMain {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  padding-block: 3rem 4rem;
+}
+
+.KHero {
+  display: grid;
+  gap: 2.5rem;
+  align-items: center;
+
+  @media (min-width: 56rem) {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 3rem;
+  }
+}
+
+.KHeroText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+.KDisplay {
+  font-size: clamp(2.25rem, 6vw, 3.75rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.KRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.KGlobe {
+  padding: 1rem;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.KSection {
+  display: grid;
+  gap: 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-kumo-hairline);
+  scroll-margin-top: 4.5rem;
+
+  @media (min-width: 56rem) {
+    grid-template-columns: 12rem minmax(0, 1fr);
+    gap: 2rem;
+  }
+}
+
+.KLabel {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.KSectionBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+  max-width: 60rem;
+}
+
+.KMono {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 0.8125rem;
+  color: var(--text-color-kumo-subtle);
+}
+
+.KCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+}
+
+.KIcon {
+  color: var(--text-color-kumo-brand);
+  margin-bottom: 0.25rem;
+}
+
+.KRoadmap {
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.KStage {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 1rem;
+  padding: 1.125rem 1.25rem;
+  scroll-margin-top: 4.5rem;
+
+  & + & {
+    border-top: 1px solid var(--color-kumo-hairline);
+  }
+}
+
+.KStageText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.KFooter {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 1.5rem 2.5rem;
+  border-top: 1px solid var(--color-kumo-hairline);
+}
