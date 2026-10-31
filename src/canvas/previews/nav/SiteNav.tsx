@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { NavigationMenu } from '@base-ui/react/navigation-menu';
 import { APPROACH_MARK, AsciiMark, PHASE_MARKS, PROJECT_MARKS, useActive } from './AsciiMark.tsx';
-import { PHASES, PROJECT } from '../../../site/content.ts';
+import { PHASES, PRINCIPLES } from '../../../site/content.ts';
 import { ThemeSwitch } from './ThemeSwitch.tsx';
 
 // The site nav. Studied from a reference's interaction and built by hand:
@@ -43,7 +43,7 @@ function DesktopNav() {
               </NavigationMenu.Trigger>
               <NavigationMenu.Content className="SiteNavContent">
                 <div className="SiteNavCells SiteNavCells-project">
-                  {PROJECT.map(([term, detail], i) => (
+                  {PRINCIPLES.map(([term, detail], i) => (
                     <Cell
                       key={term}
                       href="/#project"
@@ -266,7 +266,7 @@ function MobileNav() {
               inert={active !== 'project'}
             >
               <ul>
-                {PROJECT.map(([term, detail], i) => (
+                {PRINCIPLES.map(([term, detail], i) => (
                   <MobileItem
                     key={term}
                     href="/#project"

@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { NavigationMenu } from '@base-ui/react/navigation-menu';
-import { APPROACH_MARK, AsciiMark, PHASE_MARKS, PROJECT_MARKS, useActive } from './AsciiMark.tsx';
-import { PHASES, PROJECT } from './content.ts';
+import { APPROACH_MARK, AsciiMark, PHASE_MARKS, PRINCIPLE_MARKS, useActive } from './AsciiMark.tsx';
+import { PHASES, PRINCIPLES } from './content.ts';
 import { ThemeSwitch } from './ThemeSwitch.tsx';
 
 // The site nav. Studied from a reference's interaction and built by hand:
 // - Desktop: a rounded bar; one shared dropdown as wide as the bar (a frosted shell around a white
 //   card) that resizes between panels, built on Base UI's NavigationMenu.
-// - Phones: a full-width bar that grows into a card; Project and Roadmap open submenus that slide
+// - Phones: a full-width bar that grows into a card; Principles and Roadmap open submenus that slide
 //   in from above, and the wordmark turns into "Back to menu".
 
 export function SiteNav() {
@@ -36,18 +36,18 @@ function DesktopNav() {
 
             <NavigationMenu.Item>
               <NavigationMenu.Trigger className="SiteNavItem">
-                Project
+                Principles
                 <NavigationMenu.Icon className="SiteNavCaret">
                   <Caret />
                 </NavigationMenu.Icon>
               </NavigationMenu.Trigger>
               <NavigationMenu.Content className="SiteNavContent">
                 <div className="SiteNavCells SiteNavCells-project">
-                  {PROJECT.map(([term, detail], i) => (
+                  {PRINCIPLES.map(([term, detail], i) => (
                     <Cell
                       key={term}
-                      href="/#project"
-                      mark={PROJECT_MARKS[i]}
+                      href="/#principles"
+                      mark={PRINCIPLE_MARKS[i]}
                       eyebrow={`0${i + 1}`}
                       title={term}
                       detail={detail}
@@ -55,10 +55,10 @@ function DesktopNav() {
                   ))}
                   <Cell
                     wide
-                    href="/#approach"
+                    href="/#status"
                     mark={APPROACH_MARK}
-                    title="How we’re building it"
-                    detail="Reliability first. Storage is the foundation."
+                    title="Where things stand"
+                    detail="Early development. Nothing is released."
                   />
                 </div>
               </NavigationMenu.Content>
@@ -95,7 +95,7 @@ function DesktopNav() {
               Sign in
             </a>
             <a className="SiteNavButton" href="/#updates">
-              Get updates
+              Updates
             </a>
           </div>
         </div>
@@ -228,7 +228,7 @@ function MobileNav() {
               <ul className="SiteMobileRows">
                 <li>
                   <button className="SiteMobileRow" onClick={() => setSubmenu('project')}>
-                    Project
+                    Principles
                     <Chevron />
                   </button>
                 </li>
@@ -254,7 +254,7 @@ function MobileNav() {
                   Sign in
                 </a>
                 <a className="SiteNavButton" href="/#updates" onClick={close}>
-                  Get updates
+                  Updates
                 </a>
               </div>
             </div>
@@ -266,21 +266,21 @@ function MobileNav() {
               inert={active !== 'project'}
             >
               <ul>
-                {PROJECT.map(([term, detail], i) => (
+                {PRINCIPLES.map(([term, detail], i) => (
                   <MobileItem
                     key={term}
-                    href="/#project"
-                    mark={PROJECT_MARKS[i]}
+                    href="/#principles"
+                    mark={PRINCIPLE_MARKS[i]}
                     title={`0${i + 1} ${term}`}
                     detail={detail}
                     onPick={close}
                   />
                 ))}
                 <MobileItem
-                  href="/#approach"
+                  href="/#status"
                   mark={APPROACH_MARK}
-                  title="How we’re building it"
-                  detail="Reliability first. Storage is the foundation."
+                  title="Where things stand"
+                  detail="Early development. Nothing is released."
                   onPick={close}
                 />
               </ul>

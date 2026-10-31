@@ -56,7 +56,7 @@ export function useActive() {
   return { active, handlers: { onPointerEnter: on, onPointerLeave: off, onFocus: on, onBlur: off } };
 }
 
-export const PROJECT_MARKS: string[][] = [
+export const PRINCIPLE_MARKS: string[][] = [
   ['+-----+', '|#####|', '+-----+'],
   ['o--o   ', ' \\  \\  ', '  o--o '],
   [' .-.   ', '( # )  ', " '-'\\\\ "],
@@ -64,7 +64,7 @@ export const PROJECT_MARKS: string[][] = [
 
 export const APPROACH_MARK = ['[#][#][#]'];
 
-// Phase n of 8: a track with the phase filled in.
-export const PHASE_MARKS: string[][] = Array.from({ length: 8 }, (_, phase) => [
-  Array.from({ length: 8 }, (_, i) => (i === phase ? '#' : i < phase ? ':' : '.')).join(''),
+// Phase n of 5: a track with the phase filled in.
+export const PHASE_MARKS: string[][] = Array.from({ length: 5 }, (_, phase) => [
+  Array.from({ length: 5 }, (_, i) => (i === phase ? '#' : i < phase ? ':' : '.')).join(''),
 ]);
