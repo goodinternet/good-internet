@@ -77,7 +77,10 @@
   bottom: 16px;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 2px;
+  max-width: calc(100vw - 32px);
   padding: 4px;
   border-radius: var(--radius-8);
   background: var(--color-popup);
@@ -93,7 +96,8 @@
   font: inherit;
   cursor: default;
 }
-.cv-controls button:hover { background: var(--color-background); }
+.cv-controls button:hover, .cv-controls button[aria-current="page"] { background: var(--color-background); }
+.cv-pages { display: flex; gap: 2px; margin-right: 2px; padding-right: 4px; box-shadow: 1px 0 0 var(--color-border); }
 .cv-controls button:focus-visible { outline: 2px solid var(--color-foreground); outline-offset: -2px; }
 /* Moon in light mode, sun in dark: the icon you'd switch to, crossfading with a quarter turn. */
 .cv-controls .cv-theme { width: 28px; padding: 0; display: grid; place-items: center; }

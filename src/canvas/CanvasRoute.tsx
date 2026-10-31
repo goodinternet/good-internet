@@ -11,13 +11,14 @@ const onSystemTheme = (listener: () => void) => {
   return () => query.removeEventListener('change', listener);
 };
 import { clampCoord, clampZ, loadLayout, saveLayout, type Camera, type Positions } from './layout.ts';
-import { items, type CanvasItem } from './registry.ts';
+import { items, pages, type CanvasItem } from './registry.ts';
 import './canvas.css';
 
 const HEAD = 30; // label row above each preview, in screen pixels at any zoom
 const PAD = 64; // room around the content for fit-all and reset
 const ZOOM_STEP = 1.25;
 const SAVE_DELAY = 400;
+const START: Camera = { x: PAD, y: PAD + HEAD, z: 1 }; // where a page with nothing on it opens
 const INTERACTIVE = 'a[href], button, input, textarea, select, summary, iframe, [contenteditable]:not([contenteditable="false"]), [role="button"], [role="link"], [role="checkbox"], [role="switch"], [role="tab"], [role="menuitem"], [role="slider"], [role="textbox"]';
 
 type Pt = { x: number; y: number };
@@ -62,9 +63,9 @@ function spaceIsForControl(doc: Document, shell: HTMLElement | null): boolean {
   return el.matches(INTERACTIVE) || (el as HTMLElement).isContentEditable;
 }
 
-function bounds(positions: Positions) {
+function bounds(list: CanvasItem[], positions: Positions) {
   let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
-  for (const it of items) {
+  for (const it of list) {
     const p = positions[it.id];
     x0 = Math.min(x0, p.x); y0 = Math.min(y0, p.y);
     x1 = Math.max(x1, p.x + it.width); y1 = Math.max(y1, p.y + it.height);
@@ -110,9 +111,9 @@ interface ItemApi {
   wire: (frame: HTMLIFrameElement) => void;
 }
 
-const Item = React.memo(function Item({ item, x, y, api }: { item: CanvasItem; x: number; y: number; api: ItemApi }) {
+const Item = React.memo(function Item({ item, x, y, hidden, api }: { item: CanvasItem; x: number; y: number; hidden: boolean; api: ItemApi }) {
   return (
-    <div className="cv-item" data-id={item.id} style={{ transform: `translate(${x}px, ${y}px)`, width: item.width, height: item.height }}>
+    <div className="cv-item" data-id={item.id} hidden={hidden} style={{ transform: `translate(${x}px, ${y}px)`, width: item.width, height: item.height }}>
       <div className="cv-head" style={{ maxWidth: `calc(${item.width}px * var(--z))` }}>
         <button
           type="button"
@@ -140,7 +141,10 @@ const Item = React.memo(function Item({ item, x, y, api }: { item: CanvasItem; x
 });
 
 export default function CanvasRoute() {
-  const saved = React.useMemo(() => loadLayout(new Set(items.map((i) => i.id))), []);
+  const saved = React.useMemo(() => loadLayout(new Set(items.map((i) => i.id)), pages.map((p) => p.id)), []);
+  const [page, setPage] = React.useState(saved.page ?? pages[0].id);
+  // A page's previews mount on its first visit and then stay, hidden, so leaving a page keeps their state.
+  const [visited, setVisited] = React.useState<ReadonlySet<string>>(() => new Set([page]));
   const [positions, setPositions] = React.useState<Positions>(() =>
     Object.fromEntries(items.map((i) => [i.id, saved.positions[i.id] ?? { x: i.x, y: i.y }])),
   );
@@ -154,7 +158,9 @@ export default function CanvasRoute() {
   const shield = React.useRef<HTMLDivElement>(null);
   const zoomText = React.useRef<HTMLSpanElement>(null);
   // Live gesture values stay out of React state, so the camera never rerenders previews.
-  const cam = React.useRef<Camera>(saved.camera ?? { x: PAD, y: PAD + HEAD, z: 1 });
+  const cam = React.useRef<Camera>(saved.cameras[page] ?? START);
+  const pageNow = React.useRef(page);
+  const cameras = React.useRef(saved.cameras);
   const pos = React.useRef(positions);
   const gesture = React.useRef<Gesture | null>(null);
   const space = React.useRef(false);
@@ -180,7 +186,7 @@ export default function CanvasRoute() {
   const flush = React.useCallback(() => {
     clearTimeout(saveTimer.current);
     saveTimer.current = 0;
-    saveLayout(cam.current, pos.current);
+    saveLayout({ page: pageNow.current, cameras: { ...cameras.current, [pageNow.current]: cam.current }, positions: pos.current });
   }, []);
   const scheduleSave = React.useCallback(() => {
     clearTimeout(saveTimer.current);
@@ -207,10 +213,13 @@ export default function CanvasRoute() {
   };
   const center = (): Pt => ({ x: shell.current!.clientWidth / 2, y: shell.current!.clientHeight / 2 });
 
+  const onPage = () => items.filter((i) => i.page === pageNow.current);
   const fitAll = () => {
     const el = shell.current;
-    if (!el || !items.length) return;
-    const b = bounds(pos.current);
+    const list = onPage();
+    if (!el) return;
+    if (!list.length) return setCam(START);
+    const b = bounds(list, pos.current);
     const w = b.x1 - b.x0, h = b.y1 - b.y0;
     const z = clampZ(Math.min((el.clientWidth - PAD * 2) / w, (el.clientHeight - PAD * 2 - HEAD) / h, 1));
     setCam({
@@ -220,7 +229,8 @@ export default function CanvasRoute() {
     });
   };
   const resetCamera = () => {
-    const b = items.length ? bounds(pos.current) : { x0: 0, y0: 0 };
+    const list = onPage();
+    const b = list.length ? bounds(list, pos.current) : { x0: 0, y0: 0 };
     setCam({ z: 1, x: PAD - b.x0, y: PAD + HEAD - b.y0 });
   };
 
@@ -260,6 +270,18 @@ export default function CanvasRoute() {
     }
     gesture.current = null;
     showShield();
+  };
+
+  const showPage = (id: string) => {
+    if (id === pageNow.current) return;
+    if (gesture.current) endGesture();
+    cameras.current[pageNow.current] = cam.current;
+    pageNow.current = id;
+    setPage(id);
+    setVisited((prev) => new Set(prev).add(id));
+    const camera = cameras.current[id];
+    if (camera) setCam(camera);
+    else fitAll();
   };
 
   // Item moves and frame wiring, kept stable so Item's memo holds and previews never rerender.
@@ -411,13 +433,16 @@ export default function CanvasRoute() {
     else if (e.key === '-' || e.key === '_') zoomAt(1 / ZOOM_STEP, center());
     else if (e.key === '0') resetCamera();
     else if (e.key === '!' || (e.shiftKey && e.code === 'Digit1')) fitAll();
-    else return;
+    else if (e.key === 'PageUp' || e.key === 'PageDown') {
+      const next = pages[pages.findIndex((p) => p.id === pageNow.current) + (e.key === 'PageUp' ? -1 : 1)];
+      if (next) showPage(next.id);
+    } else return;
     e.preventDefault();
   };
 
   // Paint the saved camera before the first frame, or fit everything on a first visit.
   React.useLayoutEffect(() => {
-    if (saved.camera) write();
+    if (saved.cameras[page]) write();
     else fitAll();
     // Mount only: later camera changes go through setCam.
   }, []);
@@ -533,14 +558,19 @@ export default function CanvasRoute() {
       onKeyDown={onShellKeyDown}
     >
       <div ref={world} className="cv-world">
-        {items.map((item) => (
-          <Item key={item.id} item={item} x={positions[item.id].x} y={positions[item.id].y} api={api} />
+        {items.filter((item) => visited.has(item.page)).map((item) => (
+          <Item key={item.id} item={item} x={positions[item.id].x} y={positions[item.id].y} hidden={item.page !== page} api={api} />
         ))}
       </div>
       {/* Covers the previews while panning, so their frames can't take the pointer mid-gesture. */}
       <div ref={shield} className="cv-shield" data-on="false" />
 
       <div className="cv-controls" role="toolbar" aria-label="Canvas view">
+        <div className="cv-pages" role="group" aria-label="Pages">
+          {pages.map((p) => (
+            <button key={p.id} type="button" aria-current={p.id === page ? 'page' : undefined} onClick={() => showPage(p.id)}>{p.name}</button>
+          ))}
+        </div>
         <button type="button" aria-label="Zoom out" onClick={() => zoomAt(1 / ZOOM_STEP, center())}>−</button>
         <span ref={zoomText} className="cv-zoom" aria-label="Zoom level">100%</span>
         <button type="button" aria-label="Zoom in" onClick={() => zoomAt(ZOOM_STEP, center())}>+</button>
@@ -570,7 +600,7 @@ export default function CanvasRoute() {
       <p id="cv-help" className="cv-sr">
         Drag empty space, or hold Space or the middle button and drag anywhere, to pan. Scroll to pan; Control or
         Command and scroll, or pinch, to zoom. With the canvas focused: arrow keys pan, plus and minus zoom, 0 resets
-        the view, Shift and 1 fits everything.
+        the view, Shift and 1 fits everything, Page Up and Page Down change pages.
       </p>
       <p id="cv-copy-help" className="cv-sr">Copies this name.</p>
       <p id="cv-move-help" className="cv-sr">Drag to move. Or use the arrow keys; hold Shift for bigger steps.</p>

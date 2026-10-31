@@ -1,6 +1,19 @@
-// Everything on the landing canvas. Add, rename, or remove items here, or add a folder under
-// references/; the camera and gesture code in CanvasRoute.tsx never needs to change.
+// Everything on the landing canvas. Add, rename, or remove pages and items here, or add a folder
+// under references/; the camera and gesture code in CanvasRoute.tsx never needs to change.
 import type { ComponentType } from 'react';
+
+export interface CanvasPage {
+  /** Stable, lowercase-and-dashes. Saved cameras are keyed by it, so don't reuse one. */
+  id: string;
+  /** The label in the toolbar. */
+  name: string;
+}
+
+/** The canvas's pages, in toolbar order. Each one is its own empty world with its own camera. */
+export const pages: CanvasPage[] = [
+  { id: 'page-1', name: 'Page 1' },
+  { id: 'page-2', name: 'Page 2' },
+];
 
 export interface CanvasItem {
   /** Stable, lowercase-and-dashes. Saved positions are keyed by it, so don't reuse one. */
@@ -10,9 +23,11 @@ export interface CanvasItem {
   /** The preview's viewport in CSS pixels. Its frame gets exactly this size, so media queries match. */
   width: number;
   height: number;
-  /** Where it starts on the canvas, before anyone moves it. */
+  /** Where it starts on its page, before anyone moves it. */
   x: number;
   y: number;
+  /** The id of the page it's on. Leave it out for the first page. */
+  page?: string;
   /** The component, loaded only inside its own frame (canvas-frame.html), with its own CSS. */
   load: () => Promise<{ default: ComponentType }>;
 }
@@ -60,11 +75,12 @@ function references(): CanvasItem[] {
 function valid(list: CanvasItem[]) {
   const seen = new Set<string>();
   return list.filter((item) => {
-    const ok = ID.test(item.id) && !seen.has(item.id) && item.width > 0 && item.height > 0;
-    if (!ok) console.warn(`Canvas: skipped "${item.id}" (bad or duplicate id, or no size)`);
+    const onPage = !item.page || pages.some((page) => page.id === item.page);
+    const ok = ID.test(item.id) && !seen.has(item.id) && item.width > 0 && item.height > 0 && onPage;
+    if (!ok) console.warn(`Canvas: skipped "${item.id}" (bad or duplicate id, no size, or no such page)`);
     seen.add(item.id);
     return ok;
   });
 }
 
-export const items = valid([...builtIn, ...references()]);
+export const items = valid([...builtIn, ...references()]).map((item) => ({ ...item, page: item.page ?? pages[0].id }));
