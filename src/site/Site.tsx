@@ -6,10 +6,10 @@ import 'gen-interface-jp/display-500.css';
 import 'gen-interface-jp/display-600.css';
 import './plain.css';
 
-// The public site: one page (/), with /roadmap and /request kept as jumps to their sections.
+// The long plain page behind the homepage: /roadmap, /principles, /status, and /request jump to their sections.
 // A typography-only foundation: one typeface, plain HTML, no components or decoration.
 
-const SECTION_FOR_ROUTE: Record<string, string> = { roadmap: 'roadmap', request: 'updates' };
+const SECTION_FOR_ROUTE: Record<string, string> = { roadmap: 'roadmap', principles: 'principles', status: 'status', request: 'updates' };
 const REPO_URL = 'https://github.com/goodinternet/good-internet';
 
 export function Site({ route }: { route: string }) {
@@ -22,11 +22,11 @@ export function Site({ route }: { route: string }) {
   return (
     <div className="Plain" id="top">
       <header className="PlainHeader">
-        <a href="/#top">Good Internet</a>
+        <a href="/">Good Internet</a>
         <nav aria-label="Sections">
-          <a href="/#principles">Principles</a>
-          <a href="/#roadmap">Roadmap</a>
-          <a href="/#status">Status</a>
+          <a href="/principles">Principles</a>
+          <a href="/roadmap">Roadmap</a>
+          <a href="/status">Status</a>
           <a href="/login">Sign in</a>
         </nav>
       </header>
@@ -40,7 +40,7 @@ export function Site({ route }: { route: string }) {
             private place to collect, preserve, organize, annotate, search, and share what you reference.
           </p>
           <p>
-            <a href="/#roadmap">See the roadmap</a> · <a href="/#principles">Our principles</a>
+            <a href="/roadmap">See the roadmap</a> · <a href="/principles">Our principles</a>
           </p>
         </section>
 

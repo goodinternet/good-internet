@@ -1,0 +1,147 @@
+/* The homepage, on rerun.io's measured values: a 15px root, the system sans at weight 450, and JetBrains
+   Mono uppercase for buttons and small titles. To change typeface, change --gi-sans and --gi-mono. */
+.gi {
+  --gi-fg: oklch(14.5% 0 0);
+  --gi-muted: oklch(43.9% 0 0);
+  --gi-border: oklch(87% 0 0);
+  --gi-hover: color-mix(in srgb, var(--gi-fg) 6%, transparent);
+  --gi-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', 'Noto Sans', Arial, sans-serif;
+  --gi-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  background: #fff;
+  color: var(--gi-fg);
+  font: 450 15px/22.5px var(--gi-sans);
+  -webkit-font-smoothing: antialiased;
+}
+.gi a { color: inherit; text-decoration: none; }
+.gi p, .gi h1, .gi h2, .gi h3, .gi ul, .gi ol, .gi dl, .gi dd { margin: 0; padding: 0; }
+.gi ul, .gi ol { list-style: none; }
+.gi button { font: inherit; }
+.gi :focus-visible { outline: 2px solid var(--gi-fg); outline-offset: 2px; }
+.gi h2 { font-size: 45px; font-weight: 500; line-height: 49.5px; letter-spacing: -.9px; }
+.gi-columns h3, .gi-cases h3 { font: 500 18px/23.94px var(--gi-mono); letter-spacing: .225px; text-transform: uppercase; }
+.gi-large { font-size: 19px; font-weight: 400; line-height: 28.5px; }
+.gi-muted { color: var(--gi-muted); }
+
+/* 01 Header */
+.gi-header { position: sticky; top: 0; z-index: 20; background: #fff; box-shadow: 0 .5px 0 var(--gi-border); }
+.gi-header-inner { display: flex; align-items: center; gap: 22.5px; box-sizing: border-box; height: 50px; max-width: 1160px; margin: 0 auto; padding: 0 22.5px; }
+.gi-brand { font-weight: 600; letter-spacing: -.2px; white-space: nowrap; }
+.gi-nav { flex: 1; color: var(--gi-muted); }
+.gi-nav ul { display: flex; gap: 25px; }
+.gi-nav a, .gi-utility { transition: color .15s; }
+.gi-nav a:hover, .gi-utility:hover { color: var(--gi-fg); }
+.gi-utility { color: var(--gi-muted); }
+.gi-burger { display: none; place-items: center; width: 33.75px; height: 33.75px; margin-left: auto; padding: 0; border: 1px solid var(--gi-border); border-radius: 7.5px; background: oklch(98.5% 0 0); color: var(--gi-muted); cursor: pointer; }
+.gi-scrim { position: fixed; inset: 50px 0 0; z-index: 10; width: 100%; padding: 0; border: 0; background: rgb(0 0 0 / 40%); backdrop-filter: blur(4px); cursor: default; }
+.gi-panel { position: fixed; inset: 50px 0 auto; z-index: 20; box-sizing: border-box; padding: 7.5px 15px 22.5px; border-bottom: 1px solid var(--gi-border); background: #fff; color: var(--gi-muted); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 10%), 0 8px 10px -6px rgb(0 0 0 / 10%); }
+.gi-panel a { display: block; padding: 11.25px 0; font-size: 16.875px; line-height: 26.25px; }
+
+/* 02 Hero */
+.gi-hero { position: relative; height: 830px; overflow: hidden; }
+.gi-art { position: absolute; top: 0; left: 50%; display: block; width: 1440px; height: 830px; transform: translateX(-50%); }
+.gi-page { animation: gi-drift 9s ease-in-out infinite alternate; }
+@keyframes gi-drift { from { transform: translateY(-5px); } to { transform: translateY(7px); } }
+.gi-hero-text { position: absolute; left: 0; right: 0; top: 24px; text-align: center; }
+.gi-eyebrow { color: var(--gi-muted); font: 400 12.75px/19px var(--gi-mono); letter-spacing: .02em; }
+.gi h1 { margin-top: 17px; font-size: 63.75px; font-weight: 450; line-height: 63.75px; letter-spacing: -.6375px; }
+.gi h1 span { display: block; }
+.gi-hero .gi-large { max-width: 630px; margin: 18.75px auto 0; }
+.gi-buttons { display: flex; justify-content: center; gap: 7.5px; margin-top: 26.25px; }
+.gi-btn { position: relative; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; height: 37.5px; padding: 0 13.125px; overflow: hidden; border-radius: 1.875px; font-family: var(--gi-mono); font-weight: 450; text-transform: uppercase; white-space: nowrap; transition: opacity .15s, background-color .15s; }
+.gi-btn-solid { background: var(--gi-fg); color: #fff !important; }
+.gi-btn-solid:hover { opacity: .85; }
+.gi-btn-line { border: 1px solid var(--gi-border); }
+.gi-btn-line:hover { background: var(--gi-hover); }
+.gi-btn-spectrum { margin-top: 67.5px; background: linear-gradient(100deg, #2f6fe0, #4aa6e6, #3a5fdc, #7a5fe0, #2f6fe0); background-size: 300% 100%; color: #fff !important; animation: gi-slide 12s ease-in-out infinite alternate; transition: opacity .15s; }
+.gi-btn-spectrum:hover { opacity: .9; }
+@keyframes gi-slide { to { background-position: 100% 0; } }
+
+/* 03 Status card */
+.gi-status { position: fixed; right: 15px; bottom: 15px; z-index: 30; box-sizing: border-box; width: 280px; border: 1px solid var(--gi-border); border-radius: 22.5px; background: #fff; color: var(--gi-muted); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 10%), 0 8px 10px -6px rgb(0 0 0 / 10%); }
+.gi-status-head { padding: 18.75px 18.75px 9px; }
+.gi-status-eyebrow { font-size: 11px; font-weight: 600; line-height: 15.125px; letter-spacing: .55px; text-transform: uppercase; }
+.gi-status-title { margin-top: 5.625px !important; color: var(--gi-fg); font-size: 21px; font-weight: 500; line-height: 26.25px; letter-spacing: -.525px; }
+.gi-status dl { padding: 0 18.75px; }
+.gi-status dl div { display: flex; justify-content: space-between; align-items: baseline; padding: 4px 0; }
+.gi-status dt { color: var(--gi-fg); font-size: 14px; font-weight: 500; line-height: 21px; }
+.gi-status dd { font-size: 13px; line-height: 19.5px; }
+.gi-status-link { display: flex; align-items: center; justify-content: space-between; margin: 4px 7.5px 7.5px; padding: 8px 11.25px; border-radius: 15px; color: var(--gi-fg) !important; font-size: 14px; font-weight: 500; line-height: 21px; transition: background-color .15s; }
+.gi-status-link:hover { background: var(--gi-hover); }
+.gi-dismiss { position: absolute; top: 11.25px; right: 11.25px; display: inline-flex; align-items: center; justify-content: center; width: 26.25px; height: 26.25px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--gi-muted); opacity: 0; cursor: pointer; transition: opacity .15s; }
+.gi-status:hover .gi-dismiss { opacity: .5; }
+.gi-dismiss:hover, .gi-dismiss:focus-visible { background: color-mix(in srgb, var(--gi-fg) 8%, transparent); color: var(--gi-fg); opacity: 1 !important; }
+
+/* 05 Platform */
+.gi-platform { display: flex; flex-direction: column; align-items: center; padding: 68px 0 90px; border-top: 1px solid var(--gi-border); border-bottom: 1px solid var(--gi-border); text-align: center; scroll-margin-top: 50px; }
+.gi-platform-art { display: block; max-width: 100%; height: auto; }
+.gi-pill { margin-bottom: 11px; padding: 5.625px 15px; border: 1px solid var(--gi-border); border-radius: 34px; color: var(--gi-muted); font-size: 22.5px; line-height: 30px; }
+.gi-platform-text { max-width: 686px; margin-top: 18.75px !important; color: var(--gi-muted); }
+.gi-columns { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22.5px; box-sizing: border-box; width: 100%; max-width: 1160px; margin-top: 52px; padding: 0 22.5px; text-align: left; }
+.gi-columns h3 { margin-top: 3.75px; }
+.gi-column-text { margin-top: 11.25px !important; }
+
+/* 07 Audience and 08 Use cases */
+.gi-audience { box-sizing: border-box; max-width: 1160px; margin: 0 auto; padding: 61px 22.5px 90px; }
+.gi-audience header { text-align: center; }
+.gi-audience header h2 { max-width: 760px; margin: 0 auto; }
+.gi-audience .gi-large { max-width: 860px; margin: 18.75px auto 0; }
+.gi-cases { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-top: 45px; }
+.gi-cases svg { display: block; }
+.gi-cases h3 { margin-top: 18px; }
+.gi-cases .gi-muted { margin-top: 7.5px; }
+
+/* 10, 11, and 12 Footer */
+.gi-footer { border-top: 1px solid var(--gi-border); color: var(--gi-muted); }
+.gi-footer > * { box-sizing: border-box; max-width: 1115px; margin-left: auto; margin-right: auto; }
+.gi-footer-main { display: grid; grid-template-columns: 301px 1fr; column-gap: 60px; padding-top: 75px; }
+.gi-footer-brand { color: var(--gi-fg) !important; font-weight: 600; letter-spacing: -.2px; }
+.gi-footer-text { margin-top: 12px !important; max-width: 300px; }
+.gi-footer-columns { display: grid; grid-template-columns: repeat(3, 160px); column-gap: 37.5px; }
+.gi-footer-columns h3 { color: var(--gi-fg); font: inherit; }
+.gi-footer-columns ul { display: flex; flex-direction: column; gap: 11.25px; margin-top: 15px; }
+.gi-footer-columns a { transition: color .15s; }
+.gi-footer-columns a:hover { color: var(--gi-fg); }
+
+.gi-note { margin-top: 60px !important; padding: 37.5px 0 44px; border-top: 1px solid var(--gi-border); text-align: center; }
+.gi-note h3 { color: var(--gi-fg); font: inherit; font-weight: 500; }
+.gi-note p { max-width: 640px; margin: 5px auto 0; font-size: 13.125px; line-height: 19.5px; }
+.gi-note ol { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 30px; margin-top: 18.75px; color: var(--gi-fg); font: 500 13.125px/20px var(--gi-mono); text-transform: uppercase; }
+.gi-note li span { margin-right: 8px; color: var(--gi-muted); font-weight: 400; }
+
+.gi-legal { display: flex; justify-content: space-between; padding: 30px 0 38px; border-top: 1px solid var(--gi-border); font-size: 11.25px; line-height: 15px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gi-page, .gi-btn-spectrum { animation: none; }
+}
+
+/* Between desktop and phone: two columns, as on Rerun. */
+@media (max-width: 1023px) {
+  .gi-columns, .gi-cases { grid-template-columns: repeat(2, 1fr); }
+  .gi-footer > * { margin-left: 22.5px; margin-right: 22.5px; }
+  .gi-footer-main { grid-template-columns: 1fr; row-gap: 45px; }
+}
+
+/* Phone: Rerun drops the hero art, Hub art, and event card, and left-aligns everything. */
+@media (max-width: 767px) {
+  .gi h2 { font-size: 30.6px; line-height: 33.66px; letter-spacing: -.612px; }
+  .gi-header-inner { padding: 0 15px; }
+  .gi-nav, .gi-utility { display: none; }
+  .gi-burger { display: grid; }
+  .gi-hero { height: auto; padding: 45px 15px 0; }
+  .gi-art, .gi-platform-art, .gi-status { display: none; }
+  .gi-hero-text { position: static; text-align: left; }
+  .gi h1 { font-size: 42.3px; line-height: 42.3px; letter-spacing: -.423px; }
+  .gi-hero .gi-large { margin-left: 0; margin-right: 0; }
+  .gi-buttons { justify-content: flex-start; }
+  .gi-platform { align-items: flex-start; margin-top: 90px; padding: 90px 15px; text-align: left; }
+  .gi-pill { font-size: 16.875px; line-height: 26.25px; }
+  .gi-columns, .gi-cases { grid-template-columns: 1fr; padding: 0; }
+  .gi-audience { padding: 45.5px 15px 60px; }
+  .gi-audience header { text-align: left; }
+  .gi-audience header h2, .gi-audience .gi-large { margin-left: 0; margin-right: 0; }
+  .gi-footer > * { margin-left: 15px; margin-right: 15px; }
+  .gi-footer-main { padding-top: 60px; }
+  .gi-footer-columns { grid-template-columns: repeat(2, 1fr); gap: 30px; }
+  .gi-note ol { flex-direction: column; align-items: center; }
+  .gi-legal { flex-direction: column; gap: 8px; }
+}
