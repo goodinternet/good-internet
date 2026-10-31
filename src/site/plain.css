@@ -1,0 +1,143 @@
+/* Typography only: one typeface, black on near-white, no decoration. Scoped to .Plain. */
+
+.Plain {
+  min-height: 100vh;
+  padding: 1.5rem 1.25rem 3rem;
+  background: #fff;
+  color: #111;
+  font-family: 'Gen Interface JP Display', sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+
+  @media (min-width: 48rem) {
+    padding: 2rem 3rem 4rem;
+  }
+
+  & :where(h1, h2, h3, p, ol, ul) {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font: inherit;
+  }
+
+  & a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  & > * {
+    max-width: 44rem;
+  }
+}
+
+.PlainHeader {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: 5rem;
+  font-weight: 500;
+
+  & nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+  }
+
+  & a {
+    text-decoration: none;
+  }
+
+  & nav a:hover {
+    text-decoration: underline;
+  }
+}
+
+.PlainHero {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 4rem;
+
+  & h1 {
+    font-size: clamp(2.25rem, 6vw, 3.5rem);
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+  }
+}
+
+.PlainLede {
+  font-size: 1.25rem;
+  line-height: 1.45;
+}
+
+.PlainNotice {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 4rem;
+}
+
+.PlainNotice p:first-child {
+  font-weight: 500;
+}
+
+.PlainSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 4rem;
+  scroll-margin-top: 1.5rem;
+
+  & > h2 {
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  & > div {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+.PlainLead {
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.PlainList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  & li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    scroll-margin-top: 1.5rem;
+  }
+
+  & h3 {
+    font-weight: 600;
+  }
+}
+
+.PlainNum,
+.PlainStatus {
+  font-size: 0.875rem;
+}
+
+.PlainFooter {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  font-size: 0.875rem;
+}
