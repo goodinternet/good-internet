@@ -1,7 +1,7 @@
 // The homepage: Good Internet's words, styled on rerun.io's measured type, spacing, and components.
-// Copy is content.ts, art is Art.tsx. The status card sits fixed to the window, like Rerun's event card.
+// Copy is content.ts, art is Art.tsx. Development status is a quiet section near the end, not a floating card.
 import * as React from 'react';
-import { ArchiveIcon, BooksIcon, BriefcaseIcon, CaretRightIcon, ImagesSquareIcon, ListIcon, XIcon } from '@phosphor-icons/react';
+import { ArchiveIcon, BooksIcon, BriefcaseIcon, ImagesSquareIcon, ListIcon, XIcon } from '@phosphor-icons/react';
 import { onNavigate } from '../../good-internet/navigate.ts';
 import { HeroArt, PlatformArt } from './Art.tsx';
 import { audience, cloudflare, footer, hero, legal, nav, platform, status, useCases } from './content.ts';
@@ -44,26 +44,10 @@ function Header() {
   );
 }
 
-function StatusCard() {
-  const [open, setOpen] = React.useState(true);
-  if (!open) return null;
-  return (
-    <aside className="gi-status" aria-label="Development status">
-      <div className="gi-status-head">
-        <p className="gi-status-eyebrow">{status.eyebrow}</p>
-        <p className="gi-status-title">{status.title}</p>
-      </div>
-      <dl>{status.rows.map((row) => <div key={row.label}><dt>{row.label}</dt><dd>{row.value}</dd></div>)}</dl>
-      <a className="gi-status-link" href={status.link.href}>{status.link.label.replace(' →', '')}<CaretRightIcon size={15} aria-hidden="true" /></a>
-      <button type="button" className="gi-dismiss" aria-label="Dismiss" onClick={() => setOpen(false)}><XIcon size={14} /></button>
-    </aside>
-  );
-}
-
 export function Landing() {
   useHashScroll();
   React.useEffect(() => {
-    document.title = 'Good Internet — a private home for your references';
+    document.title = 'Good Internet — your references, kept whole and kept private';
   }, []);
 
   return (
@@ -80,6 +64,7 @@ export function Landing() {
               <a className="gi-btn gi-btn-solid" href={hero.primary.href}>{hero.primary.label}</a>
               <a className="gi-btn gi-btn-line" href={hero.secondary.href}>{hero.secondary.label}</a>
             </div>
+            <p className="gi-hero-note">{hero.note}</p>
           </div>
         </section>
 
@@ -96,6 +81,10 @@ export function Landing() {
                 <p className="gi-muted gi-column-text">{column.text}</p>
               </div>
             ))}
+          </div>
+          <div className="gi-also">
+            <p className="gi-muted gi-also-title">{platform.also.title}</p>
+            <p className="gi-muted">{platform.also.text}</p>
           </div>
           <a className="gi-btn gi-btn-spectrum" href={platform.cta.href}>{platform.cta.label}</a>
         </section>
@@ -116,6 +105,15 @@ export function Landing() {
                 </div>
               );
             })}
+          </div>
+        </section>
+
+        <section className="gi-where" aria-labelledby="gi-where-title">
+          <div className="gi-where-inner">
+            <h2 id="gi-where-title">{status.title}</h2>
+            <p className="gi-muted">{status.text}</p>
+            <dl>{status.rows.map((row) => <div key={row.label}><dt>{row.label}</dt><dd className="gi-muted">{row.value}</dd></div>)}</dl>
+            <a href={status.link.href}>{status.link.label}</a>
           </div>
         </section>
       </main>
@@ -147,7 +145,6 @@ export function Landing() {
           <p>{legal.right}</p>
         </div>
       </footer>
-      <StatusCard />
     </div>
   );
 }

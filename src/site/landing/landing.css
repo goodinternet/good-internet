@@ -56,20 +56,19 @@
 .gi-btn-spectrum:hover { opacity: .9; }
 @keyframes gi-slide { to { background-position: 100% 0; } }
 
-/* 03 Status card */
-.gi-status { position: fixed; right: 15px; bottom: 15px; z-index: 30; box-sizing: border-box; width: 280px; border: 1px solid var(--gi-border); border-radius: 22.5px; background: #fff; color: var(--gi-muted); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 10%), 0 8px 10px -6px rgb(0 0 0 / 10%); }
-.gi-status-head { padding: 18.75px 18.75px 9px; }
-.gi-status-eyebrow { font-size: 11px; font-weight: 600; line-height: 15.125px; letter-spacing: .55px; text-transform: uppercase; }
-.gi-status-title { margin-top: 5.625px !important; color: var(--gi-fg); font-size: 21px; font-weight: 500; line-height: 26.25px; letter-spacing: -.525px; }
-.gi-status dl { padding: 0 18.75px; }
-.gi-status dl div { display: flex; justify-content: space-between; align-items: baseline; padding: 4px 0; }
-.gi-status dt { color: var(--gi-fg); font-size: 14px; font-weight: 500; line-height: 21px; }
-.gi-status dd { font-size: 13px; line-height: 19.5px; }
-.gi-status-link { display: flex; align-items: center; justify-content: space-between; margin: 4px 7.5px 7.5px; padding: 8px 11.25px; border-radius: 15px; color: var(--gi-fg) !important; font-size: 14px; font-weight: 500; line-height: 21px; transition: background-color .15s; }
-.gi-status-link:hover { background: var(--gi-hover); }
-.gi-dismiss { position: absolute; top: 11.25px; right: 11.25px; display: inline-flex; align-items: center; justify-content: center; width: 26.25px; height: 26.25px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--gi-muted); opacity: 0; cursor: pointer; transition: opacity .15s; }
-.gi-status:hover .gi-dismiss { opacity: .5; }
-.gi-dismiss:hover, .gi-dismiss:focus-visible { background: color-mix(in srgb, var(--gi-fg) 8%, transparent); color: var(--gi-fg); opacity: 1 !important; }
+/* 03 Where things stand: a quiet section, in place of the old floating status card */
+.gi-where { box-sizing: border-box; max-width: 1160px; margin: 0 auto; padding: 0 22.5px 90px; }
+.gi-where-inner { max-width: 640px; margin: 0 auto; padding-top: 37.5px; border-top: 1px solid var(--gi-border); }
+.gi-where h2 { max-width: none; font: 500 18px/23.94px var(--gi-mono); letter-spacing: .225px; text-transform: uppercase; }
+.gi-where p { margin-top: 7.5px; }
+.gi-where dl { margin-top: 18px; }
+.gi-where dl div { display: flex; justify-content: space-between; gap: 24px; padding: 9px 0; border-bottom: 1px solid var(--gi-border); }
+.gi-where dt { color: var(--gi-fg); }
+.gi-where a { display: inline-block; margin-top: 18px; color: var(--gi-fg); text-decoration: underline; text-underline-offset: 3px; }
+.gi-hero-note { margin-top: 18px; font: 400 12px/18px var(--gi-mono); letter-spacing: .4px; }
+.gi-also { max-width: 640px; margin: 30px auto 0; text-align: center; }
+.gi-also-title { font: 500 12px/18px var(--gi-mono); letter-spacing: .4px; text-transform: uppercase; }
+.gi-also p + p { margin-top: 4px; }
 
 /* 05 Platform */
 .gi-platform { display: flex; flex-direction: column; align-items: center; padding: 68px 0 90px; border-top: 1px solid var(--gi-border); border-bottom: 1px solid var(--gi-border); text-align: center; scroll-margin-top: 50px; }
@@ -128,7 +127,7 @@
   .gi-nav, .gi-utility { display: none; }
   .gi-burger { display: grid; }
   .gi-hero { height: auto; padding: 45px 15px 0; }
-  .gi-art, .gi-platform-art, .gi-status { display: none; }
+  .gi-art, .gi-platform-art { display: none; }
   .gi-hero-text { position: static; text-align: left; }
   .gi h1 { font-size: 42.3px; line-height: 42.3px; letter-spacing: -.423px; }
   .gi-hero .gi-large { margin-left: 0; margin-right: 0; }
@@ -137,6 +136,7 @@
   .gi-pill { font-size: 16.875px; line-height: 26.25px; }
   .gi-columns, .gi-cases { grid-template-columns: 1fr; padding: 0; }
   .gi-audience { padding: 45.5px 15px 60px; }
+  .gi-where { padding: 0 15px 60px; }
   .gi-audience header { text-align: left; }
   .gi-audience header h2, .gi-audience .gi-large { margin-left: 0; margin-right: 0; }
   .gi-footer > * { margin-left: 15px; margin-right: 15px; }
