@@ -19,7 +19,7 @@ const { stages, items, choices } = data;
 
 const STATUS = { done: 'Done', in_progress: 'In progress', planned: 'Planned', waiting: 'Waiting', exploring: 'Exploring' };
 const KIND = { requirement: 'Requirement', engineering: 'Engineering', exploratory: 'Exploratory' };
-const BASIS = { stated: 'Stated in the Source of Truth', derived: 'Derived from a commitment' };
+const BASIS = { stated: 'Stated in the Source of Truth', derived: 'Derived from a commitment', decided: 'Decided by the owner after the Source of Truth' };
 
 // Catch typos before they reach either copy.
 const keys = new Set(items.map((i) => i.key));
@@ -38,7 +38,7 @@ for (const c of choices) {
 
 const byStage = (s) => items.filter((i) => i.stage === s.id);
 const done = items.filter((i) => i.status === 'done').length;
-const tag = (i) => `${KIND[i.kind]} · ${i.basis === 'derived' ? 'derived' : 'stated'}`;
+const tag = (i) => `${KIND[i.kind]} · ${i.basis}`;
 const refs = (i) => (i.commitments?.length ? `commitment${i.commitments.length > 1 ? 's' : ''} ${i.commitments.join(', ')}` : '');
 
 // ── Markdown ──
@@ -47,7 +47,7 @@ md.push('# Good Internet roadmap', '');
 md.push('> Generated from `docs/roadmap/roadmap.json` by `node scripts/roadmap.mjs`. Edit the JSON, not this file.', '');
 md.push('The direction is [`docs/SOURCE-OF-TRUTH.md`](../SOURCE-OF-TRUTH.md). This roadmap organizes the work under its five stages; where the two disagree, the Source of Truth wins.', '');
 md.push(`Last updated ${data.updated}. **${done} of ${items.length} items done.** Nothing below is available to users unless its status says Done.`, '');
-md.push('**Reading the labels.** *Requirement*: something that must be true of the product. *Engineering*: work needed to make a requirement real. *Exploratory*: discussed, not locked. *Stated* means the Source of Truth says it. *Derived* means it follows from a commitment and is proposed for review.', '');
+md.push('**Reading the labels.** *Requirement*: something that must be true of the product. *Engineering*: work needed to make a requirement real. *Exploratory*: discussed, not locked. *Stated* means the Source of Truth says it. *Derived* means it follows from a commitment and is proposed for review. *Decided* means the owner added it after the Source of Truth was written.', '');
 md.push('Stages are a planning structure, not a claim that each is finalized, and not a strict sequence.', '');
 
 for (const s of stages) {

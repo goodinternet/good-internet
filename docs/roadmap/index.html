@@ -23,7 +23,7 @@
 <body>
 <main>
   <h1>Good Internet roadmap</h1>
-  <p class="lede">Direction: docs/SOURCE-OF-TRUTH.md. Updated 2026-11-01. 1 of 27 items done. Nothing here is available to users unless it says Done.</p>
+  <p class="lede">Direction: docs/SOURCE-OF-TRUTH.md. Updated 2026-11-01. 1 of 28 items done. Nothing here is available to users unless it says Done.</p>
   
 <section>
   <h2><span>01</span> Define</h2>
@@ -81,6 +81,12 @@
     <p>The Cloudflare for Startups application is pending. Acceptance is not assumed. Proposed priorities: original-file storage, image delivery and processing, intelligent reference organization.</p>
     
     <p class="note">A strategy under consideration, not a selected provider. Good Internet development does not depend on the outcome: acceptance is not assumed and nothing in Build waits on it. See choices C-1, C-4.</p>
+  </article><article>
+    <h3><code>EST-6</code> Email updates and early-access signup</h3>
+    <p class="meta"><b class="st planned">Planned</b> Requirement · decided</p>
+    <p>A real signup on the public site, required before the redesigned site is published. It is not account registration. Until it is configured and tested, the site says email signup isn't set up and must not claim otherwise.</p>
+    <ul><li>A submitted address is stored by the provider (or a server), not only in the visitor's browser</li><li>Sign-up requires explicit consent and says what the person is signing up for</li><li>An appropriate privacy notice is linked, supplied or approved by the owner</li><li>Every message has working unsubscribe handling</li><li>The form has spam and bot protection</li><li>Success and failure states are verified end to end, including a network failure and a duplicate address</li></ul>
+    <p class="note">Owner decision, November 1, 2026; not in the Source of Truth. Prefer the simplest secure managed integration and no new backend architecture. API secrets never reach the browser. See choice C-9.</p>
   </article>
 </section>
 <section>
@@ -215,7 +221,7 @@
   <section>
     <h2>Open implementation choices</h2>
     <p class="scope">How, not what. None is decided; no provider is approved.</p>
-    <table><tr><td><code>C-1</code> Where original files are stored</td><td>BLD-1, BLD-3, BLD-5, BLD-6, BLD-7</td><td>Cloudflare is under consideration (EST-5), but acceptance is not a dependency for development. No provider is selected.</td></tr><tr><td><code>C-2</code> Backend and database platform</td><td>BLD-2, BLD-9, BLD-10, BLD-11</td><td>Supabase was assumed by the archived October roadmap. It was never approved and is not ruled out.</td></tr><tr><td><code>C-3</code> Authentication approach</td><td>BLD-2</td><td>Includes whether the prototype's invite-only access and two-factor become requirements.</td></tr><tr><td><code>C-4</code> Image processing and delivery</td><td>BLD-4</td><td>Named as a proposed Cloudflare priority. Not selected, and not dependent on the application.</td></tr><tr><td><code>C-5</code> How backup and recovery are done</td><td>BLD-6, BLD-7</td><td>—</td></tr><tr><td><code>C-6</code> How search is done</td><td>BLD-10, XPL-4</td><td>—</td></tr><tr><td><code>C-7</code> AI provider and approach for assisted organization</td><td>XPL-1</td><td>—</td></tr><tr><td><code>C-8</code> Pricing and storage limits</td><td>—</td><td>Exploratory per the Source of Truth. Not a roadmap item until decided.</td></tr></table>
+    <table><tr><td><code>C-1</code> Where original files are stored</td><td>BLD-1, BLD-3, BLD-5, BLD-6, BLD-7</td><td>Cloudflare is under consideration (EST-5), but acceptance is not a dependency for development. No provider is selected.</td></tr><tr><td><code>C-2</code> Backend and database platform</td><td>BLD-2, BLD-9, BLD-10, BLD-11</td><td>Supabase was assumed by the archived October roadmap. It was never approved and is not ruled out.</td></tr><tr><td><code>C-3</code> Authentication approach</td><td>BLD-2</td><td>Includes whether the prototype's invite-only access and two-factor become requirements.</td></tr><tr><td><code>C-4</code> Image processing and delivery</td><td>BLD-4</td><td>Named as a proposed Cloudflare priority. Not selected, and not dependent on the application.</td></tr><tr><td><code>C-5</code> How backup and recovery are done</td><td>BLD-6, BLD-7</td><td>—</td></tr><tr><td><code>C-6</code> How search is done</td><td>BLD-10, XPL-4</td><td>—</td></tr><tr><td><code>C-7</code> AI provider and approach for assisted organization</td><td>XPL-1</td><td>—</td></tr><tr><td><code>C-8</code> Pricing and storage limits</td><td>—</td><td>Exploratory per the Source of Truth. Not a roadmap item until decided.</td></tr><tr><td><code>C-9</code> Email updates provider and integration</td><td>EST-6</td><td>Prefer the simplest secure managed integration. No provider is chosen and no paid plan is approved. Any API key stays server-side and is never a VITE_ variable.</td></tr></table>
   </section>
 </main>
 </body>

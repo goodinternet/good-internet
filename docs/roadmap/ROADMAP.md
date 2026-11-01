@@ -4,9 +4,9 @@
 
 The direction is [`docs/SOURCE-OF-TRUTH.md`](../SOURCE-OF-TRUTH.md). This roadmap organizes the work under its five stages; where the two disagree, the Source of Truth wins.
 
-Last updated 2026-11-01. **1 of 27 items done.** Nothing below is available to users unless its status says Done.
+Last updated 2026-11-01. **1 of 28 items done.** Nothing below is available to users unless its status says Done.
 
-**Reading the labels.** *Requirement*: something that must be true of the product. *Engineering*: work needed to make a requirement real. *Exploratory*: discussed, not locked. *Stated* means the Source of Truth says it. *Derived* means it follows from a commitment and is proposed for review.
+**Reading the labels.** *Requirement*: something that must be true of the product. *Engineering*: work needed to make a requirement real. *Exploratory*: discussed, not locked. *Stated* means the Source of Truth says it. *Derived* means it follows from a commitment and is proposed for review. *Decided* means the owner added it after the Source of Truth was written.
 
 Stages are a planning structure, not a claim that each is finalized, and not a strict sequence.
 
@@ -79,6 +79,23 @@ Named in the Establish stage. Scope is not yet defined.
 The Cloudflare for Startups application is pending. Acceptance is not assumed. Proposed priorities: original-file storage, image delivery and processing, intelligent reference organization.
 
 **Note.** A strategy under consideration, not a selected provider. Good Internet development does not depend on the outcome: acceptance is not assumed and nothing in Build waits on it. See choices C-1, C-4.
+
+### EST-6 · Email updates and early-access signup
+
+- **Status:** Planned · **Type:** Requirement · decided
+
+A real signup on the public site, required before the redesigned site is published. It is not account registration. Until it is configured and tested, the site says email signup isn't set up and must not claim otherwise.
+
+**Done when**
+
+- [ ] A submitted address is stored by the provider (or a server), not only in the visitor's browser
+- [ ] Sign-up requires explicit consent and says what the person is signing up for
+- [ ] An appropriate privacy notice is linked, supplied or approved by the owner
+- [ ] Every message has working unsubscribe handling
+- [ ] The form has spam and bot protection
+- [ ] Success and failure states are verified end to end, including a network failure and a duplicate address
+
+**Note.** Owner decision, November 1, 2026; not in the Source of Truth. Prefer the simplest secure managed integration and no new backend architecture. API secrets never reach the browser. See choice C-9.
 
 ## 03 · Build
 
@@ -281,3 +298,4 @@ These are *how*, not *what*. None has been decided, and no provider is approved.
 | **C-6** How search is done | BLD-10, XPL-4 | Undecided | — |
 | **C-7** AI provider and approach for assisted organization | XPL-1 | Undecided | — |
 | **C-8** Pricing and storage limits | — | Undecided | Exploratory per the Source of Truth. Not a roadmap item until decided. |
+| **C-9** Email updates provider and integration | EST-6 | Undecided | Prefer the simplest secure managed integration. No provider is chosen and no paid plan is approved. Any API key stays server-side and is never a VITE_ variable. |

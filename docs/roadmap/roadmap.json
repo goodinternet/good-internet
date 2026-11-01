@@ -134,6 +134,25 @@
       "notes": "A strategy under consideration, not a selected provider. Good Internet development does not depend on the outcome: acceptance is not assumed and nothing in Build waits on it. See choices C-1, C-4."
     },
     {
+      "key": "EST-6",
+      "stage": "establish",
+      "kind": "requirement",
+      "basis": "decided",
+      "status": "planned",
+      "commitments": [],
+      "title": "Email updates and early-access signup",
+      "summary": "A real signup on the public site, required before the redesigned site is published. It is not account registration. Until it is configured and tested, the site says email signup isn't set up and must not claim otherwise.",
+      "doneWhen": [
+        "A submitted address is stored by the provider (or a server), not only in the visitor's browser",
+        "Sign-up requires explicit consent and says what the person is signing up for",
+        "An appropriate privacy notice is linked, supplied or approved by the owner",
+        "Every message has working unsubscribe handling",
+        "The form has spam and bot protection",
+        "Success and failure states are verified end to end, including a network failure and a duplicate address"
+      ],
+      "notes": "Owner decision, November 1, 2026; not in the Source of Truth. Prefer the simplest secure managed integration and no new backend architecture. API secrets never reach the browser. See choice C-9."
+    },
+    {
       "key": "BLD-1",
       "stage": "build",
       "kind": "requirement",
@@ -487,6 +506,15 @@
       "serves": [],
       "status": "undecided",
       "note": "Exploratory per the Source of Truth. Not a roadmap item until decided."
+    },
+    {
+      "key": "C-9",
+      "title": "Email updates provider and integration",
+      "serves": [
+        "EST-6"
+      ],
+      "status": "undecided",
+      "note": "Prefer the simplest secure managed integration. No provider is chosen and no paid plan is approved. Any API key stays server-side and is never a VITE_ variable."
     }
   ]
 }

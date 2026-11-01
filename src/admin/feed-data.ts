@@ -6,7 +6,7 @@ export const greeting = { title: "Welcome to the Good Internet admin", sub: "A f
 export const suggestions: Suggestion[] = [
   { id: "choices", kind: ["note"], title: "Settle the open implementation choices", desc: "Where original files are stored, what runs the backend, how sign-in works. None of these is chosen yet.",
     why: "Build work (stage 03) can't start until the how is decided.", cta: "Open the roadmap",
-    steps: [{ i: "note", k: "Choices", v: "C-1 through C-8" }, { i: "folder", k: "Roadmap", v: "docs/roadmap/ROADMAP.md" }] },
+    steps: [{ i: "note", k: "Choices", v: "C-1 through C-9" }, { i: "folder", k: "Roadmap", v: "docs/roadmap/ROADMAP.md" }] },
   { id: "define", kind: ["note"], title: "Define the audience and boundaries", desc: "Write down who Good Internet is for and what it deliberately is not.",
     why: "Stage 01 isn't finished: DEF-2 and DEF-3 are still open.", cta: "Open the roadmap",
     steps: [{ i: "note", k: "Items", v: "DEF-2, DEF-3" }, { i: "folder", k: "Source", v: "docs/SOURCE-OF-TRUTH.md" }] },
