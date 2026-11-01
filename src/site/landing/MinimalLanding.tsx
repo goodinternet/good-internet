@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { LinkButton } from '@cloudflare/kumo/components/button';
+import { Button, LinkButton } from '@cloudflare/kumo/components/button';
 import { createGradient } from './lava/engine/gradient';
 import { firstLoad } from './lava/first-load';
 import type { Recipe } from './lava/engine/recipe';
@@ -38,6 +38,7 @@ function LavaCard({ index }: { index: number }) {
 
 export function Landing() {
   const rail = useRef<HTMLDivElement>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [theme, updateTheme] = useState<Theme>(getTheme);
   const [edges, setEdges] = useState({ start: true, end: false });
   useEffect(() => {
@@ -55,11 +56,12 @@ export function Landing() {
     node.scrollBy({ left: direction * (card.offsetWidth + 14), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
   }
   return <div className="minimal-site">
-    <header className="minimal-nav minimal-container">
+    <header className="minimal-nav minimal-container" data-open={menuOpen} onKeyDown={e => { if (e.key === "Escape") { setMenuOpen(false); document.getElementById("landing-menu-toggle")?.focus(); } }}>
       <a className="minimal-brand" href="#overview">Good Internet</a>
-      <nav aria-label="Main navigation"><a href="#overview">Overview</a><a href="#platform">Platform</a><a href="#status">Status</a></nav>
+      <Button id="landing-menu-toggle" className="minimal-menu-toggle" variant="ghost" aria-expanded={menuOpen} aria-controls="landing-navigation" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? "Close" : "Menu"}</Button>
+      <nav id="landing-navigation" aria-label="Main navigation" onClick={() => setMenuOpen(false)}><a href="#overview">Overview</a><a href="#platform">Platform</a><a href="#status">Status</a></nav>
       <div className="minimal-nav-end"><LinkButton className="minimal-signin" variant="secondary" href="/login">Prototype sign-in</LinkButton>
-        <label className="minimal-theme"><span className="minimal-sr">Appearance</span><select aria-label="Appearance" value={theme} onChange={e => { const next = e.target.value as Theme; updateTheme(next); setTheme(next); }}><option value="system">System ◐</option><option value="light">Light ☼</option><option value="dark">Dark ☾</option></select></label>
+        <label className="minimal-theme"><span className="minimal-sr">Appearance</span><select aria-label="Appearance" value={theme} onChange={e => { const next = e.target.value as Theme; updateTheme(next); setTheme(next); }}><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
       </div>
     </header>
     <main>

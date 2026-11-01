@@ -24,7 +24,7 @@ export function createGradient(host: HTMLElement, recipe: Recipe) {
 
   const grain = document.createElement("div");
   grain.style.cssText =
-    "position:absolute;inset:0;pointer-events:none;mix-blend-mode:overlay;background-repeat:repeat;image-rendering:pixelated";
+    "position:absolute;inset:0;pointer-events:none;mix-blend-mode:overlay;background-repeat:no-repeat;background-size:100% 100%";
 
   host.style.isolation = "isolate";
   host.append(canvas, grain);
@@ -53,7 +53,7 @@ export function createGradient(host: HTMLElement, recipe: Recipe) {
   const resize = new ResizeObserver(() => {
     const { clientWidth, clientHeight } = host;
     if (!clientWidth || !clientHeight) return;
-    grain.style.backgroundSize = `${GRAIN_SIZE / devicePixelRatio}px`;
+    grain.style.backgroundSize = "100% 100%";
     send({
       type: "size",
       width: Math.max(2, Math.round(clientWidth * RENDER_SCALE)),
