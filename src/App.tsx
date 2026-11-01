@@ -36,7 +36,7 @@ function Admin() {
 function usePathRoute() {
   const route = React.useSyncExternalStore(onNavigate, currentRoute);
   React.useEffect(() => interceptLinks(), []);
-  // Lets inputs.css restyle single screens without touching the synced screen files.
+  // Lets inputs.css restyle single screens without touching the screen files that came from kept-ui.
   React.useEffect(() => {
     document.documentElement.dataset.goodInternetRoute = route;
     return () => {

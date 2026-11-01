@@ -1,3 +1,7 @@
+// NOT ROUTED on the live site (App.tsx serves src/site/ at "/"), but KEPT: the canvas frames gi-landing-desktop and
+// gi-landing-mobile render it through <GoodInternetApp route="" />, and canvas frames are permanent. Its copy
+// predates docs/SOURCE-OF-TRUTH.md (it says "knowledge workspace" and lists features that do not exist); do not
+// reuse it as product wording.
 import { ArrowLink, Separator } from './parts.tsx';
 
 const ACTIONS = [

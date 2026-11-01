@@ -1,4 +1,4 @@
-// Mock auth for the lab. Stands in for Supabase Auth (username + password, then TOTP to reach AAL2).
+// Mock auth for the lab. Stands in for real authentication (provider not yet chosen): a username and password, then a two-factor step.
 // Good Internet is invite-only: accounts are created by hand, so there is no sign-up call.
 // Lives in sessionStorage so a refresh mid-2FA keeps you on /login/mfa, as the v0 plan asks.
 

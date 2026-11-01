@@ -10,13 +10,12 @@ import { GoodInternetLibrary } from './GoodInternetLibrary.tsx';
 import { GoodInternetLogin } from './GoodInternetLogin.tsx';
 import { GoodInternetReference } from './GoodInternetReference.tsx';
 import { GoodInternetRequest } from './GoodInternetRequest.tsx';
-import { GoodInternetRoadmap } from './GoodInternetRoadmap.tsx';
 import { ArrowIcon, ArrowLink, Separator } from './parts.tsx';
 import { completeMfaForLab, getSession } from './session.ts';
 import './good-internet.css';
 import { navigate } from './navigate.ts';
 
-// Good Internet, synced from the kept-ui lab (scripts/sync-kept-ui.mjs). Routes are real paths.
+// Good Internet's screens, originally copied from the kept-ui lab (no longer synced; see docs/archive/README.md). Routes are real paths.
 // Shells are modeled on the base-ui.com homepage ((website)/layout.tsx + page.tsx):
 // an 8-column grid where sections are `display: contents` and labels sit in the left gutter.
 
@@ -31,11 +30,10 @@ const APP_NAV = [
 ];
 
 const TITLES: Record<string, string> = {
-  '': 'Good Internet — a cloud-based personal knowledge workspace',
+  '': 'Good Internet — a reference-management product',
   login: 'Sign in · GOOD INTERNET',
   'login/mfa': 'Two-factor · GOOD INTERNET',
   request: 'Request an invite · GOOD INTERNET',
-  roadmap: 'Roadmap · GOOD INTERNET',
   library: 'Library · GOOD INTERNET',
   lab: 'Lab · GOOD INTERNET',
   settings: 'Settings · GOOD INTERNET',
@@ -74,7 +72,6 @@ function contentForRoute(route: string): React.ReactNode {
   if (route === 'login') return <GoodInternetLogin />;
   if (route === 'login/mfa') return <GoodInternetMfaPlaceholder />;
   if (route === 'request') return <GoodInternetRequest />;
-  if (route === 'roadmap') return <GoodInternetRoadmap />;
   if (route === 'library') return <GoodInternetLibrary />;
   if (route === 'lab') return <GoodInternetLab />;
   if (route === 'settings') return <GoodInternetSettings />;
