@@ -1,4 +1,6 @@
 import { writeFile } from "node:fs/promises"
+import { realpathSync } from "node:fs"
+import { fileURLToPath } from "node:url"
 import { defineConfig } from "vite"
 import react from "@vitejs/plugin-react"
 import { siteConfig } from "./src/config/site.js"
@@ -52,6 +54,8 @@ export default defineConfig({
     },
   ],
   server: {
+    // Worktrees can share node_modules through a symlink; allow its font assets.
+    fs: { allow: [fileURLToPath(new URL('.', import.meta.url)), realpathSync(new URL('./node_modules', import.meta.url))] },
     host: true,
     port: 5173,
     open: false,
