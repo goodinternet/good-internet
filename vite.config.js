@@ -19,7 +19,7 @@ export default defineConfig({
           "'": "&#39;",
         })[char])
         return html
-          .replace("%SITE_TITLE%", () => escape(`${siteConfig.name} — ${siteConfig.description}`))
+          .replace("%SITE_TITLE%", () => escape(`${siteConfig.name} — ${siteConfig.tagline}`))
           .replace("%SITE_DESCRIPTION%", () => escape(siteConfig.description))
       },
     },
