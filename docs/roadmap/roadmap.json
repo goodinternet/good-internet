@@ -1,0 +1,492 @@
+{
+  "updated": "2026-11-01",
+  "authority": "docs/SOURCE-OF-TRUTH.md",
+  "stages": [
+    {
+      "id": "define",
+      "number": "01",
+      "name": "Define",
+      "scope": "Product identity, audience, capabilities, and boundaries."
+    },
+    {
+      "id": "establish",
+      "number": "02",
+      "name": "Establish",
+      "scope": "Brand, website, company foundations, and Cloudflare strategy."
+    },
+    {
+      "id": "build",
+      "number": "03",
+      "name": "Build",
+      "scope": "Cloud storage, authentication, preservation, organization, search, and reliability."
+    },
+    {
+      "id": "extend",
+      "number": "04",
+      "name": "Extend",
+      "scope": "Sharing, annotations, and richer reference workflows."
+    },
+    {
+      "id": "explore",
+      "number": "05",
+      "name": "Explore",
+      "scope": "Intelligent organization, guest feedback, and future capabilities."
+    }
+  ],
+  "items": [
+    {
+      "key": "DEF-1",
+      "stage": "define",
+      "kind": "requirement",
+      "basis": "stated",
+      "status": "done",
+      "commitments": [],
+      "title": "Write down the Source of Truth",
+      "summary": "One authoritative statement of the product definition, principle, commitments, structure, and planning stages.",
+      "doneWhen": [
+        "docs/SOURCE-OF-TRUTH.md exists and is dated",
+        "Other docs defer to it"
+      ]
+    },
+    {
+      "key": "DEF-2",
+      "stage": "define",
+      "kind": "requirement",
+      "basis": "stated",
+      "status": "planned",
+      "commitments": [
+        6
+      ],
+      "title": "Define the audience",
+      "summary": "Who Good Internet is for. The stage names audience as part of Define; it has not been written down yet."
+    },
+    {
+      "key": "DEF-3",
+      "stage": "define",
+      "kind": "requirement",
+      "basis": "stated",
+      "status": "planned",
+      "commitments": [
+        6,
+        10
+      ],
+      "title": "Write the capability list and the boundaries",
+      "summary": "What the product does, and what it deliberately does not: no general knowledge management (6), no native iOS or macOS apps (10). Starts from the commitments; adds nothing to them without sign-off."
+    },
+    {
+      "key": "EST-1",
+      "stage": "establish",
+      "kind": "requirement",
+      "basis": "stated",
+      "status": "planned",
+      "commitments": [],
+      "title": "Settle the visual identity",
+      "summary": "The brand look is still open. This is the design work that comes after the foundation is reconciled."
+    },
+    {
+      "key": "EST-2",
+      "stage": "establish",
+      "kind": "requirement",
+      "basis": "stated",
+      "status": "in_progress",
+      "commitments": [
+        11
+      ],
+      "title": "Public website: the words, then the page",
+      "summary": "Identity, product introduction, principles, roadmap, and updates. A rebuilt site exists on the marketing-rebuild branch. Next step is the hero copy.",
+      "notes": "Nothing on the site may present planned work as available (commitment 11)."
+    },
+    {
+      "key": "EST-3",
+      "stage": "establish",
+      "kind": "engineering",
+      "basis": "derived",
+      "status": "planned",
+      "commitments": [
+        11
+      ],
+      "title": "Keep the public roadmap and status honest",
+      "summary": "The public roadmap page and any status claims must match docs/roadmap/roadmap.json. Anything not built is labeled as not built.",
+      "doneWhen": [
+        "Public roadmap reads from, or is checked against, this roadmap",
+        "No page implies storage, backup, sharing, or AI exists before it ships"
+      ]
+    },
+    {
+      "key": "EST-4",
+      "stage": "establish",
+      "kind": "requirement",
+      "basis": "stated",
+      "status": "planned",
+      "commitments": [],
+      "title": "Company foundations",
+      "summary": "Named in the Establish stage. Scope is not yet defined."
+    },
+    {
+      "key": "EST-5",
+      "stage": "establish",
+      "kind": "requirement",
+      "basis": "stated",
+      "status": "waiting",
+      "commitments": [],
+      "title": "Cloudflare strategy",
+      "summary": "The Cloudflare for Startups application is pending. Acceptance is not assumed. Proposed priorities: original-file storage, image delivery and processing, intelligent reference organization.",
+      "notes": "A strategy under consideration, not a selected provider. Good Internet development does not depend on the outcome: acceptance is not assumed and nothing in Build waits on it. See choices C-1, C-4."
+    },
+    {
+      "key": "BLD-1",
+      "stage": "build",
+      "kind": "requirement",
+      "basis": "stated",
+      "status": "planned",
+      "commitments": [
+        1,
+        2
+      ],
+      "title": "Cloud storage for a user's references",
+      "summary": "References live in the cloud, reachable from the browser, so they don't take up local device storage.",
+      "doneWhen": [
+        "A user can add a reference and open it from a different device with nothing kept locally"
+      ]
+    },
+    {
+      "key": "BLD-2",
+      "stage": "build",
+      "kind": "requirement",
+      "basis": "stated",
+      "status": "planned",
+      "commitments": [
+        4
+      ],
+      "title": "Accounts, with libraries private by default",
+      "summary": "Sign-in and a session. Every library is private unless its owner shares it. Access is enforced on the server, not only hidden in the UI.",
+      "doneWhen": [
+        "A signed-out or different user cannot read a private library or its files",
+        "A new library is private without any setting being changed"
+      ],
+      "notes": "The prototype UI has invite-only access and a two-factor screen. Whether those are product requirements has not been decided."
+    },
+    {
+      "key": "BLD-3",
+      "stage": "build",
+      "kind": "requirement",
+      "basis": "stated",
+      "status": "planned",
+      "commitments": [
+        3
+      ],
+      "title": "Preserve originals and their metadata",
+      "summary": "The uploaded file is stored as it arrived: same bytes, same metadata. It is never replaced by a compressed version.",
+      "doneWhen": [
+        "The original downloaded later is byte-identical to the original uploaded",
+        "Original metadata is retained"
+      ]
+    },
+    {
+      "key": "BLD-4",
+      "stage": "build",
+      "kind": "engineering",
+      "basis": "stated",
+      "status": "planned",
+      "commitments": [
+        3
+      ],
+      "title": "Optimized previews, kept separate from originals",
+      "summary": "Previews are generated for fast display. They are derived copies that never overwrite or stand in for the original.",
+      "doneWhen": [
+        "Deleting or regenerating a preview leaves the original untouched"
+      ],
+      "notes": "'Previews are optimized' is part of the core product principle, so the requirement is stated. The 'done when' criterion (previews never overwrite originals) is a proposal for review."
+    },
+    {
+      "key": "BLD-5",
+      "stage": "build",
+      "kind": "engineering",
+      "basis": "stated",
+      "status": "planned",
+      "commitments": [
+        5
+      ],
+      "title": "Integrity checks",
+      "summary": "Detect a stored original that no longer matches what was uploaded.",
+      "doneWhen": [
+        "Each original has a recorded fingerprint taken at upload",
+        "Stored files are verified against it, and a mismatch is surfaced rather than ignored"
+      ],
+      "notes": "Named in commitment 5 as an engineering requirement. The 'done when' criteria are proposals for review."
+    },
+    {
+      "key": "BLD-6",
+      "stage": "build",
+      "kind": "engineering",
+      "basis": "stated",
+      "status": "planned",
+      "commitments": [
+        5
+      ],
+      "title": "Backups",
+      "summary": "Originals and library data are backed up so one failure cannot lose them.",
+      "doneWhen": [
+        "Backups run on a schedule and their success is checked"
+      ],
+      "notes": "Named in commitment 5 as an engineering requirement. The 'done when' criteria are proposals for review."
+    },
+    {
+      "key": "BLD-7",
+      "stage": "build",
+      "kind": "engineering",
+      "basis": "stated",
+      "status": "planned",
+      "commitments": [
+        5
+      ],
+      "title": "Recovery, tested",
+      "summary": "A written and rehearsed way to restore from backup. A backup that has never been restored is not yet trusted.",
+      "doneWhen": [
+        "A restore has been performed end to end from a backup, and the result verified against BLD-5"
+      ],
+      "notes": "Named in commitment 5 as an engineering requirement. The 'done when' criteria are proposals for review."
+    },
+    {
+      "key": "BLD-8",
+      "stage": "build",
+      "kind": "requirement",
+      "basis": "stated",
+      "status": "planned",
+      "commitments": [
+        5,
+        3
+      ],
+      "title": "Export",
+      "summary": "A user can take their references with them: originals and their organization, not only previews.",
+      "doneWhen": [
+        "An export contains the original files, metadata, and collection/tag/note information"
+      ]
+    },
+    {
+      "key": "BLD-9",
+      "stage": "build",
+      "kind": "requirement",
+      "basis": "stated",
+      "status": "planned",
+      "commitments": [
+        7
+      ],
+      "title": "Organization: collections, tags, notes",
+      "summary": "Collections, tags, and notes on stored references. The prototype UI has these on sample data."
+    },
+    {
+      "key": "BLD-10",
+      "stage": "build",
+      "kind": "requirement",
+      "basis": "stated",
+      "status": "planned",
+      "commitments": [
+        7
+      ],
+      "title": "Search",
+      "summary": "Find stored references again. The prototype UI has a search on sample data."
+    },
+    {
+      "key": "BLD-11",
+      "stage": "build",
+      "kind": "engineering",
+      "basis": "derived",
+      "status": "planned",
+      "commitments": [
+        1,
+        11
+      ],
+      "title": "Replace the prototype's sample data with the real thing",
+      "summary": "The private workspace UI currently runs on mock data behind src/good-internet/repository.ts and session.ts. Real storage and accounts go behind those same functions. Until then the workspace is labeled a prototype.",
+      "notes": "Depends on choices C-1 to C-3."
+    },
+    {
+      "key": "EXT-1",
+      "stage": "extend",
+      "kind": "requirement",
+      "basis": "stated",
+      "status": "planned",
+      "commitments": [
+        8,
+        4
+      ],
+      "title": "Share a collection by link",
+      "summary": "Users selectively share collections through links without exposing the rest of their library.",
+      "doneWhen": [
+        "A link shows only the chosen collection",
+        "Nothing else in the owner's library is reachable through it"
+      ],
+      "notes": "Ending a share is EXT-4. Sharing does not exist today; the prototype's share screens run on sample data."
+    },
+    {
+      "key": "EXT-2",
+      "stage": "extend",
+      "kind": "requirement",
+      "basis": "stated",
+      "status": "planned",
+      "commitments": [
+        7
+      ],
+      "title": "Annotations",
+      "summary": "Annotations on references, listed in commitment 7 and in the Extend stage. Guest annotations are separate and exploratory (XPL-2)."
+    },
+    {
+      "key": "EXT-3",
+      "stage": "extend",
+      "kind": "requirement",
+      "basis": "stated",
+      "status": "planned",
+      "commitments": [
+        6
+      ],
+      "title": "Richer reference workflows",
+      "summary": "Named in the Extend stage. What 'richer' means has not been defined, and is not to be invented here.",
+      "notes": "Undefined placeholder. It does not authorize any additional feature; defining one needs a separate decision."
+    },
+    {
+      "key": "EXT-4",
+      "stage": "extend",
+      "kind": "engineering",
+      "basis": "derived",
+      "status": "planned",
+      "commitments": [
+        8,
+        4
+      ],
+      "title": "Revoke shared access",
+      "summary": "The owner can end a share so its link stops working. Required whenever link sharing is implemented, so that sharing stays intentional (8) and the library stays private (4). Applies only once EXT-1 exists.",
+      "doneWhen": [
+        "After a share is revoked, its old link no longer shows the collection",
+        "Revoking one share leaves the owner's other shares and private library unaffected"
+      ]
+    },
+    {
+      "key": "XPL-1",
+      "stage": "explore",
+      "kind": "exploratory",
+      "basis": "stated",
+      "status": "exploring",
+      "commitments": [
+        9
+      ],
+      "title": "Intelligent organization",
+      "summary": "AI help with administrative work such as tagging and organizing. It assists and does not take control away from the user. Automatic AI tagging is not a locked requirement."
+    },
+    {
+      "key": "XPL-2",
+      "stage": "explore",
+      "kind": "exploratory",
+      "basis": "stated",
+      "status": "exploring",
+      "commitments": [
+        8
+      ],
+      "title": "Guest feedback and annotations on shared collections",
+      "summary": "Discussed, not locked."
+    },
+    {
+      "key": "XPL-3",
+      "stage": "explore",
+      "kind": "exploratory",
+      "basis": "stated",
+      "status": "exploring",
+      "commitments": [],
+      "title": "File formats beyond images",
+      "summary": "Discussed, not locked. The product is images today."
+    },
+    {
+      "key": "XPL-4",
+      "stage": "explore",
+      "kind": "exploratory",
+      "basis": "stated",
+      "status": "exploring",
+      "commitments": [
+        7
+      ],
+      "title": "Advanced retrieval",
+      "summary": "Discussed, not locked. Basic search is BLD-10."
+    }
+  ],
+  "choices": [
+    {
+      "key": "C-1",
+      "title": "Where original files are stored",
+      "serves": [
+        "BLD-1",
+        "BLD-3",
+        "BLD-5",
+        "BLD-6",
+        "BLD-7"
+      ],
+      "status": "undecided",
+      "note": "Cloudflare is under consideration (EST-5), but acceptance is not a dependency for development. No provider is selected."
+    },
+    {
+      "key": "C-2",
+      "title": "Backend and database platform",
+      "serves": [
+        "BLD-2",
+        "BLD-9",
+        "BLD-10",
+        "BLD-11"
+      ],
+      "status": "undecided",
+      "note": "Supabase was assumed by the archived October roadmap. It was never approved and is not ruled out."
+    },
+    {
+      "key": "C-3",
+      "title": "Authentication approach",
+      "serves": [
+        "BLD-2"
+      ],
+      "status": "undecided",
+      "note": "Includes whether the prototype's invite-only access and two-factor become requirements."
+    },
+    {
+      "key": "C-4",
+      "title": "Image processing and delivery",
+      "serves": [
+        "BLD-4"
+      ],
+      "status": "undecided",
+      "note": "Named as a proposed Cloudflare priority. Not selected, and not dependent on the application."
+    },
+    {
+      "key": "C-5",
+      "title": "How backup and recovery are done",
+      "serves": [
+        "BLD-6",
+        "BLD-7"
+      ],
+      "status": "undecided",
+      "note": ""
+    },
+    {
+      "key": "C-6",
+      "title": "How search is done",
+      "serves": [
+        "BLD-10",
+        "XPL-4"
+      ],
+      "status": "undecided",
+      "note": ""
+    },
+    {
+      "key": "C-7",
+      "title": "AI provider and approach for assisted organization",
+      "serves": [
+        "XPL-1"
+      ],
+      "status": "undecided",
+      "note": ""
+    },
+    {
+      "key": "C-8",
+      "title": "Pricing and storage limits",
+      "serves": [],
+      "status": "undecided",
+      "note": "Exploratory per the Source of Truth. Not a roadmap item until decided."
+    }
+  ]
+}
