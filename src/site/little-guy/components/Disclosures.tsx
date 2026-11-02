@@ -3,6 +3,7 @@ import { stagger } from "./Hero";
 // Plain statement of what exists today. Not a privacy policy.
 const paragraphs = [
   "Good Internet is an independent software project in active development. The current workspace is a prototype running on sample data and does not yet provide cloud storage, backup, or recovery. Features shown or described are subject to change and should not be considered available until released.",
+  "Email addresses submitted through the Updates form are used only to send Good Internet project news and early-access announcements, and every message includes an unsubscribe link.",
 ];
 
 export default function Disclosures() {
