@@ -1,5 +1,5 @@
 // Uploaded images for the lab, kept in this browser's IndexedDB (localStorage is far too small).
-// Stand-in for Supabase Storage: files never leave the device they were added on.
+// Stand-in for real cloud storage (provider not yet chosen): files never leave the device they were added on.
 
 // Legacy pre-rebrand name, kept so existing uploaded images aren't lost.
 const DB_NAME = 'kept-lab';

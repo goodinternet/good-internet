@@ -16,7 +16,7 @@ export function Site({ route }: { route: string }) {
   useSectionScroll(SECTION_FOR_ROUTE[route]);
 
   React.useEffect(() => {
-    document.title = 'Good Internet — a private home for your references';
+    document.title = 'Good Internet — your references, kept whole and kept private';
   }, []);
 
   return (
@@ -27,17 +27,17 @@ export function Site({ route }: { route: string }) {
           <a href="/principles">Principles</a>
           <a href="/roadmap">Roadmap</a>
           <a href="/status">Status</a>
-          <a href="/login">Sign in</a>
+          <a href="/login">Prototype sign-in</a>
         </nav>
       </header>
 
       <main>
         <section className="PlainHero">
-          <p>Early development</p>
+          <p>In development · Product not yet released.</p>
           <h1>Your references, kept whole and kept private.</h1>
           <p className="PlainLede">
-            Good Internet is a reference-management product built on a trustworthy cloud-storage foundation: a
-            private place to collect, preserve, organize, annotate, search, and share what you reference.
+            We’re building a private, cloud-based home for collecting, organizing, and preserving the things worth
+            keeping.
           </p>
           <p>
             <a href="/roadmap">See the roadmap</a> · <a href="/principles">Our principles</a>
@@ -45,7 +45,7 @@ export function Site({ route }: { route: string }) {
         </section>
 
         <section className="PlainNotice">
-          <p>Early development: nothing is released yet.</p>
+          <p>In development: nothing is released yet.</p>
           <p>This page describes where Good Internet is headed. Planned capabilities are labelled as planned.</p>
         </section>
 
@@ -99,16 +99,16 @@ export function Site({ route }: { route: string }) {
             ))}
           </ol>
           <p>
-            Five stages, in order. The plan can change as we learn, and when it does, this page changes with it.
+            Five stages that organize the work. They’re a planning structure, not a strict sequence, and the plan can change as we learn. When it does, this page changes with it.
           </p>
         </Section>
 
         <Section id="cloudflare" label="Cloudflare">
-          <p className="PlainLead">The game plan when Cloudflare says yes.</p>
+          <p className="PlainLead">Fingers crossed on Cloudflare.</p>
           <p>Application pending</p>
           <p>
-            We’ve applied to Cloudflare for Startups. We haven’t been accepted, and nothing here is an endorsement
-            by Cloudflare or a promise of credits.
+            We’ve applied to Cloudflare for Startups and haven’t heard back. We’re building either way, and nothing
+            here is an endorsement by Cloudflare or a promise of credits.
           </p>
           <ol className="PlainList">
             {CLOUDFLARE.map(([term, detail], i) => (
@@ -139,7 +139,7 @@ export function Site({ route }: { route: string }) {
       <footer className="PlainFooter">
         <span>© Good Internet</span>
         <span>
-          Prototype · <a href="/login">Sign in →</a>
+          <a href="/login">Prototype sign-in →</a>
         </span>
       </footer>
     </div>

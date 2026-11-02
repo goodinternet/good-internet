@@ -1,4 +1,6 @@
 import { writeFile } from "node:fs/promises"
+import { realpathSync } from "node:fs"
+import { fileURLToPath } from "node:url"
 import { defineConfig } from "vite"
 import react from "@vitejs/plugin-react"
 import tailwindcss from "@tailwindcss/vite"
@@ -21,7 +23,7 @@ export default defineConfig({
           "'": "&#39;",
         })[char])
         return html
-          .replace("%SITE_TITLE%", () => escape(`${siteConfig.name} — ${siteConfig.description}`))
+          .replace("%SITE_TITLE%", () => escape(`${siteConfig.name} — ${siteConfig.tagline}`))
           .replace("%SITE_DESCRIPTION%", () => escape(siteConfig.description))
       },
     },
@@ -54,6 +56,8 @@ export default defineConfig({
     },
   ],
   server: {
+    // Worktrees can share node_modules through a symlink; allow its font assets.
+    fs: { allow: [fileURLToPath(new URL('.', import.meta.url)), realpathSync(new URL('./node_modules', import.meta.url))] },
     host: true,
     port: 5173,
     open: false,

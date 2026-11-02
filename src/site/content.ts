@@ -1,5 +1,6 @@
 // Copy for the one-page marketing site and its nav.
 // Everything here describes direction, not shipped features. Keep it that way.
+// Detailed status lives here; the homepage is lighter. Authority: docs/SOURCE-OF-TRUTH.md.
 
 export const PRINCIPLES: [term: string, detail: string][] = [
   ['Originals are preserved', 'What you save is kept as it was, not just as a link or a thumbnail.'],
@@ -9,7 +10,7 @@ export const PRINCIPLES: [term: string, detail: string][] = [
 
 export const FEATURES: [term: string, detail: string][] = [
   ['Collect', 'Bring references into one private library, from the browser.'],
-  ['Preserve', 'Keep the original file, so a reference survives when the web changes.'],
+  ['Preserve', 'Keep the original file, with its quality and metadata intact.'],
   ['Organize', 'Collections, tags, and notes that work the way you think.'],
   ['Annotate', 'Mark up and comment on what you save.'],
   ['Search', 'Find a reference again without remembering where you put it.'],
@@ -50,7 +51,7 @@ export const PHASES: Phase[] = [
     number: '04',
     name: 'Extend',
     short: 'Sharing and annotations.',
-    detail: 'Sharing, annotations, richer reference workflows, and better retrieval.',
+    detail: 'Sharing, annotations, and richer reference workflows.',
   },
   {
     number: '05',
@@ -68,6 +69,6 @@ export const CLOUDFLARE: [term: string, detail: string][] = [
 
 export const STATUS: string[] = [
   'Good Internet is in early development. Nothing is released and there is no public product yet.',
-  'The private workspace you can reach from “Sign in” is a prototype running on sample data. It is not our storage, preservation, or recovery system, and it isn’t open to the public.',
+  'The private workspace you can reach from “Prototype sign-in” is a prototype running on sample data. It is not our storage, preservation, or recovery system, and it isn’t open to the public.',
   'Sharing, annotations, and intelligent organization are not built. There are no native iOS or macOS apps planned right now.',
 ];

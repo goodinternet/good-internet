@@ -3,7 +3,7 @@ import oklabSquares from './data/oklab-squares.json';
 import workspace from './data/workspace.json';
 import { loadUploads, prepareUpload, saveUpload, type StoredUpload } from './uploads.ts';
 
-// Mock repository for the lab. Same UI-facing shape the real Supabase repository will expose
+// Mock repository for the lab. A real backend (provider not yet chosen) must keep this UI-facing shape
 // (see gi-v0.html: "keep the same UI-facing API"). Edits to notes, tags, pins and collection
 // descriptions are saved in this browser's localStorage; new collections too. Uploaded images
 // are saved in IndexedDB (uploads.ts). All of it stays on the device it was made on.
@@ -444,7 +444,7 @@ export async function getBoard(token: string): Promise<Board | undefined> {
 
 // ─── Invite requests ───
 // Good Internet is invite-only; requests wait for the owner to let people in by hand.
-// Saved in this browser for the lab; the real app stores them in Supabase.
+// Saved in this browser for the lab; a real backend will store them (provider not yet chosen).
 
 export interface InviteRequest {
   name: string;

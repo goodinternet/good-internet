@@ -1,1715 +1,301 @@
-# Good Internet backend roadmap
+# Good Internet roadmap
 
 > Generated from `docs/roadmap/roadmap.json` by `node scripts/roadmap.mjs`. Edit the JSON, not this file.
 
-Wire Good Internet's finished UI (a pixel copy of the kept-ui lab) to Supabase: Postgres, Auth, Storage and two Edge Functions, behind the exact functions the screens already call, so no screen changes.
+The direction is [`docs/SOURCE-OF-TRUTH.md`](../SOURCE-OF-TRUTH.md). This roadmap organizes the work under its five stages; where the two disagree, the Source of Truth wins.
 
-**Progress:** 2 of 72 issues done.
+Last updated 2026-11-01. **1 of 28 items done.** Nothing below is available to users unless its status says Done.
 
-## How it fits together
+**Reading the labels.** *Requirement*: something that must be true of the product. *Engineering*: work needed to make a requirement real. *Exploratory*: discussed, not locked. *Stated* means the Source of Truth says it. *Derived* means it follows from a commitment and is proposed for review. *Decided* means the owner added it after the Source of Truth was written.
 
-```text
-Browser · goodinternetwww.com (Vite SPA, same screens as kept-ui)
-│
-├── supabase-js  (publishable key, user JWT)
-│     ├── Auth      password + TOTP → AAL2; signup off
-│     ├── Postgres  RLS on every table: owner_id = auth.uid() AND aal2
-│     └── Storage   private bucket gi-assets/<owner>/<ref>/{full,thumb}.jpg
-│
-├── Edge Function  sign-in   username → email, then password sign-in
-└── Edge Function  board     /m/:token → rows + short-lived signed image URLs
-                             (the only path that works signed out)
-```
+Stages are a planning structure, not a claim that each is finalized, and not a strict sequence.
 
-## The seam
+## 01 · Define
 
-What each function in `src/good-internet/session.ts` and `src/good-internet/repository.ts` becomes.
+Product identity, audience, capabilities, and boundaries.
 
-| Function | Backed by | Issue |
-| --- | --- | --- |
-| `getSession()` | Cached Supabase session + AAL, read synchronously after boot | GI-13 |
-| `signInWithPassword(username, password)` | Edge Function `sign-in` → `auth.setSession()` | GI-12 |
-| `completeMfaForLab()` | Replaced by TOTP enroll / verify | GI-15 |
-| `signOut()` | `auth.signOut()` | GI-13 |
-| `listCollections()` · `getCollection(id)` | `collection_summaries` view, slug as the id | GI-18 |
-| `createCollection(name)` · `updateCollection(id, patch)` | RPC `create_collection` · update on `collections` | GI-18 |
-| `listReferences(id)` · `listAllReferences()` | One nested select + batched signed URLs | GI-19 |
-| `updateReference(cid, rid, patch)` | Notes update; RPCs `set_ref_tags`, `set_ref_pins` | GI-20 |
-| `addUploads(cid, files, onProgress)` | On-device resize → rows → Storage uploads | GI-21 |
-| `getShare` · `publishCollection` · `rotateShare` · `unpublishCollection` | `collection_shares` + token RPCs | GI-23 |
-| `getBoard(token)` | Edge Function `board` (no sign-in) | GI-24 |
-| `requestInvite(request)` | RPC `request_invite` (anon) | GI-26 |
+### DEF-1 · Write down the Source of Truth
 
-## Ground rules
+- **Status:** Done · **Type:** Requirement · stated
 
-- kept-ui is the source of truth and is never written to from here. New screens (two-factor, later box annotations and renaming) are designed there first, then synced.
-- `npm run sync-kept-ui` must never overwrite the real data layer (GI-6).
-- Same function names and return shapes. If kept-ui changes a shape, the typecheck fails before anything ships.
-- Only the publishable key reaches the browser. The service-role key lives in Edge Function secrets and a local seed script, never behind a `VITE_` prefix.
-- Without Supabase env vars the app falls back to the mocks (D-4).
-- The pixel sweep is re-run once real data flows: the UI must still match kept-ui.
+One authoritative statement of the product definition, principle, commitments, structure, and planning stages.
 
-## Decisions
-
-### D-1 · How usernames sign in — Open
-
-Good Internet signs in by username, but Supabase Auth signs in by email. Something has to turn a username into an email without letting anyone look up whose account is whose.
-
-- **Edge Function `sign-in`** _(recommended)_: The browser sends username + password to a function that looks up the email with the service role and signs in server-side. Emails never leave the server, and an unknown username gives the same error as a wrong password.
-- **Synthetic emails**: Each account's email is `username@users.goodinternetwww.com`. No server code, but no real inbox for recovery or notices.
-- **Public lookup function**: An anon-callable `email_for_username()`. Simplest, but it lets anyone enumerate usernames and read their emails. Not recommended.
-
-### D-2 · How board images are served — Open
-
-Library images stay in a private bucket. Boards are opened by people who aren't signed in, so their images need a different path.
-
-- **Signed URLs from the `board` function** _(recommended)_: The function checks the token and returns URLs that expire (about an hour). Unpublish and New link take effect immediately for new visits. One bucket, nothing public.
-- **Public copies of published images**: Publishing copies files into a public bucket. Links never expire and CDN caching is simpler, but every publish, rotate and unpublish has to copy or delete files.
-
-### D-3 · Where Supabase is provisioned — Open
-
-Supabase can be created directly on supabase.com or through the Vercel Marketplace integration.
-
-- **Vercel Marketplace integration** _(recommended)_: Billed through Vercel; env vars sync to Production, Preview and Development automatically. Vite only exposes `VITE_`-prefixed vars, so `vite.config` adds the integration's `NEXT_PUBLIC_SUPABASE_` prefix to `envPrefix`.
-- **supabase.com directly**: Billed by Supabase; env vars are copied into Vercel by hand. Nothing else changes.
-
-### D-4 · Keep the mocks as a fallback — Open
-
-When Supabase env vars are missing (a fresh clone, a preview without secrets), the app can either fall back to kept-ui's mocks or refuse to start.
-
-- **Fall back to the mocks** _(recommended)_: `repository.ts` picks the Supabase implementation when configured, else the synced mock. The lab account `wade / 1234` keeps working locally. This matches the v0 spec.
-- **Require Supabase everywhere**: Simpler code paths, but every preview and fresh clone needs real credentials.
-
-### D-5 · Collection images in git — Open
-
-PR #3 already committed the 320 moode-matcha files to main (the repo is public). Once they're in Storage, the copies in `public/collections/` aren't needed.
-
-- **Remove them after the seed** _(recommended)_: Delete `public/collections/` from main once GI-28 has moved them into Storage. They stay in git history, but the app stops depending on them.
-- **Keep them in the repo**: Useful for the mock fallback on previews. Costs repo size and keeps the images public.
-
-### D-6 · How the iOS app is built — **Decided: React Native**
-
-The UI rebuild happens once. Capacitor was the original plan, chosen to avoid rebuilding the UI; the goal has since changed to an app that feels genuinely native in the hand, which a web view cannot deliver for an image-heavy, gesture-heavy app.
-
-- **React Native** _(recommended, chosen)_: Real native views. Reanimated runs animations on the UI thread, so gestures track 1:1 and stay interruptible. Keeps React and TypeScript, so the mental model and the data contract carry over. Base UI does not, so the 16 screens are rebuilt. This is what apps like Phantom use.
-- **Native SwiftUI**: The highest ceiling and the most Apple-native feel, at the cost of a new language and paradigm, and the furthest distance from everything already built.
-- **Capacitor wrapper**: The original `/ios` plan: the Vite build inside a WKWebView. By far the cheapest, and keeps one codebase. Rejected: a web view cannot hold 120fps on a 300-image grid or give interruptible gesture physics, and Good Internet is exactly that kind of app.
-
-### D-7 · The app name and bundle identifier — Open
-
-A bundle identifier is permanent once an app is public: a new one is a new app, with new reviews and no upgrade path for anyone who installed the old one. The display name can change; the identifier cannot. Today this costs nothing to settle.
-
-- **Stay Good Internet — `com.goodinternetwww.app`**: Closes the question. Matches the domain, the repo and everything already written.
-- **Rename before the Xcode project**: If the name is going to change, this is the cheapest moment in the project's life to do it. Blocks GI-40 until it lands.
-- **Throwaway id now, decide before TestFlight**: Build on a scratch identifier and replace it before the first external build. Buys time; costs a pass over Universal Links, App Groups and the App Store Connect record.
-
-### D-8 · Expo or bare React Native — **Decided: Expo with a development build**
-
-React Native can be set up bare or through Expo. The share extension and App Groups both need custom native code, which used to be the reason to avoid Expo and no longer is.
-
-- **Expo with a development build** _(chosen)_: Config plugins generate the native project, so custom native code (share extension, App Groups, associated domains) still works. EAS handles signing and TestFlight uploads. Much less Xcode time.
-- **Bare React Native**: Total control of the Xcode project, and no dependency on Expo's release cadence. More setup, more signing work, and every native change is done by hand.
-
-### D-9 · Where the design system lives once there are two renderers — **Decided: Tokens become the shared layer**
-
-`tokens.css` is web-only, and Base UI cannot run on iOS. The rule that kept-ui is the single source of truth for the UI was written when there was one renderer, and the rebuild breaks it.
-
-- **Tokens become the shared layer** _(chosen)_: Colors, type scale, spacing and radii move to `tokens.json`, which generates the CSS custom properties for web and a typed object for native. kept-ui stays the source of truth for web layout and design intent; tokens become the source for both.
-- **kept-ui stays the source, native copies by hand**: No new tooling. Every token change has to be mirrored into the native app manually, and they will drift.
-- **Let iOS have its own design system**: Fastest in the short term, and guarantees the two apps stop looking like the same product.
-
-### D-10 · Where the session lives on the device — **Decided: Keychain via `expo-secure-store`**
-
-The web app keeps its session in `sessionStorage` so a refresh mid-2FA stays on the MFA step. A phone app is expected to stay signed in for months, which makes the storage choice a security decision rather than a convenience one.
-
-- **Keychain via `expo-secure-store`** _(chosen)_: Refresh tokens live in the iOS keychain, protected by the device passcode and wiped on uninstall. Supabase's auth client takes a custom storage adapter, so this is a small amount of code.
-- **`AsyncStorage`**: The common default in React Native examples. It is an unencrypted file in the app container — acceptable for preferences, not for a refresh token that grants access to the whole library.
-
-## Phases
-
-### Ground work (2/7)
-
-Get PR #4 onto main, settle the open calls, and protect the data layer from the sync script. _Target: Before any backend code._
-
-- [x] **GI-0** Recreate the kept-ui UI in good-internet — Done, High
-- [x] **GI-1** Merge PR #4 into main — Done, Urgent
-- [ ] **GI-2** Decide how usernames sign in (D-1) — Todo, High
-- [ ] **GI-3** Decide how board images are served (D-2) — Todo, High
-- [ ] **GI-4** Decide where Supabase is provisioned (D-3) — Todo, High
-- [ ] **GI-5** Decide on the mock fallback (D-4) — Todo, Medium
-- [ ] **GI-6** Stop the sync script from overwriting the data layer — Todo, High
-
-### Supabase foundation (0/5)
-
-Project, migrations, row-level security enforcing owner + two-factor, a private image bucket, generated types. _Target: Schema, RLS, Storage._
-
-- [ ] **GI-7** Create the Supabase project and local setup — Backlog, High
-- [ ] **GI-8** Schema migration — Backlog, Urgent
-- [ ] **GI-9** Row-level security: owner and two-factor on every row — Backlog, Urgent
-- [ ] **GI-10** Private Storage bucket for images — Backlog, High
-- [ ] **GI-11** Supabase client and generated types — Backlog, Medium
-
-### Sign-in and two-factor (0/5)
-
-Username sign-in through an Edge Function, a real session behind the synchronous getSession(), and TOTP. _Target: Real accounts._
-
-- [ ] **GI-12** Username sign-in Edge Function — Backlog, Urgent
-- [ ] **GI-13** Real session behind the synchronous getSession() — Backlog, Urgent
-- [ ] **GI-14** Design the two-factor screen in kept-ui — Backlog, Urgent
-- [ ] **GI-15** Wire TOTP enrollment and challenge — Backlog, Urgent
-- [ ] **GI-16** Create your account by hand — Backlog, High
-
-### iOS foundation (0/9)
-
-The native app exists and can be run on your phone: framework, tokens, navigation, and the motion primitives everything else is built on. No backend dependency, so it runs alongside p1. _Target: A shell that feels right._
-
-- [ ] **GI-37** Confirm the native framework and retire the Capacitor plan — Todo, Urgent
-- [ ] **GI-38** Settle the app name and bundle identifier — Todo, Urgent
-- [ ] **GI-39** Join the Apple Developer Program — Backlog, High
-- [ ] **GI-40** Create the React Native app — Backlog, Urgent
-- [ ] **GI-41** Design tokens as shared data — Backlog, Urgent
-- [ ] **GI-42** Native information architecture — Backlog, Urgent
-- [ ] **GI-43** Type, fonts, dark mode and safe areas — Backlog, High
-- [ ] **GI-44** Motion and gesture foundations — Backlog, Urgent
-- [ ] **GI-45** The data contract on native — Backlog, Urgent
-
-### Library data (0/6)
-
-Collections, references, notes, tags, pins and uploads move from browser storage to Postgres and Storage. _Target: Same functions, real rows._
-
-- [ ] **GI-17** Repository adapter structure — Backlog, High
-- [ ] **GI-18** Collections: list, get, create, describe — Backlog, High
-- [ ] **GI-19** References: list with signed image URLs — Backlog, Urgent
-- [ ] **GI-20** Save notes, tags and pins — Backlog, High
-- [ ] **GI-21** Uploads to Storage — Backlog, Urgent
-- [ ] **GI-22** Keep search client-side for v0 — Backlog, Low
-
-### Boards (0/3)
-
-Publish, rotate and unpublish in Postgres; a signed-out Edge Function serves boards with short-lived image URLs. _Target: /m/:token for real._
-
-- [ ] **GI-23** Publish, rotate and unpublish in Postgres — Backlog, High
-- [ ] **GI-24** Board Edge Function for signed-out visitors — Backlog, Urgent
-- [ ] **GI-25** Share links use goodinternetwww.com — Backlog, Medium
-
-### Invites (0/2)
-
-Invite requests stored server-side, deduplicated by email, with a notification to you. _Target: Requests reach you._
-
-- [ ] **GI-26** Store invite requests server-side — Backlog, High
-- [ ] **GI-27** Tell you when someone asks for an invite — Backlog, Medium
-
-### iOS library (0/10)
-
-The screens that matter on a phone: collections, the reference grid, the viewer, pins, notes. Built against the contract on mocks, then wired to real data once p3 lands. _Target: Browsing that feels native._
-
-- [ ] **GI-46** Collections home — Backlog, High
-- [ ] **GI-47** The reference grid — Backlog, Urgent
-- [ ] **GI-48** Reference viewer: pinch, pan and drag to dismiss — Backlog, Urgent
-- [ ] **GI-49** Swipe between references — Backlog, High
-- [ ] **GI-50** Pins on native — Backlog, High
-- [ ] **GI-51** Notes, tags and titles — Backlog, High
-- [ ] **GI-52** Search on device — Backlog, Medium
-- [ ] **GI-53** The feel pass — Backlog, Urgent
-- [ ] **GI-54** Image cache and offline reads — Backlog, High
-- [ ] **GI-55** Wire the native library to Supabase — Backlog, Urgent
-
-### iOS capture (0/5)
-
-The reason the app exists: camera, photo library, and Share → Good Internet from Safari, Photos or Instagram, with an upload queue that survives losing signal. _Target: Capture from anywhere._
-
-- [ ] **GI-56** Camera and photo library import — Backlog, Urgent
-- [ ] **GI-57** Share extension — Backlog, Urgent
-- [ ] **GI-58** App Group handoff — Backlog, Urgent
-- [ ] **GI-59** Upload queue and background uploads — Backlog, Urgent
-- [ ] **GI-60** Native share sheet for board links — Backlog, Medium
-
-### Web v0 ship (0/4)
-
-Seed moode-matcha into Storage, set env and secrets, re-verify pixel parity and RLS, deploy the web app. _Target: goodinternetwww.com._
-
-- [ ] **GI-28** Seed moode-matcha into Storage — Backlog, High
-- [ ] **GI-29** Environment variables and secrets — Backlog, Urgent
-- [ ] **GI-30** Verify the web app: pixel parity, end-to-end and RLS — Backlog, Urgent
-- [ ] **GI-31** Ship the web app to goodinternetwww.com — Backlog, Urgent
-
-### iOS ship (0/7)
-
-Universal Links, the App Store requirements that are not optional (account deletion, privacy manifest, minimum functionality), then TestFlight and review. _Target: On the App Store._
-
-- [ ] **GI-61** Universal Links for boards — Backlog, High
-- [ ] **GI-62** Delete your account, in the app — Backlog, Urgent
-- [ ] **GI-63** Privacy manifest and App Store privacy answers — Backlog, Urgent
-- [ ] **GI-64** App icon, launch screen and store assets — Backlog, High
-- [ ] **GI-65** Guideline 4.2 readiness review — Backlog, Urgent
-- [ ] **GI-66** TestFlight beta — Backlog, Urgent
-- [ ] **GI-67** App Store submission — Backlog, Urgent
-
-### Later (0/9)
-
-Worth doing, not needed for v0: box annotations, renaming, server search, share previews, and the bigger platform bets (iPad, widgets, Android, a SwiftUI rewrite if the feel ceiling is ever hit). _Target: After v0._
-
-- [ ] **GI-32** Box annotations — Backlog, Low
-- [ ] **GI-33** Rename references — Backlog, Low
-- [ ] **GI-34** Server-side search and a command palette — Backlog, Low
-- [ ] **GI-35** Board link previews — Backlog, Low
-- [ ] **GI-36** Move images to R2 if Storage costs bite — Backlog, No priority
-- [ ] **GI-68** Revisit SwiftUI if the feel ceiling is hit — Backlog, No priority
-- [ ] **GI-69** iPad — Backlog, Low
-- [ ] **GI-70** Widgets, Live Activities and Shortcuts — Backlog, Low
-- [ ] **GI-71** Android — Backlog, No priority
-
-## Issues
-
-### GI-0 · Recreate the kept-ui UI in good-internet
-
-- **Status:** Done · **Priority:** High · **Estimate:** 8 pt · **Phase:** Ground work
-- **Labels:** ui
-
-**Why.** Every screen and state from the kept-ui lab now runs on real paths in good-internet, pixel-identical at 1440px and 390px in light and dark.
-
-**Approach**
-
-1. Synced `src/good-internet` with `scripts/sync-kept-ui.mjs`, which rewrites `#/kept/...` routes into paths.
-2. Added `navigate.ts` and a `useSyncExternalStore` router so links don't reload and redirects aren't missed.
-3. Removed the legacy home and map pages; matched kept-ui's dependency versions; added a typecheck to the build.
-
-**Done when**
-
-- [x] All 16 routes identical to kept-ui.vercel.app
-- [x] Interactive states identical (dialogs, menus, search, lightbox, keyboard stepping, sign-in redirects)
-
-**Notes.** Commits `969134d` and `7e9ddba` on `cursor/snapshot-kept-ui-a2a8`, open as PR #4.
-
-### GI-1 · Merge PR #4 into main
-
-- **Status:** Done · **Priority:** Urgent · **Estimate:** 1 pt · **Phase:** Ground work
-- **Labels:** ops
-- **Blocks:** GI-31
-
-**Why.** The UI work lives on a branch. Main still has PR #3, an older snapshot of the same screens with the legacy home and map pages. Everything else builds on main.
-
-**Approach**
-
-1. Merge PR #4, resolving conflicts in favour of #4 (it's a superset of #3 and verified).
-2. Keep #3's committed `public/collections/` images and drop #4's `.gitignore` line for them, so production has images until Storage takes over.
-3. Build, then check the Vercel preview renders `/`, `/library`, and `/m/mm7q2x9kfa`.
-
-**Done when**
-
-- [x] main contains `7e9ddba`'s tree plus the images
-- [x] `npm run build` passes on main
-- [x] Vercel production shows the kept-ui landing
-
-**Notes.** Merged 2026-09-19 as 4248833; Vercel deploy succeeded and goodinternetwww.com serves the new UI.
-
-### GI-2 · Decide how usernames sign in (D-1)
-
-- **Status:** Todo · **Priority:** High · **Estimate:** 1 pt · **Phase:** Ground work
-- **Labels:** decision, auth
-- **Blocks:** GI-12
-
-**Why.** Blocks the whole sign-in phase. See Decisions → D-1; the recommendation is an Edge Function so emails never reach the browser.
-
-**Done when**
-
-- [ ] D-1 marked decided
-
-### GI-3 · Decide how board images are served (D-2)
-
-- **Status:** Todo · **Priority:** High · **Estimate:** 1 pt · **Phase:** Ground work
-- **Labels:** decision, storage
-- **Blocks:** GI-10, GI-24
-
-**Why.** Shapes the storage policies and the board function. See Decisions → D-2.
-
-**Done when**
-
-- [ ] D-2 marked decided
-
-### GI-4 · Decide where Supabase is provisioned (D-3)
-
-- **Status:** Todo · **Priority:** High · **Estimate:** 1 pt · **Phase:** Ground work
-- **Labels:** decision, infra
-- **Blocks:** GI-7
-
-**Why.** Needed before the project exists. See Decisions → D-3.
-
-**Done when**
-
-- [ ] D-3 marked decided
-
-### GI-5 · Decide on the mock fallback (D-4)
-
-- **Status:** Todo · **Priority:** Medium · **Estimate:** 1 pt · **Phase:** Ground work
-- **Labels:** decision
-- **Blocks:** GI-6
-
-**Why.** Decides how `repository.ts` is structured. See Decisions → D-4.
-
-**Done when**
-
-- [ ] D-4 marked decided
-
-### GI-6 · Stop the sync script from overwriting the data layer
-
-- **Status:** Todo · **Priority:** High · **Estimate:** 2 pt · **Phase:** Ground work
-- **Labels:** data, ops
-- **Blocked by:** GI-5
-- **Blocks:** GI-17
-
-**Why.** `npm run sync-kept-ui` copies every file in kept-ui's `src/good-internet`, including the mock `repository.ts`, `session.ts` and `uploads.ts`. Once those are real, one sync would silently put the mocks back.
-
-**Approach**
-
-1. Sync kept-ui's `repository.ts` to `repository.mock.ts`, `session.ts` to `session.mock.ts`, and `uploads.ts` to `uploads.mock.ts` (rename on write), rewriting their relative imports.
-2. good-internet owns `repository.ts` and `session.ts`: they re-export the types from the mocks and pick an implementation (D-4).
-3. Screens keep importing `./repository.ts`; nothing in the synced screens changes.
-4. Keep `prepareUpload()` from the mock uploads module: the on-device resize is shared by both implementations.
-
-**Done when**
-
-- [ ] Running the sync twice leaves `repository.ts` and `session.ts` untouched
-- [ ] If kept-ui changes a function or type the screens use, `npm run build` fails on the typecheck
-- [ ] README documents which files are synced, renamed, or owned here
-
-### GI-7 · Create the Supabase project and local setup
-
-- **Status:** Backlog · **Priority:** High · **Estimate:** 2 pt · **Phase:** Supabase foundation
-- **Labels:** infra
-- **Blocked by:** GI-4
-- **Blocks:** GI-8, GI-10, GI-29
-
-**Why.** Everything else needs a project, the CLI, and migrations in the repo so the schema is reviewable.
-
-**Approach**
-
-1. Create the project (per D-3) in the region closest to you.
-2. Auth settings: disable signups, keep email confirmations on, set Site URL to `https://goodinternetwww.com` and add `http://localhost:5173` to redirect URLs.
-3. `npx supabase init`, `supabase link`, migrations under `supabase/migrations/`.
-4. Add `.env.example` with `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`; real values in `.env.local` (git-ignored) and Vercel.
-
-**Done when**
-
-- [ ] `supabase db push` applies cleanly to an empty project
-- [ ] Signups are off (a sign-up call is rejected)
-- [ ] No keys are committed
-
-### GI-8 · Schema migration
-
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 5 pt · **Phase:** Supabase foundation
-- **Labels:** db
-- **Blocked by:** GI-7
-- **Blocks:** GI-9, GI-11
-
-**Why.** Turns the shapes in `repository.ts` into tables. A Reference is the unit of meaning; its Asset carries the file facts; v0 has one asset and one collection per reference.
-
-**Approach**
-
-1. Write `0001_schema.sql` with the tables below; UUID primary keys, `owner_id` on every row for RLS.
-2. Collections keep a `slug` because the UI uses it as the collection id in URLs (`/library/moode-matcha`). References keep a short `public_id` for `/library/:c/:r`.
-3. `references` is a reserved word in SQL, so the table is `refs`.
-4. Add `updated_at` triggers, and a generated `search` tsvector on refs for later server search (GI-34).
-
-**Sketch**
-
-```text
-profiles      id uuid pk → auth.users · username citext unique (2–32 [a-z0-9._-])
-collections   id uuid pk · owner_id · slug text · name text (≤80) · description text
-              created_at · updated_at · unique (owner_id, slug)
-refs          id uuid pk · public_id text unique · owner_id · collection_id → collections
-              title · notes · capture_url (null = uploaded) · added_at · updated_at
-              search tsvector generated
-assets        id uuid pk · ref_id → refs (cascade) · owner_id · path_full · path_thumb
-              file_name · file_type · width · height · bytes
-tags          id uuid pk · owner_id · name citext · unique (owner_id, name)
-ref_tags      ref_id → refs · tag_id → tags · pk (ref_id, tag_id)
-annotations   id uuid pk · ref_id → refs (cascade) · owner_id · kind ('pin'|'box')
-              x · y · w · h (null for pins) · caption · position int
-collection_shares  collection_id pk → collections (cascade) · token text unique
-                   published_at · rotated_at
-invite_requests    id uuid pk · name · email citext unique · note (≤500)
-                   requested_at · status ('waiting'|'invited'|'declined')
-```
-
-**Done when**
-
-- [ ] Every field the UI reads maps to a column (see the seam table)
-- [ ] Slugs unique per owner; tokens and public ids unique globally
-- [ ] Migration is idempotent against a fresh project
-
-### GI-9 · Row-level security: owner and two-factor on every row
-
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 3 pt · **Phase:** Supabase foundation
-- **Labels:** db, security
-- **Blocked by:** GI-8
-- **Blocks:** GI-12, GI-26
-
-**Why.** The browser talks straight to Postgres, so RLS is the whole security model. Checking `aal2` in the policies means a stolen password without the second factor reads nothing.
-
-**Approach**
-
-1. Enable RLS on every table. No policies on `invite_requests` or `collection_shares` for anon.
-2. One permissive policy per table for select/insert/update/delete: `owner_id = auth.uid()`.
-3. One restrictive policy per table: `(auth.jwt() ->> 'aal') = 'aal2'`.
-4. `profiles`: a user reads and updates only their own row; usernames are set by you, not the user.
-5. Signed-out access goes only through SECURITY DEFINER functions with narrow return shapes (board, invite).
-
-**Sketch**
-
-```text
-create policy "own rows" on refs for all to authenticated
-  using (owner_id = auth.uid()) with check (owner_id = auth.uid());
-create policy "require mfa" on refs as restrictive for all to authenticated
-  using ((auth.jwt() ->> 'aal') = 'aal2');
-```
-
-**Done when**
-
-- [ ] pgTAP (or SQL) tests: user B can't select, update or delete user A's rows in any table
-- [ ] An aal1 session reads zero rows
-- [ ] anon reads zero rows from every table
-
-### GI-10 · Private Storage bucket for images
-
-- **Status:** Backlog · **Priority:** High · **Estimate:** 2 pt · **Phase:** Supabase foundation
-- **Labels:** storage, security
-- **Blocked by:** GI-7, GI-3
-- **Blocks:** GI-19
-
-**Why.** Images replace IndexedDB blobs and `public/collections/`. The upload path already makes a 1600px full and a 480px thumb on the device, so no server-side transforms are needed.
-
-**Approach**
-
-1. Bucket `gi-assets`, private, 10 MB limit, allowed types `image/jpeg`, `image/png`, `image/webp`.
-2. Object paths `<owner_id>/<ref_id>/full.jpg` and `thumb.jpg`.
-3. Policies on `storage.objects`: `(storage.foldername(name))[1] = auth.uid()::text` plus aal2, for select, insert, update and delete.
-
-**Done when**
-
-- [ ] A signed-in user can upload and sign URLs only under their own folder
-- [ ] Unsigned object URLs return 400/404
-- [ ] Another user's paths can't be signed
-
-### GI-11 · Supabase client and generated types
-
-- **Status:** Backlog · **Priority:** Medium · **Estimate:** 1 pt · **Phase:** Supabase foundation
-- **Labels:** data
-- **Blocked by:** GI-8
-- **Blocks:** GI-13, GI-17
-
-**Why.** One client module the data layer shares, and types generated from the schema so column typos fail the build.
-
-**Approach**
-
-1. `src/good-internet/supabase.ts` creates the client from `VITE_SUPABASE_URL` + `VITE_SUPABASE_PUBLISHABLE_KEY`, or exports `null` when they're missing (D-4).
-2. `npm run db:types` runs `supabase gen types typescript` into `src/good-internet/db.types.ts`.
-3. Add `@supabase/supabase-js` as the only new runtime dependency.
-
-**Done when**
-
-- [ ] Typecheck passes with generated types
-- [ ] App still runs on mocks with no env vars
-
-### GI-12 · Username sign-in Edge Function
-
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 3 pt · **Phase:** Sign-in and two-factor
-- **Labels:** auth, edge function, security
-- **Blocked by:** GI-2, GI-9
-- **Blocks:** GI-16
-
-**Why.** Implements D-1. The login screen stays exactly as it is: username, password, the same four error messages.
-
-**Approach**
-
-1. `supabase/functions/sign-in`: POST `{ username, password }`.
-2. With the service role, find `profiles.username` → user id → `auth.admin.getUserById()` → email.
-3. Call `signInWithPassword({ email, password })` with an anon client inside the function and return `{ access_token, refresh_token }`.
-4. Unknown username and wrong password return the same 400 and the same message: “Username or password is incorrect.”
-5. Basic rate limit per IP and per username (a small table with timestamps is enough for v0).
-6. Client: `signInWithPassword()` in `session.ts` calls the function, then `supabase.auth.setSession()`.
-
-**Done when**
-
-- [ ] The existing login error states still render identically
-- [ ] No response ever contains an email
-- [ ] 10 bad attempts in a minute are refused
-
-### GI-13 · Real session behind the synchronous getSession()
-
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 3 pt · **Phase:** Sign-in and two-factor
-- **Labels:** auth
-- **Blocked by:** GI-11
-- **Blocks:** GI-15, GI-55
-
-**Why.** Screens and the auth gate call `getSession()` synchronously and expect `{ username, aal }`. Supabase's session API is async, so the app has to load the session once before the first render and keep a cache.
-
-**Approach**
-
-1. In `main.tsx`, before `createRoot().render`, await `session.init()`: `auth.getSession()`, `auth.mfa.getAuthenticatorAssuranceLevel()` (both read the local JWT, so this is fast), and the user's `profiles.username`.
-2. Keep a module-level cache; update it from `onAuthStateChange` (sign-in, token refresh, sign-out) and notify the router so the gate re-evaluates.
-3. `getSession()` returns the cache synchronously: `{ username, aal: currentLevel }`.
-4. `signOut()` calls `auth.signOut()` and clears the cache.
-
-**Done when**
-
-- [ ] Reloading `/library` while signed in never flashes the sign-in page
-- [ ] Signing out in one tab signs out other tabs
-- [ ] Token refresh happens without a visible change
-
-### GI-14 · Design the two-factor screen in kept-ui
-
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 3 pt · **Phase:** Sign-in and two-factor
-- **Labels:** kept-ui first, ui
-- **Blocks:** GI-15
-
-**Why.** `/login/mfa` is a placeholder in both projects. kept-ui is the source of truth, so the real screen is designed and approved there (with a mock) before good-internet wires it.
-
-**Approach**
-
-1. In kept-ui, add two states to `/login/mfa`: **Set up** (QR code, the secret as text for manual entry, a six-digit field) and **Verify** (a six-digit field only).
-2. Add mock functions to kept-ui's `session.ts` that the screen calls, e.g. `getMfaStatus()`, `startTotpEnrollment()`, `verifyTotp(code)`. These become the seam.
-3. Errors in the existing style: “Enter the six-digit code.”, “That code didn’t work. Try the newest one.”
-4. Approve it in the lab, then `npm run sync-kept-ui`.
-
-**Done when**
-
-- [ ] kept-ui has the approved screen and mock functions
-- [ ] good-internet matches it pixel for pixel after the sync
-
-**Notes.** This is the one issue that touches kept-ui. It's lab work done with your approval, like the other screens, not a change pushed from good-internet. Since D-6, there are two renderers: kept-ui remains the source for the web screen, and the native two-factor screen is designed separately under GI-42's information architecture. The seam functions (`getMfaStatus`, `startTotpEnrollment`, `verifyTotp`) are shared by both.
-
-### GI-15 · Wire TOTP enrollment and challenge
-
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 3 pt · **Phase:** Sign-in and two-factor
-- **Labels:** auth, security
-- **Blocked by:** GI-13, GI-14
-- **Blocks:** GI-16
-
-**Why.** Makes the aal2 requirement real. Supabase's MFA API does enroll → challenge → verify and upgrades the session to aal2.
-
-**Approach**
-
-1. `startTotpEnrollment()` → `auth.mfa.enroll({ factorType: 'totp' })`, returning the QR SVG and secret.
-2. `verifyTotp(code)` → `auth.mfa.challenge()` then `auth.mfa.verify()`; on success refresh the session cache to aal2.
-3. The gate already sends aal1 sessions to `/login/mfa`; the screen shows Set up when no factor is verified, else Verify.
-4. Recovery: Supabase has no backup codes. Enroll a second TOTP factor (another device or a password manager) and document the dashboard reset as the last resort.
-
-**Done when**
-
-- [ ] Fresh account: sign in → set up → library
-- [ ] Next sign-in asks only for the code
-- [ ] An aal1 session can't read data even by calling the API directly (GI-9)
-
-### GI-16 · Create your account by hand
-
-- **Status:** Backlog · **Priority:** High · **Estimate:** 1 pt · **Phase:** Sign-in and two-factor
-- **Labels:** auth, ops
-- **Blocked by:** GI-12, GI-15
-- **Blocks:** GI-28
-
-**Why.** Signups are off and Good Internet is invite-only, so accounts are made in the dashboard. This is also the procedure for approving invites.
-
-**Approach**
-
-1. Dashboard → Authentication → Add user: your real email, a strong password, auto-confirm.
-2. Insert the profile: `insert into profiles (id, username) values ('<user id>', 'wade');`
-3. Sign in, enroll TOTP, and confirm the library loads (empty until GI-28).
-
-**Done when**
-
-- [ ] You can sign in as `wade` with a real password and TOTP
-- [ ] The lab password `1234` no longer works outside the mock fallback
-
-### GI-17 · Repository adapter structure
-
-- **Status:** Backlog · **Priority:** High · **Estimate:** 2 pt · **Phase:** Library data
-- **Labels:** data
-- **Blocked by:** GI-6, GI-11
-- **Blocks:** GI-18, GI-19, GI-23
-
-**Why.** Implements D-4 and GI-6's split. Screens import one module; it routes each call to Supabase or the mock.
-
-**Approach**
-
-1. `repository.ts`: `export * from types`, then each function delegates to `supabaseRepository` when the client exists, else to `repository.mock.ts`.
-2. `repository.supabase.ts` holds the real implementations, one per exported function, with identical signatures.
-3. Shared helpers: slug ↔ uuid map for collections, public_id ↔ uuid for refs, signed-URL cache.
-
-**Done when**
-
-- [ ] With no env vars the app behaves exactly like today
-- [ ] With env vars every function hits Supabase
-- [ ] No screen file changes
-
-### GI-18 · Collections: list, get, create, describe
-
-- **Status:** Backlog · **Priority:** High · **Estimate:** 3 pt · **Phase:** Library data
-- **Labels:** data, db
-- **Blocked by:** GI-17
-
-**Why.** The library home needs names, counts, updated dates, descriptions and up to four cover thumbnails per collection.
-
-**Approach**
-
-1. View `collection_summaries`: collection columns + `count(refs)` + the four newest thumb paths.
-2. `listCollections()` selects the view, signs cover paths in one batch, maps `slug` to `id`.
-3. `getCollection(id)` by slug.
-4. `createCollection(name)` calls RPC `create_collection(name)`, which makes a unique slug per owner in SQL (no race between two tabs).
-5. `updateCollection(id, { description })` updates by slug.
-
-**Done when**
-
-- [ ] Library count line and tiles match the mock for the same data
-- [ ] Creating “Type specimens” twice gives `type-specimens` and `type-specimens-2`
-
-### GI-19 · References: list with signed image URLs
-
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 5 pt · **Phase:** Library data
-- **Labels:** data, storage
-- **Blocked by:** GI-17, GI-10
-- **Blocks:** GI-20, GI-21, GI-55
-
-**Why.** The collection grid, list, reference page and All references all read `listReferences()`. It must return complete `Reference` objects, image URLs included, fast enough for 160+ items.
-
-**Approach**
-
-1. One query: `refs` with nested `assets`, `ref_tags(tags(name))` and `annotations`, ordered newest first.
-2. Map rows to `Reference`: `id` = public_id, `collectionId` = slug, pins from annotations of kind pin (normalized x/y + caption).
-3. Sign thumbs and fulls with `storage.createSignedUrls()` in one call per 100 paths; cache by path until 5 minutes before expiry.
-4. `listAllReferences()` runs the same query without the collection filter.
-
-**Done when**
-
-- [ ] The moode-matcha grid loads with images in one round trip plus two signing calls
-- [ ] Reference page ← → still steps through the same order
-- [ ] Search still finds titles, tags, notes, source, file names and pin captions (it runs on the loaded list)
-
-### GI-20 · Save notes, tags and pins
-
-- **Status:** Backlog · **Priority:** High · **Estimate:** 3 pt · **Phase:** Library data
-- **Labels:** data, db
-- **Blocked by:** GI-19
-
-**Why.** `updateReference()` takes a partial `{ notes, tags, pins }` and returns the updated reference. Tags and pins are lists that should be replaced atomically.
-
-**Approach**
-
-1. `notes`: update `refs.notes`.
-2. `tags`: RPC `set_ref_tags(ref, names text[])` upserts tag names (case-insensitive, like the UI's duplicate rule) and replaces `ref_tags` in one transaction.
-3. `pins`: RPC `set_ref_pins(ref, pins jsonb)` replaces the ref's pin annotations in one transaction, keeping order.
-4. Coalesce rapid edits (typing notes, dragging a caption) into one write per pause, as the mock's localStorage writes never had to.
-
-**Done when**
-
-- [ ] Edits survive reload and show up on another device
-- [ ] Two quick tag edits never leave a half-applied state
-
-### GI-21 · Uploads to Storage
-
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 5 pt · **Phase:** Library data
-- **Labels:** data, storage
-- **Blocked by:** GI-19
-- **Blocks:** GI-28, GI-55, GI-59
-
-**Why.** The upload dialog's rows (Waiting, Adding…, Added, “Couldn’t read this file”) and its running count stay the same; only where the files go changes.
-
-**Approach**
-
-1. Keep `prepareUpload()` (on-device decode, 1600px full, 480px thumb, metadata stripped).
-2. Per file: RPC `create_ref(collection, title, file facts)` returns ids and paths → upload full and thumb → mark added.
-3. On failure, delete the rows and any uploaded object, then report `failed` for that file only.
-4. Bump the collection's `updated_at` once at the end, as the mock does.
-
-**Done when**
-
-- [ ] Uploading 12 phone photos shows the same progress UI and lands them first in the grid
-- [ ] A corrupt file fails alone without leaving an orphan row or object
-- [ ] Nothing is written to IndexedDB any more
-
-### GI-22 · Keep search client-side for v0
-
-- **Status:** Backlog · **Priority:** Low · **Estimate:** 1 pt · **Phase:** Library data
-- **Labels:** data
-
-**Why.** `ReferenceBrowser` filters the loaded list, which is instant at this size. No backend work until a library outgrows it; the tsvector column is already there for GI-34.
-
-**Done when**
-
-- [ ] Search behaves identically on real data
-
-### GI-23 · Publish, rotate and unpublish in Postgres
-
-- **Status:** Backlog · **Priority:** High · **Estimate:** 2 pt · **Phase:** Boards
-- **Labels:** data, db
-- **Blocked by:** GI-17
-- **Blocks:** GI-24, GI-25, GI-28, GI-60
-
-**Why.** The share dialog's states (not shared, shared with a link, new link, unpublished) move from localStorage to `collection_shares`.
-
-**Approach**
-
-1. `getShare(id)` selects the share by collection.
-2. RPC `publish_collection(collection)` makes a 10-character base36 token with `gen_random_bytes` (same format as the mock) and returns the share; idempotent.
-3. RPC `rotate_share(collection)` replaces the token; the old one stops resolving at once.
-4. `unpublishCollection` deletes the row.
-5. `Share.owner` comes from the owner's `profiles.username`.
-
-**Done when**
-
-- [ ] The share dialog's copy, New link and Unpublish states render as today
-- [ ] A rotated token 404s on the next board load
-
-### GI-24 · Board Edge Function for signed-out visitors
-
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 3 pt · **Phase:** Boards
-- **Labels:** edge function, storage, security
-- **Blocked by:** GI-23, GI-3
-- **Blocks:** GI-30, GI-61
-
-**Why.** Implements D-2. `/m/:token` has to work with no session, so it can't go through RLS as a user.
-
-**Approach**
-
-1. `supabase/functions/board`: GET `?token=`; with the service role, find the share → collection → refs with assets, tags and pins.
-2. Return the `Board` shape (`collection`, `references`, `share`) with signed URLs (about an hour).
-3. Unknown, rotated or unpublished tokens: 404 → the existing “This board isn't available” state.
-4. Short `Cache-Control` (a minute) so unpublish takes effect quickly; never cache 404s long.
-5. `getBoard(token)` calls the function without an auth header.
-
-**Done when**
-
-- [ ] The board and lightbox render identically, signed out, on another device
-- [ ] Unpublish → the next load shows the unavailable state
-- [ ] The response contains no owner email or ids beyond what the board shows
-
-### GI-25 · Share links use goodinternetwww.com
-
-- **Status:** Backlog · **Priority:** Medium · **Estimate:** 1 pt · **Phase:** Boards
-- **Labels:** ui
-- **Blocked by:** GI-23
-
-**Why.** `boardAbsoluteUrl()` builds links from the current origin, so preview deployments hand out preview URLs.
-
-**Approach**
-
-1. Add `VITE_PUBLIC_ORIGIN` (`https://goodinternetwww.com` in production) and fall back to `window.location.origin`.
-2. This is a good-internet-only helper; the sync rewrite keeps pointing kept-ui's share URL at it.
-
-**Done when**
-
-- [ ] Links copied from production are `https://goodinternetwww.com/m/…`
-
-### GI-26 · Store invite requests server-side
-
-- **Status:** Backlog · **Priority:** High · **Estimate:** 2 pt · **Phase:** Invites
-- **Labels:** db, security
-- **Blocked by:** GI-9
-- **Blocks:** GI-27, GI-30
-
-**Why.** Today requests live only in the requester's browser, so you never see them. The form, its errors and the two confirmation states stay the same.
-
-**Approach**
-
-1. RPC `request_invite(name, email, note)`, SECURITY DEFINER, executable by anon: validate lengths and email shape, `insert … on conflict (email) do nothing`, return `{ alreadyRequested }`.
-2. Honeypot field + a per-IP rate limit to keep bots out; add Turnstile later only if spam shows up.
-3. `requestInvite()` in the repository calls the RPC.
-
-**Done when**
-
-- [ ] “You’re on the list.” and “You’re already on the list.” work across devices
-- [ ] anon still can't select from `invite_requests`
-
-### GI-27 · Tell you when someone asks for an invite
-
-- **Status:** Backlog · **Priority:** Medium · **Estimate:** 2 pt · **Phase:** Invites
-- **Labels:** edge function, ops
-- **Blocked by:** GI-26
-
-**Why.** A request nobody sees is the same as no request.
-
-**Approach**
-
-1. Database webhook on `invite_requests` insert → Edge Function `notify-invite` → email to you via Resend (or a Slack webhook).
-2. Approving = GI-16's steps for their account, then set `status = 'invited'`.
-
-**Done when**
-
-- [ ] A test request reaches your inbox within a minute
-
-### GI-28 · Seed moode-matcha into Storage
-
-- **Status:** Backlog · **Priority:** High · **Estimate:** 3 pt · **Phase:** Web v0 ship
-- **Labels:** data, ops
-- **Blocked by:** GI-21, GI-23, GI-16
-- **Blocks:** GI-30
-
-**Why.** Your real collection has to move from `public/collections/` and `data/moode-matcha.json` into your account.
-
-**Approach**
-
-1. `scripts/seed-moode-matcha.mjs`, run locally with the service-role key from `.env.local` (never committed).
-2. Create the collection `moode-matcha` for `wade`, upload all 160 full and thumb files, insert refs and assets with the file facts from the JSON.
-3. Publish it with the existing token `mm7q2x9kfa` so the board link you've already shared keeps working.
-4. Idempotent: re-running skips what exists.
-
-**Done when**
-
-- [ ] Library shows 1 collection, 160 references with images
-- [ ] `/m/mm7q2x9kfa` works signed out
-
-### GI-29 · Environment variables and secrets
-
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 1 pt · **Phase:** Web v0 ship
-- **Labels:** infra, security
-- **Blocked by:** GI-7
-- **Blocks:** GI-31
-
-**Why.** Only the publishable key may reach the browser.
-
-**Approach**
-
-1. Vercel (Production + Preview): `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `VITE_PUBLIC_ORIGIN`.
-2. Edge Function secrets: service-role key, Resend key.
-3. Local: `.env.local` for the app and the seed script; `.env.example` committed without values.
-4. Check the production bundle for anything that looks like a service key before the first deploy.
-
-**Done when**
-
-- [ ] `grep` of `dist/` finds no service-role key
-- [ ] Previews without secrets fall back to the mocks (D-4)
-
-### GI-30 · Verify the web app: pixel parity, end-to-end and RLS
-
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 3 pt · **Phase:** Web v0 ship
-- **Labels:** security, ui
-- **Blocked by:** GI-28, GI-24, GI-26
-- **Blocks:** GI-31
-
-**Why.** Real data mustn't change how anything looks, and the security model needs proof, not assumption.
-
-**Approach**
-
-1. Re-run the pixel sweep against kept-ui with the same collection seeded: every route and state identical (share URLs excepted).
-2. End to end: sign in → TOTP → create collection → upload → pin → tag → notes → publish → open board signed out → New link → Unpublish → invite request.
-3. RLS tests from GI-9 pass against the deployed project.
-4. Log a health run (`health/log.csv`) for the release.
-
-**Done when**
-
-- [ ] All three pass on the production project before the domain switch
-
-### GI-31 · Ship the web app to goodinternetwww.com
-
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 1 pt · **Phase:** Web v0 ship
-- **Labels:** ops
-- **Blocked by:** GI-30, GI-29, GI-1
-- **Blocks:** GI-61
-
-**Why.** The finish line for v0.
-
-**Approach**
-
-1. Merge to main → Vercel production deploy.
-2. Point `goodinternetwww.com` at the project; check `/`, `/library` (signed in), and a board signed out.
-3. Tick “Ship to goodinternetwww.com” in Good Internet's own To do page.
-
-**Done when**
-
-- [ ] goodinternetwww.com serves the real app with real data
-
-### GI-32 · Box annotations
-
-- **Status:** Backlog · **Priority:** Low · **Estimate:** 5 pt · **Phase:** Later
-- **Labels:** kept-ui first, ui
-
-**Why.** Pins only today. The schema already allows `kind = 'box'` with `w`/`h`. Design the drag-to-draw interaction in kept-ui first.
-
-### GI-33 · Rename references
-
-- **Status:** Backlog · **Priority:** Low · **Estimate:** 2 pt · **Phase:** Later
-- **Labels:** kept-ui first, ui
-
-**Why.** Uploads take the file name as the title. Needs an editable title in kept-ui, then `updateReference` accepts `title`.
-
-### GI-34 · Server-side search and a command palette
-
-- **Status:** Backlog · **Priority:** Low · **Estimate:** 5 pt · **Phase:** Later
-- **Labels:** db, ui
-
-**Why.** When the library outgrows client filtering: an RPC over the `search` tsvector (titles, notes, tags, pin captions), and a Base UI Combobox palette designed in kept-ui.
-
-### GI-35 · Board link previews
-
-- **Status:** Backlog · **Priority:** Low · **Estimate:** 3 pt · **Phase:** Later
-- **Labels:** edge function
-
-**Why.** A preview card when a board link is pasted into a chat. A tiny OG endpoint for `/m/:token`, without moving the app to Next.js.
-
-### GI-36 · Move images to R2 if Storage costs bite
-
-- **Status:** Backlog · **Priority:** No priority · **Estimate:** 3 pt · **Phase:** Later
-- **Labels:** storage, infra
-
-**Why.** Out of scope for v0 by design. Revisit only if egress or storage costs become real.
-
-### GI-37 · Confirm the native framework and retire the Capacitor plan
-
-- **Status:** Todo · **Priority:** Urgent · **Estimate:** 1 pt · **Phase:** iOS foundation
-- **Labels:** decision, ios
-- **Blocks:** GI-40
-
-**Why.** The `/ios` page in the app still describes a Capacitor wrapper, chosen when the goal was "don't rebuild the UI". The goal is now an app that feels native in the hand, which points somewhere else (D-6). The old plan has to be retired in writing or it will keep resurfacing.
-
-**Approach**
-
-1. Record the call in D-6 with the reasoning, not just the choice.
-2. Rewrite `src/good-internet/GoodInternetIos.tsx` so `/ios` describes the real plan. Four things in it are already wrong: it says hash routes work unchanged (good-internet uses real paths), it says `pnpm` (this repo is npm), it points at `kept-ui.vercel.app` as "today", and it hardcodes a LAN IP in a public repo.
-3. Rewrite the AGENTS.md rule that kept-ui is the single source of truth for the UI: true for web, false once a second renderer exists.
-4. Write down the condition that would reopen D-6, so it is a test rather than a mood: GI-44 failing its frame budget on device.
-
-**Done when**
-
-- [ ] D-6 has a chosen option and a recorded reason
-- [ ] `/ios` describes the current plan and contains no stale claims
-- [ ] AGENTS.md says which source of truth applies to which renderer
-
-**Notes.** Nothing in the backend roadmap (p1–p6) is affected by this decision. Schema, RLS, Storage, Auth and both Edge Functions serve a native client exactly as they serve the browser.
-
-### GI-38 · Settle the app name and bundle identifier
-
-- **Status:** Todo · **Priority:** Urgent · **Estimate:** 1 pt · **Phase:** iOS foundation
-- **Labels:** decision, ios, ops
-- **Blocks:** GI-39, GI-40, GI-64
-
-**Why.** A bundle identifier is permanent once the app is public. Changing it after release means a new App Store listing, new reviews, and no upgrade path for anyone who already installed it. The name question has been open and low-priority; for iOS it stops being low-priority at GI-40.
-
-**Approach**
-
-1. Settle D-7.
-2. Pick the reverse-DNS identifier (`com.goodinternetwww.app` if the name stands) and write it down in exactly one place that the Xcode project, the App Group, the associated domain and App Store Connect all read from.
-3. Reserve the name in App Store Connect once GI-39 is done — reservation is first-come and free.
-
-**Done when**
-
-- [ ] D-7 has a chosen option
-- [ ] The identifier is recorded once and referenced everywhere else
-- [ ] The name is reserved in App Store Connect
-
-**Notes.** The App Store display name can be changed later. The bundle identifier and the App Group identifier cannot, in practice.
-
-### GI-39 · Join the Apple Developer Program
-
-- **Status:** Backlog · **Priority:** High · **Estimate:** 1 pt · **Phase:** iOS foundation
-- **Labels:** ios, ops
-- **Blocked by:** GI-38
-
-**Why.** $99 a year. Required for TestFlight, the App Store, Universal Links, App Groups and push. A free Apple ID can only sideload to your own device, and the install expires after seven days — enough to prove GI-44, not enough to live with the app.
-
-**Approach**
-
-1. Enroll. Individual or company changes the seller name shown publicly on the App Store; switching afterwards is a support process, not a settings toggle.
-2. Two-factor on the Apple ID is mandatory for App Store Connect.
-3. Create the app record in App Store Connect and reserve the name from GI-38.
-
-**Done when**
-
-- [ ] Membership is active
-- [ ] App Store Connect has the app record with the agreed bundle identifier
-
-**Notes.** Enrolling as an individual publishes your legal name as the seller. If that matters, sort out the entity before enrolling rather than after.
-
-### GI-40 · Create the React Native app
-
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 3 pt · **Phase:** iOS foundation
-- **Labels:** ios, native
-- **Blocked by:** GI-37, GI-38
-- **Blocks:** GI-58
-
-**Why.** The project itself: Expo with a development build (D-8), TypeScript strict, the agreed bundle identifier, and the one Info.plist flag without which the app is capped at 60fps on a 120Hz phone.
-
-**Approach**
-
-1. `npx create-expo-app` with the TypeScript template; add `expo-dev-client` so custom native code is possible from day one.
-2. Set the bundle identifier from GI-38 in `app.config.ts`.
-3. Set `CADisableMinimumFrameDurationOnPhone` to `YES` in Info.plist. Without it iOS caps the app at 60fps on ProMotion devices and every animation silently loses half its frames.
-4. EAS build profiles: `development` (dev client on device), `preview` (internal distribution), `production` (TestFlight and App Store).
-5. Decide repo layout: a sibling repo, or a folder in a monorepo alongside the web app. The only thing that genuinely needs sharing is tokens (GI-41) and the data contract (GI-45).
-
-**Sketch**
-
-```text
-app.config.ts
-  ios.bundleIdentifier   com.goodinternetwww.app          (D-7)
-  ios.infoPlist          CADisableMinimumFrameDurationOnPhone: true
-  ios.supportsTablet     false                    (iPad is a later bet)
-  plugins                expo-dev-client, expo-font, expo-image,
-                         expo-secure-store, expo-image-picker
-```
-
-**Done when**
-
-- [ ] A development build runs on your iPhone over the cable
-- [ ] A test animation measurably runs above 60fps on device
-- [ ] The bundle identifier matches GI-38 everywhere it appears
-
-### GI-41 · Design tokens as shared data
-
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 3 pt · **Phase:** iOS foundation
-- **Labels:** ui, ios, data
-
-**Why.** `tokens.css` is web-only, so today there is no way for the two apps to agree on a colour. Implements D-9: one source of truth that generates both.
-
-**Approach**
-
-1. Extract `src/good-internet/tokens.css` into `tokens.json`: colour (light and dark), spacing scale, radii, type scale, weights, and the motion constants from GI-44.
-2. A generator emits CSS custom properties for the web app and a typed TS object for native.
-3. The web app keeps importing the generated CSS, so nothing changes visually and the pixel sweep still passes.
-4. Lint rule or review habit: no raw hex, no magic spacing numbers in native screen code.
-
-**Done when**
-
-- [ ] Changing one value in `tokens.json` changes both apps
-- [ ] The web app is pixel-identical before and after the extraction
-- [ ] Native screens reference tokens, never literals
-
-**Notes.** This is the concrete moment kept-ui stops being the single source of truth for the UI. It stays the source for web layout and design intent; tokens become the shared layer beneath both.
-
-### GI-42 · Native information architecture
-
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 3 pt · **Phase:** iOS foundation
-- **Labels:** ios, ui, kept-ui first
-- **Blocks:** GI-46
-
-**Why.** The web app is a three-pane desktop layout across 16 routes. A phone is not a small desktop: the screens have to be re-planned, not ported. Getting this wrong is expensive because every later screen sits inside it.
-
-**Approach**
-
-1. Decide the root: a tab bar (Library · Search · Add · You) or a single stack with a prominent capture action.
-2. Map each of the 16 web routes to a native screen, a sheet, or explicitly nothing. `/map`, `/ios`, `/todo` and `/referral` are almost certainly nothing.
-3. Decide what a modal sheet is and what is a pushed screen — a rule, applied consistently, not a per-screen judgement call.
-4. Design it before building it. Whether that is kept-ui, Figma or paper matters less than it being approved before GI-46 starts.
-
-**Done when**
-
-- [ ] Every web route has a native counterpart or a written "not on phone"
-- [ ] The navigation shape is approved before any library screen is built
-
-**Notes.** Good Internet's job on a phone is capture and browse. The long tail of account screens can be thin or absent without hurting the product.
-
-### GI-43 · Type, fonts, dark mode and safe areas
-
-- **Status:** Backlog · **Priority:** High · **Estimate:** 2 pt · **Phase:** iOS foundation
-- **Labels:** ui, ios
-
-**Why.** The chrome that makes a native app feel like it belongs to the same product as the website.
-
-**Approach**
-
-1. Load Geist and Geist Mono with `expo-font`; fall back to the system face while they load rather than flashing.
-2. Light and dark from `useColorScheme`, reading the same tokens as the web (GI-41).
-3. Safe areas with `react-native-safe-area-context` — the notch, the home indicator, and the keyboard.
-4. Decide the Dynamic Type position: full support, or a capped scale. Accessibility text sizes will break a dense image grid if ignored entirely.
-
-**Done when**
-
-- [ ] Light and dark match the web tokens side by side
-- [ ] Nothing is obscured by the notch or the home indicator on a modern iPhone
-- [ ] Text at the largest accessibility size is still usable
-
-### GI-44 · Motion and gesture foundations
-
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 5 pt · **Phase:** iOS foundation
-- **Labels:** ios, motion, native
-- **Blocks:** GI-46, GI-47
-
-**Why.** The whole reason for rebuilding instead of wrapping. These primitives get set once, before any screen depends on them, and they are also the test of whether the framework choice was right.
-
-**Approach**
-
-1. `react-native-reanimated` and `react-native-gesture-handler`. Every animation runs on the UI thread from a shared value — never driven by React state, which puts it back on the JS thread and back at the mercy of a render.
-2. One shared spring configuration in tokens, so every surface in the app decelerates the same way.
-3. The rule, written down: every animation is interruptible. Anything you can start with a gesture, you can catch mid-flight and reverse.
-4. Velocity carries from the gesture into the animation. A flung sheet keeps the speed of the finger that threw it.
-5. Build a throwaway test screen: 300 images, fast scroll, a pinch, a drag-dismiss. Profile it on a real device, not the simulator.
-6. Load the `apple-design` and `gesture-ui` guidance before setting the spring values, rather than guessing at numbers.
-
-**Done when**
-
-- [ ] A scroll of 300 images holds 120fps on device
-- [ ] A sheet can be caught mid-animation and reversed without snapping
-- [ ] Nothing animates through React state
-
-**Notes.** If this issue cannot hit its frame budget, D-6 gets reopened here — before sixteen screens are built on top of it, not after.
-
-### GI-45 · The data contract on native
-
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 3 pt · **Phase:** iOS foundation
-- **Labels:** data, ios
-- **Blocks:** GI-46, GI-55
-
-**Why.** The seam is the most valuable thing in the web repo: screens call `repository.ts` and `session.ts`, and swapping mocks for Supabase touches no screen. The native app gets the same seam, so its screens can be built on mocks while the backend is still being built.
-
-**Approach**
-
-1. Same function names and return shapes as the web: `listCollections`, `getCollection`, `listReferences`, `updateReference`, `addUploads`, `getSession`, `signInWithPassword`.
-2. Share the generated database types from GI-11 rather than redeclaring them; a drift here should fail a typecheck, not surface as a bug.
-3. `supabase-js` in React Native needs `react-native-url-polyfill` and a storage adapter for auth — the keychain one from D-10.
-4. Port the mock repository so every screen in p9 can be built and demoed before p3 lands.
-
-**Done when**
-
-- [ ] Native screens compile against the same types the web app uses
-- [ ] Every p9 screen runs on mocks with no backend
-- [ ] Swapping mocks for Supabase touches one module
-
-**Notes.** Depends on GI-11 only for the generated types. Everything else here can start immediately.
-
-### GI-46 · Collections home
-
-- **Status:** Backlog · **Priority:** High · **Estimate:** 3 pt · **Phase:** iOS library
-- **Labels:** ios, ui
-- **Blocked by:** GI-42, GI-44, GI-45
-- **Blocks:** GI-47, GI-51
-
-**Why.** The root screen: your collections, and a way into All references. The first screen built on the GI-42 navigation and the GI-44 primitives, so it is also where both get proven.
-
-**Approach**
-
-1. Collection list or grid with cover images and counts.
-2. Pull to refresh; empty state; skeletons that match the token type scale rather than generic grey bars.
-3. Create a collection from here, as a sheet.
-4. Open transition into a collection uses the shared spring, not a stock push.
-
-**Done when**
-
-- [ ] Matches the approved GI-42 design
-- [ ] Runs entirely on mocks
-- [ ] Cold open to interactive in under a second on device
-
-### GI-47 · The reference grid
-
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 8 pt · **Phase:** iOS library
-- **Labels:** ios, ui, motion
-- **Blocked by:** GI-44, GI-46
-- **Blocks:** GI-48, GI-52, GI-54
-
-**Why.** The screen Good Internet lives or dies on, and the one a web view could never do properly: hundreds of images, scrolled fast, at 120fps, without the app being killed for memory. moode-matcha alone is 320 files.
-
-**Approach**
-
-1. `@shopify/flash-list` for recycling. A plain list keeps every row mounted and will not survive a real library.
-2. `expo-image` for decode and caching — it is backed by SDWebImage on iOS and handles memory and disk caching properly.
-3. Thumbnails in the grid (480px), never the full image. The full 1600px asset is only ever loaded by the viewer.
-4. Prefetch ahead of the scroll direction; cancel prefetches that scroll past.
-5. Set an explicit memory ceiling for the image cache and test against the largest collection, not a demo one.
-6. Fixed aspect tiles or a measured masonry layout — decide before building, since masonry with recycling is materially harder.
-
-**Done when**
-
-- [ ] 300+ references scroll at 120fps on device with no blank tiles
-- [ ] Memory stays flat over a long scroll; the app is not jetsammed
-- [ ] A cold open with a warm disk cache shows images without a flash
-
-**Notes.** This is the issue that proves or disproves the whole rebuild. Worth profiling on the oldest phone you intend to support, not just yours.
-
-### GI-48 · Reference viewer: pinch, pan and drag to dismiss
-
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 8 pt · **Phase:** iOS library
-- **Labels:** ios, motion
-- **Blocked by:** GI-47
-- **Blocks:** GI-49, GI-50, GI-53
-
-**Why.** Opening a reference is the most-repeated gesture in the app. It is also the clearest single signal of whether an app feels native, because everyone has Photos.app as a reference point.
-
-**Approach**
-
-1. Shared-element transition from the grid tile into the viewer: the tile becomes the image, it does not cross-fade.
-2. Pinch to zoom with two-finger pan, tracking the fingers exactly, with rubber-banding past the bounds and a spring back.
-3. Drag down to dismiss, with the background dimming in proportion to the drag and the image returning to its tile if released early.
-4. Velocity decides the outcome: a fast flick dismisses even from a short distance.
-5. Every part of it interruptible — you can catch a dismissing image and drag it back.
-
 **Done when**
-
-- [ ] Pinch tracks the fingers with no perceptible lag
-- [ ] A dismiss can be reversed mid-flight
-- [ ] The image lands exactly on its grid tile when it returns
-- [ ] Holds 120fps throughout on device
-
-**Notes.** Load the `apple-design` and `gesture-ui` guidance before building this one. It is the issue most worth over-investing in.
 
-### GI-49 · Swipe between references
+- [x] docs/SOURCE-OF-TRUTH.md exists and is dated
+- [x] Other docs defer to it
 
-- **Status:** Backlog · **Priority:** High · **Estimate:** 5 pt · **Phase:** iOS library
-- **Labels:** ios, motion
-- **Blocked by:** GI-48
+### DEF-2 · Define the audience
 
-**Why.** Once a reference is open, moving to the next one should be a flick, not a trip back to the grid.
+- **Status:** Planned · **Type:** Requirement · stated · **Serves:** commitment 6
 
-**Approach**
+Who Good Internet is for. The stage names audience as part of Define; it has not been written down yet.
 
-1. Horizontal paging within the viewer, sharing the zoom state machine from GI-48 so a zoomed image pans instead of paging.
-2. Preload the neighbours on both sides; release images more than two away.
-3. Keep the grid's scroll position in sync, so dismissing returns you to the reference you ended on rather than the one you started from.
+### DEF-3 · Write the capability list and the boundaries
 
-**Done when**
+- **Status:** Planned · **Type:** Requirement · stated · **Serves:** commitments 6, 10
 
-- [ ] Swiping through twenty references never shows a loading state
-- [ ] Dismissing lands on the correct tile after paging
-- [ ] Zoomed panning never accidentally pages
+What the product does, and what it deliberately does not: no general knowledge management (6), no native iOS or macOS apps (10). Starts from the commitments; adds nothing to them without sign-off.
 
-### GI-50 · Pins on native
+## 02 · Establish
 
-- **Status:** Backlog · **Priority:** High · **Estimate:** 5 pt · **Phase:** iOS library
-- **Labels:** ios, ui
-- **Blocked by:** GI-48
-- **Blocks:** GI-53
+Brand, website, company foundations, and Cloudflare strategy.
 
-**Why.** Pins are what make a reference a reference rather than a photo. Placing one on a phone is a different interaction from placing one with a mouse.
+### EST-1 · Settle the visual identity
 
-**Approach**
+- **Status:** Planned · **Type:** Requirement · stated
 
-1. Long-press to place, drag to position, with the pin offset above the finger so it is not hidden by it.
-2. A magnifier or offset preview while dragging, since the finger covers the target.
-3. Caption entry as a sheet, with the keyboard handled so the pin stays visible.
-4. Haptic on placement and on hitting a snap threshold, not on every frame of the drag.
-5. Pins live in image coordinates, not screen coordinates, so they survive zoom and rotation.
+The brand look is still open. This is the design work that comes after the foundation is reconciled.
 
-**Done when**
+### EST-2 · Public website: the words, then the page
 
-- [ ] A pin can be placed accurately at the top and bottom edges of the image
-- [ ] Pin positions match the web app exactly for the same reference
-- [ ] Captions are readable and editable with the keyboard up
+- **Status:** In progress · **Type:** Requirement · stated · **Serves:** commitment 11
 
-### GI-51 · Notes, tags and titles
+Identity, product introduction, principles, roadmap, and updates. A rebuilt site exists on the marketing-rebuild branch. Next step is the hero copy.
 
-- **Status:** Backlog · **Priority:** High · **Estimate:** 3 pt · **Phase:** iOS library
-- **Labels:** ios, ui
-- **Blocked by:** GI-46
+**Note.** Nothing on the site may present planned work as available (commitment 11).
 
-**Why.** The editing surfaces. Mostly unremarkable, except that keyboard handling on iOS is where otherwise-good apps fall apart.
+### EST-3 · Keep the public roadmap and status honest
 
-**Approach**
+- **Status:** Planned · **Type:** Engineering · derived · **Serves:** commitment 11
 
-1. Notes as a sheet with the keyboard pushing content rather than covering it.
-2. Tag entry with autocomplete from existing tags; creating a tag is the same gesture as picking one.
-3. Save on dismiss, not with an explicit Save button; show that it saved without a modal.
-4. Same field-level errors and copy as the web app.
+The public roadmap page and any status claims must match docs/roadmap/roadmap.json. Anything not built is labeled as not built.
 
 **Done when**
-
-- [ ] The caret is never hidden behind the keyboard
-- [ ] Dismissing the sheet mid-edit does not lose the edit
-- [ ] Tags created on the phone appear on the web and the reverse
-
-### GI-52 · Search on device
 
-- **Status:** Backlog · **Priority:** Medium · **Estimate:** 3 pt · **Phase:** iOS library
-- **Labels:** ios, ui
-- **Blocked by:** GI-47
+- [ ] Public roadmap reads from, or is checked against, this roadmap
+- [ ] No page implies storage, backup, sharing, or AI exists before it ships
 
-**Why.** Matches the web app's v0 position (GI-22): filter what is already loaded rather than build server search. Revisit with GI-34 when either client outgrows it.
+### EST-4 · Company foundations
 
-**Approach**
+- **Status:** Planned · **Type:** Requirement · stated
 
-1. Filter across titles, notes, tags and pin captions — the same fields the web filters.
-2. Debounced, running off the main thread if the library is large.
-3. Recent searches; an empty state that offers something rather than shrugging.
+Named in the Establish stage. Scope is not yet defined.
 
-**Done when**
+### EST-5 · Cloudflare strategy
 
-- [ ] Search over a 500-reference library stays responsive while typing
-- [ ] Results match the web app for the same query
+- **Status:** Waiting · **Type:** Requirement · stated
 
-### GI-53 · The feel pass
+The Cloudflare for Startups application is pending. Acceptance is not assumed. Proposed priorities: original-file storage, image delivery and processing, intelligent reference organization.
 
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 5 pt · **Phase:** iOS library
-- **Labels:** ios, motion
-- **Blocked by:** GI-48, GI-50
-- **Blocks:** GI-64, GI-66
+**Note.** A strategy under consideration, not a selected provider. Good Internet development does not depend on the outcome: acceptance is not assumed and nothing in Build waits on it. See choices C-1, C-4.
 
-**Why.** A dedicated pass over the whole app for the things that separate "works" from "feels amazing". Deliberately its own issue, because polish that is left as a sub-task of every other issue never happens.
+### EST-6 · Email updates and early-access signup
 
-**Approach**
+- **Status:** Planned · **Type:** Requirement · decided
 
-1. Haptics bound to gesture thresholds and state changes, never to taps for their own sake. A haptic that fires on everything stops meaning anything.
-2. Audit every transition for interruptibility; anything that cannot be caught mid-flight gets rebuilt.
-3. Remove every stock animation that was left at its default while building.
-4. Check the whole app under Reduce Motion: every spring becomes a fade, nothing becomes a jump.
-5. Profile on device, holding 120fps through the grid, the viewer and every sheet.
-6. Hand the app to someone who has not seen it and watch where their thumb hesitates.
+A real signup on the public site, required before the redesigned site is published. It is not account registration. Until it is configured and tested, the site says email signup isn't set up and must not claim otherwise.
 
 **Done when**
-
-- [ ] 120fps held across the main flows on device
-- [ ] Reduce Motion produces a calm app, not a broken one
-- [ ] No default-looking transitions remain
-
-**Notes.** This is the issue that the whole rebuild was justified by. If it gets cut for time, the rebuild was not worth doing.
-
-### GI-54 · Image cache and offline reads
-
-- **Status:** Backlog · **Priority:** High · **Estimate:** 5 pt · **Phase:** iOS library
-- **Labels:** ios, storage
-- **Blocked by:** GI-47
-
-**Why.** A phone loses signal. A reference library that goes blank on the underground is not a library you trust.
-
-**Approach**
-
-1. Disk cache for thumbnails with an explicit size ceiling and an eviction policy.
-2. Cache collection and reference metadata so the grid renders offline even when images are still arriving.
-3. Signed Storage URLs expire — cache the image bytes, never the URL, and re-sign on demand.
-4. An honest offline state: show what is cached, say what is not, never an infinite spinner.
 
-**Done when**
+- [ ] A submitted address is stored by the provider (or a server), not only in the visitor's browser
+- [ ] Sign-up requires explicit consent and says what the person is signing up for
+- [ ] An appropriate privacy notice is linked, supplied or approved by the owner
+- [ ] Every message has working unsubscribe handling
+- [ ] The form has spam and bot protection
+- [ ] Success and failure states are verified end to end, including a network failure and a duplicate address
 
-- [ ] Airplane mode still shows previously-browsed collections and thumbnails
-- [ ] Expired signed URLs re-sign without the user noticing
-- [ ] The cache respects its ceiling over a week of real use
+**Note.** Owner decision, November 1, 2026; not in the Source of Truth. Prefer the simplest secure managed integration and no new backend architecture. API secrets never reach the browser. See choice C-9.
 
-### GI-55 · Wire the native library to Supabase
+## 03 · Build
 
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 5 pt · **Phase:** iOS library
-- **Labels:** ios, data
-- **Blocked by:** GI-45, GI-19, GI-21, GI-13
-- **Blocks:** GI-56, GI-58, GI-60
+Cloud storage, authentication, preservation, organization, search, and reliability.
 
-**Why.** The moment the phone and the web become one product: the same account, the same collections, the same images, from either device. This is what "sign into the website and see what I collected on my phone" actually means.
+### BLD-1 · Cloud storage for a user's references
 
-**Approach**
+- **Status:** Planned · **Type:** Requirement · stated · **Serves:** commitments 1, 2
 
-1. Swap the mock adapter for the Supabase implementation behind the GI-45 contract — one module, no screen changes.
-2. Sign-in through the same `sign-in` Edge Function as the web, then TOTP to reach AAL2.
-3. Session in the keychain (D-10), with refresh handled on resume so the app is not signed out after a week in the background.
-4. Verify row-level security from the device: a second account must see nothing of yours.
+References live in the cloud, reachable from the browser, so they don't take up local device storage.
 
 **Done when**
-
-- [ ] A collection made on the phone appears on the web without a reload, and the reverse
-- [ ] The app stays signed in across relaunches and a week of backgrounding
-- [ ] RLS holds from the native client, tested with a second account
-
-### GI-56 · Camera and photo library import
 
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 5 pt · **Phase:** iOS capture
-- **Labels:** ios, storage
-- **Blocked by:** GI-55
-- **Blocks:** GI-57, GI-59
+- [ ] A user can add a reference and open it from a different device with nothing kept locally
 
-**Why.** The most obvious thing an app can do that a website cannot: put what is in front of you, or already on your phone, into a collection in two taps.
+### BLD-2 · Accounts, with libraries private by default
 
-**Approach**
+- **Status:** Planned · **Type:** Requirement · stated · **Serves:** commitment 4
 
-1. `expo-image-picker` for camera and library, with multi-select from the library.
-2. Permission strings in Info.plist written in Good Internet's voice — they are user-facing copy, not boilerplate.
-3. Use the limited photo library selection properly; do not nag for full access.
-4. Reuse the existing on-device resize (1600px full, 480px thumb, metadata stripped) so phone uploads match web uploads exactly.
-5. Strip location metadata. A reference library has no business recording where a photo was taken.
+Sign-in and a session. Every library is private unless its owner shares it. Access is enforced on the server, not only hidden in the UI.
 
 **Done when**
 
-- [ ] A photo goes from camera to a collection in two taps
-- [ ] Limited photo access works without repeated prompting
-- [ ] Uploads from the phone are byte-comparable to the same file uploaded on the web
+- [ ] A signed-out or different user cannot read a private library or its files
+- [ ] A new library is private without any setting being changed
 
-### GI-57 · Share extension
+**Note.** The prototype UI has invite-only access and a two-factor screen. Whether those are product requirements has not been decided.
 
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 8 pt · **Phase:** iOS capture
-- **Labels:** ios, native
-- **Blocked by:** GI-58, GI-56
-- **Blocks:** GI-65
+### BLD-3 · Preserve originals and their metadata
 
-**Why.** The single best reason for this app to exist. Share → Good Internet from Safari, Photos or Instagram is how a visual reference library actually gets filled, and it is also what makes the app more than a website in a wrapper under App Store guideline 4.2.
+- **Status:** Planned · **Type:** Requirement · stated · **Serves:** commitment 3
 
-**Approach**
+The uploaded file is stored as it arrived: same bytes, same metadata. It is never replaced by a compressed version.
 
-1. A share extension target, added through an Expo config plugin (D-8) so it survives a prebuild.
-2. Accept images, URLs and text. A shared URL becomes a reference with `capture_url` set, matching the web's captured references.
-3. Pick a destination collection inside the extension, without launching the app.
-4. Extensions get a hard memory limit — around 120MB — and are killed without ceremony. Hand large images off rather than processing them in the extension.
-5. The extension UI is small: it must still look like Good Internet, using the shared tokens.
-
 **Done when**
-
-- [ ] Share → Good Internet works from Safari, Photos and Instagram
-- [ ] A shared URL lands as a reference with its capture URL set
-- [ ] Sharing ten large photos at once does not crash the extension
-- [ ] The destination collection can be chosen without opening the app
-
-**Notes.** The biggest single piece of native work in the plan, and the one that most changes how Good Internet is used day to day.
-
-### GI-58 · App Group handoff
 
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 3 pt · **Phase:** iOS capture
-- **Labels:** ios, native, infra
-- **Blocked by:** GI-40, GI-55
-- **Blocks:** GI-57
+- [ ] The original downloaded later is byte-identical to the original uploaded
+- [ ] Original metadata is retained
 
-**Why.** A share extension is a separate process with its own sandbox. An App Group is the only way it can hand files and state to the app.
+### BLD-4 · Optimized previews, kept separate from originals
 
-**Approach**
+- **Status:** Planned · **Type:** Engineering · stated · **Serves:** commitment 3
 
-1. Create the App Group identifier alongside the bundle identifier (GI-38); like the bundle id, it is painful to change later.
-2. Shared container for handed-off files; shared defaults for the queue.
-3. The extension writes to the container and enqueues; the app drains the queue on next launch or resume.
-4. Share the auth session across the group so the extension knows who is signed in without its own sign-in flow.
-5. Clean up handed-off files after a successful upload, and on a schedule for ones that failed.
+Previews are generated for fast display. They are derived copies that never overwrite or stand in for the original.
 
 **Done when**
 
-- [ ] The app picks up items shared while it was closed
-- [ ] The extension knows the signed-in account
-- [ ] Nothing accumulates indefinitely in the shared container
+- [ ] Deleting or regenerating a preview leaves the original untouched
 
-### GI-59 · Upload queue and background uploads
+**Note.** 'Previews are optimized' is part of the core product principle, so the requirement is stated. The 'done when' criterion (previews never overwrite originals) is a proposal for review.
 
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 8 pt · **Phase:** iOS capture
-- **Labels:** ios, storage
-- **Blocked by:** GI-56, GI-21
-- **Blocks:** GI-66
+### BLD-5 · Integrity checks
 
-**Why.** Phone uploads are not desktop uploads: the network drops, the app gets backgrounded, and iOS suspends processes without warning. An upload that only works in the foreground on good wifi is not an upload.
+- **Status:** Planned · **Type:** Engineering · stated · **Serves:** commitment 5
 
-**Approach**
+Detect a stored original that no longer matches what was uploaded.
 
-1. A persistent queue that survives app termination — on disk, not in memory.
-2. Per-item state matching the web's upload dialog: Waiting, Adding…, Added, failed. Same copy, same running count.
-3. Background upload via `URLSession` background transfers so uploads continue after the app is suspended.
-4. Retry with backoff; distinguish a failed file from a lost connection and say which.
-5. One failure never takes down the batch — the web app's rule, kept.
-6. Show the queue somewhere honest. An upload silently failing is worse than one visibly retrying.
-
 **Done when**
-
-- [ ] Twenty photos queued, app backgrounded immediately, all arrive
-- [ ] Killing the app mid-upload loses nothing; it resumes on next launch
-- [ ] Airplane mode queues and drains automatically on reconnect
-- [ ] One corrupt file fails alone, with no orphan rows or objects
 
-### GI-60 · Native share sheet for board links
+- [ ] Each original has a recorded fingerprint taken at upload
+- [ ] Stored files are verified against it, and a mismatch is surfaced rather than ignored
 
-- **Status:** Backlog · **Priority:** Medium · **Estimate:** 2 pt · **Phase:** iOS capture
-- **Labels:** ios, ui
-- **Blocked by:** GI-55, GI-23
+**Note.** Named in commitment 5 as an engineering requirement. The 'done when' criteria are proposals for review.
 
-**Why.** Publishing a board on the phone should hand you the system share sheet, not a copy-to-clipboard toast borrowed from the web.
+### BLD-6 · Backups
 
-**Approach**
+- **Status:** Planned · **Type:** Engineering · stated · **Serves:** commitment 5
 
-1. The native share sheet for a published board link.
-2. Links use `https://goodinternetwww.com/m/…` (GI-25), never a local or preview origin.
-3. Keep copy-to-clipboard as the secondary action, with the native haptic confirmation.
+Originals and library data are backed up so one failure cannot lose them.
 
 **Done when**
 
-- [ ] Sharing a board offers Messages, Mail and the rest
-- [ ] The shared link is the public goodinternetwww.com URL
+- [ ] Backups run on a schedule and their success is checked
 
-### GI-61 · Universal Links for boards
+**Note.** Named in commitment 5 as an engineering requirement. The 'done when' criteria are proposals for review.
 
-- **Status:** Backlog · **Priority:** High · **Estimate:** 3 pt · **Phase:** iOS ship
-- **Labels:** ios, infra
-- **Blocked by:** GI-24, GI-31
-- **Blocks:** GI-67
+### BLD-7 · Recovery, tested
 
-**Why.** A board link sent to someone who has the app should open the app, not Safari. It is also the thing that makes the two surfaces feel like one product from the outside.
+- **Status:** Planned · **Type:** Engineering · stated · **Serves:** commitment 5
 
-**Approach**
+A written and rehearsed way to restore from backup. A backup that has never been restored is not yet trusted.
 
-1. Serve `apple-app-site-association` from `https://goodinternetwww.com/.well-known/`, as JSON, no extension, no redirect, correct content type.
-2. Associated Domains entitlement (`applinks:goodinternetwww.com`) in the app.
-3. Handle `/m/:token` as a cold start, not just while running — the common bug is only handling the warm case.
-4. Anyone without the app must still get the web board. The link is public and sign-in-free by design.
-5. Test from Messages and Notes; Safari's address bar deliberately does not trigger Universal Links.
-
 **Done when**
-
-- [ ] A board link opens the app when installed, the website when not
-- [ ] Cold start on a link lands on the right board
-- [ ] The association file validates
 
-### GI-62 · Delete your account, in the app
+- [ ] A restore has been performed end to end from a backup, and the result verified against BLD-5
 
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 3 pt · **Phase:** iOS ship
-- **Labels:** ios, security
-- **Blocks:** GI-66
+**Note.** Named in commitment 5 as an engineering requirement. The 'done when' criteria are proposals for review.
 
-**Why.** App Store guideline 5.1.1(v): an app that supports account creation must let people delete the account from inside the app. Good Internet is invite-only and accounts are made by hand, which does not exempt it. This is a common rejection.
+### BLD-8 · Export
 
-**Approach**
+- **Status:** Planned · **Type:** Requirement · stated · **Serves:** commitments 5, 3
 
-1. A delete path in the app that actually deletes: auth user, rows, and every Storage object.
-2. Confirmation that makes the consequence plain, and is hard to trigger accidentally.
-3. A server-side function does the deletion; the client must not be trusted to cascade it.
-4. Published boards die with the account.
-5. Decide and state the retention position — immediate, or a grace period — and make the copy match what actually happens.
+A user can take their references with them: originals and their organization, not only previews.
 
 **Done when**
-
-- [ ] An account can be fully deleted from inside the app
-- [ ] No orphaned rows or Storage objects survive
-- [ ] Published board links stop resolving
-
-**Notes.** Worth building on the web app too. The requirement is Apple's, but the capability is not iOS-specific.
-
-### GI-63 · Privacy manifest and App Store privacy answers
-
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 3 pt · **Phase:** iOS ship
-- **Labels:** ios, security
-- **Blocks:** GI-66
 
-**Why.** Apple requires a privacy manifest and accurate data-collection answers. Getting these wrong is both a rejection risk and a trust problem, since the answers are shown publicly on the listing.
+- [ ] An export contains the original files, metadata, and collection/tag/note information
 
-**Approach**
+### BLD-9 · Organization: collections, tags, notes
 
-1. `PrivacyInfo.xcprivacy` declaring data types collected and the reasons for any required-reason APIs.
-2. Check the manifests of every third-party SDK that ships in the binary; they aggregate into yours.
-3. Answer the App Store Connect privacy questions honestly: user content, identifiers, what is linked to the user, what is used for tracking (nothing).
-4. A privacy policy at a stable URL on goodinternetwww.com; the listing requires one.
-5. If location metadata is stripped at import (GI-56), say so — it is a genuine selling point.
+- **Status:** Planned · **Type:** Requirement · stated · **Serves:** commitment 7
 
-**Done when**
+Collections, tags, and notes on stored references. The prototype UI has these on sample data.
 
-- [ ] The manifest covers the app and its dependencies
-- [ ] The privacy answers match what the app actually does
-- [ ] A privacy policy is live at a permanent URL
+### BLD-10 · Search
 
-### GI-64 · App icon, launch screen and store assets
+- **Status:** Planned · **Type:** Requirement · stated · **Serves:** commitment 7
 
-- **Status:** Backlog · **Priority:** High · **Estimate:** 3 pt · **Phase:** iOS ship
-- **Labels:** ios, ui
-- **Blocked by:** GI-38, GI-53
-- **Blocks:** GI-66
+Find stored references again. The prototype UI has a search on sample data.
 
-**Why.** The first thing anyone sees, and the last thing anyone leaves time for.
+### BLD-11 · Replace the prototype's sample data with the real thing
 
-**Approach**
+- **Status:** Planned · **Type:** Engineering · derived · **Serves:** commitments 1, 11
 
-1. App icon at every required size; test it on both light and dark home screens, and at the smallest size it will ever be drawn.
-2. Launch screen that matches the app's first frame so launch reads as instant rather than as a flash.
-3. App Store screenshots for the required device sizes, showing real collections rather than lorem ipsum.
-4. Listing copy: name, subtitle, description, keywords. The subtitle does a lot of work.
-5. Decide whether the icon reflects the GOOD INTERNET wordmark or stands apart from it.
-
-**Done when**
+The private workspace UI currently runs on mock data behind src/good-internet/repository.ts and session.ts. Real storage and accounts go behind those same functions. Until then the workspace is labeled a prototype.
 
-- [ ] The icon reads clearly at the smallest size, in light and dark
-- [ ] Launch does not flash a mismatched colour
-- [ ] Screenshots show the real app
+**Note.** Depends on choices C-1 to C-3.
 
-### GI-65 · Guideline 4.2 readiness review
+## 04 · Extend
 
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 2 pt · **Phase:** iOS ship
-- **Labels:** ios, app store
-- **Blocked by:** GI-57
-- **Blocks:** GI-67
+Sharing, annotations, and richer reference workflows.
 
-**Why.** Apple rejects apps that are a website in a wrapper. The rebuild makes this a much easier argument than the Capacitor plan would have, but it is still worth checking deliberately before submitting rather than discovering it in review.
+### EXT-1 · Share a collection by link
 
-**Approach**
+- **Status:** Planned · **Type:** Requirement · stated · **Serves:** commitments 8, 4
 
-1. Write down the native capabilities the website cannot have: share extension, camera capture, offline library, Universal Links, haptics, background uploads.
-2. Confirm the app is not merely a mirror of goodinternetwww.com — the IA from GI-42 should already differ.
-3. Prepare reviewer notes explaining the invite-only model, with a working demo account. Invite-only apps get rejected for being untestable far more often than for anything else.
-4. Make sure the demo account has real content; an empty library looks broken to a reviewer.
+Users selectively share collections through links without exposing the rest of their library.
 
 **Done when**
-
-- [ ] A written 4.2 argument exists before submission
-- [ ] Reviewer notes include working credentials and a populated demo account
-
-**Notes.** The demo account is the single most common avoidable rejection for invite-only apps. Set it up before you need it.
-
-### GI-66 · TestFlight beta
-
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 3 pt · **Phase:** iOS ship
-- **Labels:** ios, ops
-- **Blocked by:** GI-53, GI-59, GI-62, GI-63, GI-64
-- **Blocks:** GI-67
 
-**Why.** Real devices, real hands, before the App Store. Also the first time the app runs without a cable and a debugger attached.
+- [ ] A link shows only the chosen collection
+- [ ] Nothing else in the owner's library is reachable through it
 
-**Approach**
+**Note.** Ending a share is EXT-4. Sharing does not exist today; the prototype's share screens run on sample data.
 
-1. EAS production build uploaded to App Store Connect.
-2. Internal testers first (up to 100, no review). External testing needs a beta review, which is lighter than App Store review but not instant.
-3. Builds expire after 90 days — plan the cadence rather than being surprised.
-4. Set up crash reporting before the first tester, not after the first crash.
-5. Ask testers for one specific thing: does it feel good in the hand? Everything else is easier to find yourself.
+### EXT-2 · Annotations
 
-**Done when**
-
-- [ ] A build is installable from TestFlight on a device that has never been cabled to your Mac
-- [ ] Crashes report with symbols
-- [ ] At least a handful of testers have used it on a real library
-
-### GI-67 · App Store submission
-
-- **Status:** Backlog · **Priority:** Urgent · **Estimate:** 3 pt · **Phase:** iOS ship
-- **Labels:** ios, app store
-- **Blocked by:** GI-66, GI-65, GI-61
+- **Status:** Planned · **Type:** Requirement · stated · **Serves:** commitment 7
 
-**Why.** The finish line for iOS v1.
+Annotations on references, listed in commitment 7 and in the Extend stage. Guest annotations are separate and exploratory (XPL-2).
 
-**Approach**
+### EXT-3 · Richer reference workflows
 
-1. Final build, listing, screenshots, privacy answers and reviewer notes.
-2. Age rating, export compliance (the app uses HTTPS, which is the usual answer), content rights.
-3. Submit, then expect a round of review feedback rather than being surprised by it.
-4. Plan the release: manual release rather than automatic, so the launch happens when you choose.
-5. Tick it off in Good Internet's own To do page.
+- **Status:** Planned · **Type:** Requirement · stated · **Serves:** commitment 6
 
-**Done when**
+Named in the Extend stage. What 'richer' means has not been defined, and is not to be invented here.
 
-- [ ] The app is on the App Store
-- [ ] A phone-only user can be invited, sign in and build a library end to end
+**Note.** Undefined placeholder. It does not authorize any additional feature; defining one needs a separate decision.
 
-### GI-68 · Revisit SwiftUI if the feel ceiling is hit
+### EXT-4 · Revoke shared access
 
-- **Status:** Backlog · **Priority:** No priority · **Estimate:** 8 pt · **Phase:** Later
-- **Labels:** ios, decision
+- **Status:** Planned · **Type:** Engineering · derived · **Serves:** commitments 8, 4
 
-**Why.** React Native gets very close to native feel and is not native. If GI-53 keeps finding things that cannot be fixed from JavaScript, the ceiling is real and this is the escape hatch.
+The owner can end a share so its link stops working. Required whenever link sharing is implemented, so that sharing stays intentional (8) and the library stays private (4). Applies only once EXT-1 exists.
 
 **Done when**
 
-- [ ] Only opened if a specific, repeated feel problem traces to the framework rather than the implementation
+- [ ] After a share is revoked, its old link no longer shows the collection
+- [ ] Revoking one share leaves the owner's other shares and private library unaffected
 
-**Notes.** Deliberately parked, not rejected. Reopening this without a concrete failing test from GI-44 or GI-53 is relitigating D-6.
+## 05 · Explore
 
-### GI-69 · iPad
+Intelligent organization, guest feedback, and future capabilities.
 
-- **Status:** Backlog · **Priority:** Low · **Estimate:** 5 pt · **Phase:** Later
-- **Labels:** ios, ui
+### XPL-1 · Intelligent organization
 
-**Why.** A reference library on a larger screen is genuinely compelling — closer to the desktop three-pane layout than the phone is. Out of scope for v1: it is a second IA to design and maintain.
+- **Status:** Exploring · **Type:** Exploratory · stated · **Serves:** commitment 9
 
-**Done when**
+AI help with administrative work such as tagging and organizing. It assists and does not take control away from the user. Automatic AI tagging is not a locked requirement.
 
-- [ ] Revisit once the phone app is in real use
+### XPL-2 · Guest feedback and annotations on shared collections
 
-### GI-70 · Widgets, Live Activities and Shortcuts
+- **Status:** Exploring · **Type:** Exploratory · stated · **Serves:** commitment 8
 
-- **Status:** Backlog · **Priority:** Low · **Estimate:** 5 pt · **Phase:** Later
-- **Labels:** ios, native
+Discussed, not locked.
 
-**Why.** A widget showing a rotating reference from a collection is an obvious fit for a visual library, and Shortcuts would let Good Internet be scripted into other capture flows.
+### XPL-3 · File formats beyond images
 
-**Done when**
+- **Status:** Exploring · **Type:** Exploratory · stated
 
-- [ ] Revisit after the App Store release
+Discussed, not locked. The product is images today.
 
-### GI-71 · Android
+### XPL-4 · Advanced retrieval
 
-- **Status:** Backlog · **Priority:** No priority · **Estimate:** 8 pt · **Phase:** Later
-- **Labels:** native
+- **Status:** Exploring · **Type:** Exploratory · stated · **Serves:** commitment 7
 
-**Why.** React Native makes this cheaper than it would otherwise be, but it is not free: platform-specific IA, its own store process, its own test devices. No demand for it yet.
+Discussed, not locked. Basic search is BLD-10.
 
-**Done when**
+## Open implementation choices
 
-- [ ] Only if someone actually asks
+These are *how*, not *what*. None has been decided, and no provider is approved. Do not build as if one were.
 
-**Notes.** One of the few upsides of React Native over SwiftUI that has no cost until you choose to use it.
+| Choice | Serves | Status | Note |
+| --- | --- | --- | --- |
+| **C-1** Where original files are stored | BLD-1, BLD-3, BLD-5, BLD-6, BLD-7 | Undecided | Cloudflare is under consideration (EST-5), but acceptance is not a dependency for development. No provider is selected. |
+| **C-2** Backend and database platform | BLD-2, BLD-9, BLD-10, BLD-11 | Undecided | Supabase was assumed by the archived October roadmap. It was never approved and is not ruled out. |
+| **C-3** Authentication approach | BLD-2 | Undecided | Includes whether the prototype's invite-only access and two-factor become requirements. |
+| **C-4** Image processing and delivery | BLD-4 | Undecided | Named as a proposed Cloudflare priority. Not selected, and not dependent on the application. |
+| **C-5** How backup and recovery are done | BLD-6, BLD-7 | Undecided | — |
+| **C-6** How search is done | BLD-10, XPL-4 | Undecided | — |
+| **C-7** AI provider and approach for assisted organization | XPL-1 | Undecided | — |
+| **C-8** Pricing and storage limits | — | Undecided | Exploratory per the Source of Truth. Not a roadmap item until decided. |
+| **C-9** Email updates provider and integration | EST-6 | Undecided | Prefer the simplest secure managed integration. No provider is chosen and no paid plan is approved. Any API key stays server-side and is never a VITE_ variable. |

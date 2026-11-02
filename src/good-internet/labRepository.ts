@@ -1,5 +1,5 @@
 // Browser-local repository for Good Internet Lab. This intentionally mirrors the repository seam used by
-// the rest of Good Internet so these functions can later call Supabase without changing the Lab UI.
+// the rest of Good Internet so these functions can later call a real backend (provider not yet chosen) without changing the Lab UI.
 
 export type LabCategory = 'reference' | 'experiment' | 'concept' | 'ios' | 'map' | 'build';
 export type LabStatus = 'saved' | 'exploring' | 'prototyping' | 'promoted';
@@ -25,22 +25,22 @@ const REFERENCE_MAP_NOTES = [
   ['capabilities', 'Core capabilities', 'Capture images, index with titles and tags, annotate with notes and image markers, organize in collections, search, retrieve, and publish a collection as a board.'],
   ['domain', 'Domain model', 'A User owns Collections. References are the unit of meaning; each has an Asset plus Notes, Tags and Annotations. A Share publishes one collection at an unlisted token.'],
   ['application', 'Application shape', 'Vite + React with Base UI and Good Internet CSS. Marketing, auth, product and board shells share one repository-facing UI.'],
-  ['data', 'Data layer', 'Supabase Postgres, Auth and private Storage sit behind the repository seam, with row-level security and signed image URLs.'],
-  ['infrastructure', 'Infrastructure', 'Vercel serves the static app. Supabase provides Postgres, Auth and Storage. Browser-exposed configuration is limited to publishable VITE_ values.'],
+  ['data', 'Data layer', 'A backend and private storage sit behind the repository seam, with access enforced on the server so libraries are private by default. The provider is not yet chosen.'],
+  ['infrastructure', 'Infrastructure', 'Vercel serves the static app. The backend and storage providers are not yet chosen. Browser-exposed configuration is limited to publishable VITE_ values.'],
   ['later', 'Later system ideas', 'Typed links between references, OCR, image understanding, automatic tagging, semantic search, richer previews, larger-scale file storage and team access remain later work.'],
 ] as const;
 
 const IOS_NOTES = [
-  ['path', 'Native path', 'Move from the web app to a home-screen app, native shell, device features, synced backend and links, then TestFlight and the App Store.'],
+  ['path', 'Native path', 'Exploratory only: no native iOS or macOS app is committed to the roadmap. The idea: move from the web app to a home-screen app, native shell, device features, synced backend and links, then TestFlight and the App Store.'],
   ['approach', 'Native approach', 'Keep one React and Base UI surface. Add native code only where the web cannot reach, such as share extensions, widgets and deeper device integration.'],
   ['home-screen', 'Home screen app', 'Add a manifest, app icons, matched status-bar colors and safe-area handling while keeping Safari and installed-app storage limitations explicit.'],
   ['native-features', 'Native features', 'Camera and photo-library capture, Share → Good Internet, App Group handoff, native sharing, haptics, keyboard handling and in-app browsing.'],
-  ['backend-links', 'Backend and links', 'Use the same Supabase data and sign-in on web and phone, queue offline work, and open goodinternetwww.com board links through Universal Links.'],
+  ['backend-links', 'Backend and links', 'Use the same data and sign-in on web and phone, queue offline work, and open goodinternetwww.com board links through Universal Links.'],
   ['shipping', 'TestFlight and App Store', 'Plan for signing, privacy declarations, in-app account deletion, native-value review requirements, beta distribution and the final store listing.'],
 ] as const;
 
 const CURRENT_BUILD = [
-  ['now', 'backend', 'Build the data layer', 'Supabase schema, storage, and row-level security.'],
+  ['now', 'backend', 'Build the data layer', 'Cloud storage and a backend for the library. The provider is not yet chosen.'],
   ['now', 'repository', 'Connect the library', 'Replace mock references, boards, and notes with persisted data.'],
   ['now', 'signin', 'Real sign-in', 'Authenticate the actual owner account.'],
   ['now', 'mfa', 'Two-factor authentication', 'Protect each sign-in with a second factor.'],
