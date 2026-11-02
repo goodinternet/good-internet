@@ -4,7 +4,7 @@
 // Roadmap item EST-6, choice C-9.
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const ALLOWED_HOSTS = new Set(['goodinternet.com', 'www.goodinternet.com', 'localhost', '127.0.0.1']);
+const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1']);
 
 // Best-effort limit per server instance: 5 attempts per 10 minutes per IP. Not a substitute for the provider's own protections.
 const hits = new Map<string, number[]>();
@@ -19,12 +19,13 @@ function limited(ip: string) {
 const json = (status: number, body: Record<string, unknown>) =>
   new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 
+// Only the site itself (or a local dev server) may post: the request's Origin must match the Host it was sent to.
 function sameSite(request: Request) {
   const origin = request.headers.get('origin');
   if (!origin) return false;
   try {
-    const { hostname } = new URL(origin);
-    return ALLOWED_HOSTS.has(hostname) || hostname.endsWith('.vercel.app');
+    const { host, hostname } = new URL(origin);
+    return host === request.headers.get('host') || LOCAL_HOSTS.has(hostname);
   } catch {
     return false;
   }
