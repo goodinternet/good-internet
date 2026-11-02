@@ -10,25 +10,25 @@ const platformCards = [
   {
     icon: CollectIcon,
     title: "Collect",
-    description: "Bring images, links, and other references into one private, browser-based library.",
+    description: "You\u2019ll bring your references together in one private library, reachable from any browser.",
     why: "One place for the things you don't want to lose.",
   },
   {
     icon: PreserveIcon,
     title: "Preserve",
-    description: "Keep original files intact while optimized previews make browsing effortless.",
+    description: "Your original files will be kept as they came, with optimized previews to keep browsing fast.",
     why: "Your source material stays whole.",
   },
   {
     icon: OrganizeIcon,
     title: "Organize",
-    description: "Give references structure through collections, tags, notes, and metadata.",
+    description: "Collections, tags, and notes will give each reference the context that makes it useful later.",
     why: "Keep the context alongside the reference.",
   },
   {
     icon: RetrieveIcon,
     title: "Retrieve",
-    description: "Search and revisit references without digging through scattered folders.",
+    description: "Search will help you find what you need again, without remembering where you put it.",
     why: "Find what matters when you need it.",
   },
 ];

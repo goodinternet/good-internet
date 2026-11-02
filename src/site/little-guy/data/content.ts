@@ -6,9 +6,9 @@ export const lead = {
 };
 
 export const summary = [
-  "An independent software project building a private, cloud-based home for your references.",
-  "We’re building a reference-management platform with original-file preservation, optimized previews, collections, and search. The idea is simple: your references should be easy to keep, easy to find, and yours to control.",
-  "Good Internet is currently in development. The workspace is a prototype, and we’re working toward a reliable foundation for storage, privacy, and sharing. You can explore what we’re building below.",
+  "We\u2019re building a private, cloud-based home for your references: original files preserved, optimized previews for browsing, and collections and search to bring it all together.",
+  "The idea is simple: your references should be easy to keep, easy to find, and yours to control.",
+  "Good Internet is in early development and the product isn\u2019t released yet. The workspace is a prototype running on sample data, and storage, backup, recovery, and sharing are being built or planned.",
 ];
 
 // Detailed roadmap, shown under the "Roadmap" header on the landing page: each stage has a
@@ -17,40 +17,30 @@ export const roadmap = [
   {
     n: "01",
     name: "Define",
-    status: "In Progress",
+    status: "In progress",
     color: "blue",
-    text: "Establish the product direction, principles, experience, and scope.",
-    items: [
-      "Product definition and requirements",
-      "Core workflows and interaction design",
-      "Information architecture",
-      "Prototype research and validation",
-    ],
+    text: "Product identity, audience, capabilities, and boundaries.",
+    items: ["The Source of Truth is written", "Audience", "Capabilities and boundaries"],
   },
   {
     n: "02",
     name: "Establish",
-    status: "Planned",
-    color: "gray",
-    text: "Build the reliable foundation Good Internet needs before storing people's files.",
-    items: [
-      "Accounts and access control",
-      "Cloud storage and original-file integrity",
-      "Privacy and permissions",
-      "Backup, recovery, and export",
-    ],
+    status: "In progress",
+    color: "blue",
+    text: "Brand, this public website, company foundations, and our Cloudflare startup strategy.",
+    items: ["Visual identity", "Public website", "Company foundations", "Cloudflare strategy (application pending)"],
   },
   {
     n: "03",
     name: "Build",
-    status: "Prototype",
-    color: "amber",
-    text: "Turn the foundation into a usable reference-management workspace.",
+    status: "Planned",
+    color: "gray",
+    text: "The private cloud foundation Good Internet needs before it holds anyone\u2019s files.",
     items: [
-      "Reference library and file browser",
-      "Collections, tags, and notes",
-      "Previews and metadata",
-      "Search and retrieval",
+      "Cloud storage and accounts, private by default",
+      "Original-file preservation and optimized previews",
+      "Backups, recovery, and export",
+      "Collections, tags, notes, and search",
     ],
   },
   {
@@ -58,23 +48,15 @@ export const roadmap = [
     name: "Extend",
     status: "Planned",
     color: "gray",
-    text: "Expand how references can be shared and worked with.",
-    items: [
-      "Selective sharing and public links",
-      "Link management and revocation",
-      "Annotations and richer workflows",
-    ],
+    text: "Sharing, annotations, and richer reference workflows.",
+    items: ["Share a collection by link", "Annotations", "Revoke shared access"],
   },
   {
     n: "05",
     name: "Explore",
-    status: "Research",
+    status: "Exploring",
     color: "violet",
-    text: "Investigate intelligent assistance and future possibilities.",
-    items: [
-      "Assisted tagging and organization",
-      "Context-aware retrieval",
-      "Otto's future workspace capabilities",
-    ],
+    text: "Ideas we\u2019re looking into, not promising yet.",
+    items: ["Intelligent organization", "Guest feedback on shared collections", "File formats beyond images"],
   },
 ];

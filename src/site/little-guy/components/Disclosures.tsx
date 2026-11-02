@@ -1,9 +1,8 @@
 import { stagger } from "./Hero";
 
-// Plain statement of what exists today. Not a privacy policy; that notice comes before signup opens.
+// Plain statement of what exists today. Not a privacy policy.
 const paragraphs = [
-  "Good Internet is an independent software project in active development. The current workspace is a prototype and does not yet provide production cloud storage, backup, or recovery. Features shown or described are subject to change and should not be considered available until released.",
-  "Email addresses submitted through the updates form will be used to send project news and early-access announcements. Details about data handling and unsubscribing will be provided in the privacy notice before signup opens.",
+  "Good Internet is an independent software project in active development. The current workspace is a prototype running on sample data and does not yet provide cloud storage, backup, or recovery. Features shown or described are subject to change and should not be considered available until released.",
 ];
 
 export default function Disclosures() {

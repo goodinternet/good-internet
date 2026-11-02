@@ -1,12 +1,12 @@
 import { stagger } from "./Hero";
 
-// Not part of the original site. A conventional small-print footer: identity + status on the
-// left, legal / contact links on the right. Links are "#" placeholders until real pages exist.
+// Small-print footer: identity + status on the left, links to pages that exist on the right.
 const identity = "© 2026 Good Internet";
-const status = { label: "In development", version: "v0.1" };
+const status = { label: "In development" };
 const links = [
-  { label: "Privacy Policy", href: "#" },
-  { label: "Contact", href: "#" },
+  { label: "Principles", href: "/principles" },
+  { label: "Roadmap", href: "/roadmap" },
+  { label: "Status", href: "/status" },
 ];
 
 export default function Footer() {
@@ -16,7 +16,7 @@ export default function Footer() {
         <span>{identity}</span>
         <span className="site-footer-status">
           <span className="site-footer-dot" aria-hidden="true" />
-          {status.label} {status.version}
+          {status.label}
         </span>
       </div>
       <nav className="site-footer-links" aria-label="Footer">
