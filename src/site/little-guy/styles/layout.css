@@ -1,0 +1,13 @@
+.section-label{color:var(--fg-2);font-family:ui-rounded,SF Pro Rounded,system-ui,sans-serif;font-size:14px;font-weight:400;line-height:20px}
+@keyframes stagger-fade-up{0%{opacity:0;transform:translateY(8px)}
+to{opacity:1;transform:none}
+}
+.stagger-in{opacity:0;animation:.5s both stagger-fade-up;animation-delay:var(--stagger-delay,0s)}
+.landing-page{background-color:var(--bg);justify-content:center;width:100%;min-height:100vh;display:flex}
+.landing-page-column{flex-direction:column;width:500px;max-width:calc(100% - 48px);padding-top:240px;padding-bottom:140px;display:flex}
+@media (width<=1080px){.landing-page-column{padding-bottom:100px}
+}
+@media (width<=768px){.landing-page-column{padding-top:120px}
+}
+@media (width<=480px){.landing-page-column{padding-bottom:72px}
+}

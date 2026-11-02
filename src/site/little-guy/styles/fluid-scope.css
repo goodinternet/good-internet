@@ -1,0 +1,9 @@
+/* Wrapper for Fluid Functionalism components (no Tailwind preflight in this project).
+   Pins their type to the site's 14px / 20px Inter and adds a minimal reset, in Tailwind's base layer. */
+.fluid-scope{font-family:var(--landing-font,inherit);--fs-display:14px;--lh-display:20px;--fs-display-compact:14px;--lh-display-compact:20px;--fs-title:14px;--lh-title:20px;--fs-title-compact:14px;--lh-title-compact:20px;--fs-subtitle:14px;--lh-subtitle:20px;--fs-subtitle-compact:14px;--lh-subtitle-compact:20px;--fs-body:14px;--lh-body:20px;--fs-body-compact:14px;--lh-body-compact:20px;--fs-caption:14px;--lh-caption:20px;--fs-caption-compact:14px;--lh-caption-compact:20px;--fs-micro:14px;--lh-micro:20px;--fs-micro-compact:14px;--lh-micro-compact:20px;}
+@layer base{
+  .fluid-scope *,.fluid-scope ::before,.fluid-scope ::after{box-sizing:border-box;border:0 solid}
+  .fluid-scope button,.fluid-scope a{background:transparent;padding:0;font:inherit;color:inherit;text-decoration:none;-webkit-appearance:none;appearance:none;cursor:pointer}
+  .fluid-scope p,.fluid-scope h1,.fluid-scope h2,.fluid-scope h3{margin:0;font:inherit}
+  .fluid-scope svg{display:block}
+}

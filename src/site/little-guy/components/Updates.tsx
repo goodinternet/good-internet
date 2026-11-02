@@ -1,0 +1,18 @@
+import { stagger } from "./Hero";
+import JoinList from "./JoinList";
+
+const note =
+  "Good Internet is taking shape and we think we're building something worth keeping! Join the list for occasional development updates, early previews, and news about access. Occasional emails. No spam. Unsubscribe anytime.";
+
+// Updates section: a header, one paragraph and the email sign-up.
+export default function Updates() {
+  return (
+    <section id="side-projects" className="side-projects">
+      <div className="side-projects-content stagger-in" style={stagger(6)}>
+        <div className="section-label">Updates</div>
+        <p className="side-projects-note">{note}</p>
+        <JoinList />
+      </div>
+    </section>
+  );
+}

@@ -1,0 +1,41 @@
+/* Roadmap: Fluid Functionalism accordion + fine-print disclaimer. */
+.roadmap{position:relative}
+.roadmap-content{flex-direction:column;padding-top:48px;display:flex}
+.roadmap-accordion{padding-top:12px}
+
+/* Note under the list: info icon + sentence case, 12px, the site's secondary gray. */
+.roadmap-note{display:grid;grid-template-columns:12px 1fr;column-gap:8px;margin:24px 0 0;color:var(--faint);font-family:var(--landing-font,inherit);font-size:12px;font-weight:400;line-height:18px}
+.roadmap-note svg{margin-top:3px}
+
+/* + that turns to x: the 200ms ease from wade-site. The accordion's own chevron spin (a motion span
+   around the icon) is neutralised so only the plus's quarter-turn shows. */
+.roadmap-accordion button[data-state] > span:last-child{transform:none !important}
+.roadmap-plus{display:block;transition:transform 200ms cubic-bezier(.23,1,.32,1)}
+.roadmap-accordion button[data-state=open] .roadmap-plus{transform:rotate(45deg)}
+@media (prefers-reduced-motion:reduce){.roadmap-plus{transition:none}}
+
+/* the text revealed under a row: Inter light, like the summary paragraphs */
+.roadmap-accordion [role=region]{font-weight:300;padding-left:50px} /* 50px = number column (56) - 6, so the text lines up under the stage name */
+
+/* section numbers sit at the far left of the row (6px in from the highlight edge); the name starts a fixed column over.
+   Dim at rest, lighter still while their row is open so the name leads */
+.roadmap-num{display:inline-block;width:56px;margin-left:-6px;opacity:.6;transition:opacity 150ms ease}
+.roadmap-accordion button[data-state=open] .roadmap-num{opacity:.3}
+@media (prefers-reduced-motion:reduce){.roadmap-num{transition:none}}
+
+/* stage detail: summary line, then the work areas, one per line */
+.roadmap-items{list-style:none;margin:10px 0 0;padding:0 0 0 4px;display:flex;flex-direction:column;gap:2px;font-family:var(--landing-font,inherit);font-size:14px;font-weight:300;line-height:20px}
+.roadmap-items li{display:flex;gap:10px}
+.roadmap-items li::before{content:"\2022";flex:none;opacity:.7}
+
+/* Open row: summary and items rise in one after another when the row opens. */
+
+@keyframes roadmap-rise{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.roadmap-v-stagger [role=region][data-state=open] p,
+.roadmap-v-stagger [role=region][data-state=open] li{animation:roadmap-rise 260ms cubic-bezier(.23,1,.32,1) both}
+.roadmap-v-stagger [role=region][data-state=open] p{animation-delay:40ms}
+.roadmap-v-stagger [role=region][data-state=open] li:nth-child(1){animation-delay:90ms}
+.roadmap-v-stagger [role=region][data-state=open] li:nth-child(2){animation-delay:130ms}
+.roadmap-v-stagger [role=region][data-state=open] li:nth-child(3){animation-delay:170ms}
+.roadmap-v-stagger [role=region][data-state=open] li:nth-child(4){animation-delay:210ms}
+@media (prefers-reduced-motion:reduce){.roadmap-v-stagger [role=region][data-state=open] p,.roadmap-v-stagger [role=region][data-state=open] li{animation:none}}

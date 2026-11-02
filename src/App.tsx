@@ -7,7 +7,7 @@ import './good-internet/inputs.css';
 import './good-internet/plex.css';
 import { currentRoute, interceptLinks, navigate, onNavigate } from './good-internet/navigate.ts';
 import { getSession } from './good-internet/session.ts';
-import { Landing } from './site/landing/Landing.tsx';
+import { Landing } from './site/little-guy/Landing.tsx';
 import { Site } from './site/Site.tsx';
 
 // The in-house admin. Its own chunk, so the product bundle never loads it.

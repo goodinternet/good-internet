@@ -1,0 +1,12 @@
+.hero{flex-direction:column;width:100%;display:flex}
+.hero-bio{color:var(--fg);flex-direction:column;gap:12px;font-family:ui-rounded,SF Pro Rounded,system-ui,sans-serif;font-size:14px;font-weight:400;line-height:20px;display:flex}
+.hero-bio-line{margin:0}
+.hero-bio-link{color:var(--fg);text-underline-offset:2px;-webkit-text-decoration:underline var(--underline);text-decoration:underline var(--underline);transition:text-decoration-color .15s}
+.hero-bio-link:hover{text-decoration-color:var(--fg)}
+.hero-email-copy{font:inherit;cursor:pointer;background:0 0;border:none;padding:0;display:inline-block;position:relative}
+.hero-email-tooltip{color:var(--pill-fg);white-space:nowrap;opacity:0;pointer-events:none;background-color:var(--pill);border-radius:8px;justify-content:center;align-items:center;margin-bottom:4px;line-height:normal;transition:opacity .1s;display:flex;position:absolute;bottom:100%;left:50%;overflow:hidden;transform:translate(-50%)}
+.hero-email-copy:hover .hero-email-tooltip{opacity:1}
+
+.hero-sprite{padding-top:44px}
+.hero-name{display:block;font-size:16px;font-weight:700;line-height:24px}
+.hero-bio-line.is-light{font-weight:300}

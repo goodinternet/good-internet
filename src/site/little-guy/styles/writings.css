@@ -1,0 +1,45 @@
+.writings{flex-direction:column;padding-top:48px;display:flex}
+.writings-list{flex-direction:column;gap:6px;padding-top:16px;display:flex}
+.writing-row{width:100%;font:inherit;text-align:left;cursor:pointer;opacity:1;background:0 0;border:none;justify-content:space-between;align-items:center;gap:16px;padding:0;text-decoration:none;transition:opacity .2s;display:flex}
+.writings-list.is-hovering .writing-row:not(.is-active):not(.is-disabled){opacity:.35}
+.writing-left{align-items:center;gap:8px;min-width:0;display:flex}
+.writing-title{text-overflow:ellipsis;white-space:nowrap;color:var(--fg);min-width:0;font-family:ui-rounded,SF Pro Rounded,system-ui,sans-serif;font-size:14px;font-weight:400;line-height:20px;overflow:hidden}
+.writing-badge{letter-spacing:.04em;text-transform:uppercase;color:#00a2f1;background-color:#00a2f11f;border-radius:4px;flex-shrink:0;align-items:center;padding:2px 6px;font-family:Geist Mono,monospace;font-size:10px;font-weight:600;display:flex}
+.writing-right{flex-shrink:0;align-items:center;gap:4px;display:flex}
+.writing-date{color:var(--fg-2);white-space:nowrap;font-family:ui-rounded,SF Pro Rounded,system-ui,sans-serif;font-size:14px;font-weight:400;line-height:20px}
+.writing-arrow{color:var(--fg-2);opacity:0;flex-shrink:0;width:0;font-family:ui-rounded,SF Pro Rounded,system-ui,sans-serif;font-size:14px;font-weight:400;transition:width .26s cubic-bezier(.22,1,.36,1),transform .26s cubic-bezier(.22,1,.36,1),opacity .2s;display:inline-block;overflow:hidden;transform:translate(-4px)}
+.writing-row.is-active .writing-arrow{opacity:1;width:14px;transform:translate(0)}
+.writing-row.is-disabled{cursor:default}
+.writing-row.is-disabled .writing-title,.writing-row.is-disabled .writing-date{color:#00000047}
+@media (hover:none){.writings-list.is-hovering .writing-row:not(.is-active):not(.is-disabled){opacity:1}
+}
+/* the Card reads its sizes from --fs-* / --lh-*; pin them to the site's 14px / 20px so titles and descriptions match the other rows */
+.platform-cards{padding:16px 0 20px;font-family:var(--landing-font,inherit);--fs-display:14px;--lh-display:20px;--fs-display-compact:14px;--lh-display-compact:20px;--fs-title:14px;--lh-title:20px;--fs-title-compact:14px;--lh-title-compact:20px;--fs-subtitle:14px;--lh-subtitle:20px;--fs-subtitle-compact:14px;--lh-subtitle-compact:20px;--fs-body:14px;--lh-body:20px;--fs-body-compact:14px;--lh-body-compact:20px;--fs-caption:14px;--lh-caption:20px;--fs-caption-compact:14px;--lh-caption-compact:20px;--fs-micro:14px;--lh-micro:20px;--fs-micro-compact:14px;--lh-micro-compact:20px;}
+/* Minimal stand-in for Tailwind's preflight, scoped to the cards only (the page itself has no reset). */
+@layer base{
+  .platform-cards *,.platform-cards ::before,.platform-cards ::after{box-sizing:border-box;border:0 solid}
+  .platform-cards button,.platform-cards a{background:transparent;padding:0;font:inherit;color:inherit;text-decoration:none;-webkit-appearance:none;appearance:none;cursor:pointer}
+  .platform-cards p,.platform-cards h1,.platform-cards h2,.platform-cards h3{margin:0;font:inherit}
+  .platform-cards svg{display:block}
+}
+
+/* Permanent card fill: each card is always visible as a tile. The fluid-hover highlight (a translucent
+   black) is lifted above the fill, so on hover the tile reads slightly darker than at rest. */
+.platform-cards{--card-fill:rgb(0 0 0 / 0.025);--card-radius:14px}
+.platform-cards [data-slot=card]{background-color:var(--card-fill);border-radius:var(--card-radius)}
+.platform-cards [data-slot=fluid-hover-highlight]{z-index:15;border-radius:var(--card-radius)}
+@media (prefers-color-scheme:dark){.platform-cards{--card-fill:rgb(245 245 245 / 0.05)}}
+
+/* ── Match opnmark.com's Intelligence cards ──────────────────────────────────────────────────
+   Values read from its stylesheet: card 16/16/18 padding, 12px radius, 6px gap; title 13.5px / 650 /
+   -0.01em; description 12.5px / 1.5; support line 11.5px / 1.5 pinned to the card's bottom with
+   16px above it, no divider. Text colors are opnmark's ink-hi / ink-soft / ink-mut. */
+.platform-cards{--card-radius:12px;--ink-hi:#1C1C1F;--ink-soft:#2B2B30;--ink-mut:#6F6F77}
+@media (prefers-color-scheme:dark){.platform-cards{--ink-hi:#F2F2F2;--ink-soft:#E9E9E9;--ink-mut:#9C9C9C}}
+.platform-cards [data-slot=card-group]{gap:6px}
+.platform-cards [data-slot=card-header]{display:flex;flex-direction:column;flex:1}
+.platform-cards [data-slot=card-title]{margin-top:16px;color:var(--ink-hi);font-size:13.5px;line-height:1.3;letter-spacing:-.01em;font-weight:650}
+/* the Card draws its title in inner spans with an inline weight; override those too */
+.platform-cards [data-slot=card-title] *{font-variation-settings:"wght" 650 !important;font-weight:650;color:var(--ink-hi)}
+.platform-cards [data-slot=card-description]{margin-top:8px;color:var(--ink-soft);font-size:12.5px;line-height:1.5;text-wrap:pretty}
+.platform-why{margin:auto 0 0;padding-top:16px;color:var(--ink-mut);font-size:11.5px;font-weight:400;line-height:1.5;text-wrap:pretty}

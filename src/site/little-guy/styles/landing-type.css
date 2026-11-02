@@ -1,0 +1,18 @@
+/* Landing page type: Inter (variable). Home page only.
+   To swap back: --landing-font:"Gen Interface JP Display" (faces below, files in public/fonts). */
+@font-face{font-family:"Gen Interface JP Display";font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/GenInterfaceJPDisplay-Regular.woff2) format("woff2")}
+@font-face{font-family:"Gen Interface JP Display";font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/GenInterfaceJPDisplay-Medium.woff2) format("woff2")}
+@font-face{font-family:"Gen Interface JP Display";font-style:normal;font-weight:700;font-display:swap;src:url(/fonts/GenInterfaceJPDisplay-Bold.woff2) format("woff2")}
+
+.landing-page{--landing-font:"Inter Variable",Inter,ui-rounded,"SF Pro Rounded",system-ui,sans-serif}
+.landing-page .hero-bio,
+.landing-page .section-label,
+.landing-page .writing-title,
+.landing-page .writing-date,
+.landing-page .writing-arrow,
+.landing-page .case-study-title,
+.landing-page .case-study-company,
+.landing-page .case-study-arrow,
+.landing-page .side-project-title,
+.landing-page .side-project-description,
+.landing-page .side-project-arrow{font-family:var(--landing-font)}

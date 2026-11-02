@@ -1,0 +1,3 @@
+/* Page-level base. Scoped to the landing so the product screens keep their own. */
+.landing-page{color:var(--fg);font-synthesis:none;text-rendering:optimizelegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;background:var(--bg);font-family:ui-rounded,SF Pro Rounded,system-ui,sans-serif}
+.landing-page *,.landing-page *::before,.landing-page *::after{box-sizing:border-box}

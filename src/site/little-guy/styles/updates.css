@@ -1,0 +1,33 @@
+/* Updates section: note + email sign-up. */
+.side-projects{position:relative}
+.side-projects-content{flex-direction:column;padding-top:48px;display:flex}
+
+.side-projects-note{margin:16px 0 0;color:var(--fg);font-family:var(--landing-font,inherit);font-size:14px;font-weight:300;line-height:20px}
+.side-projects-note{color:var(--fg);font-family:var(--landing-font,inherit);font-size:14px;font-weight:300;line-height:20px}
+
+/* Email sign-up: pill field + pill button, one-line promise below */
+.join-list{margin-top:20px;font-family:var(--landing-font,inherit)}
+.join-list-row{display:flex;gap:6px;align-items:center}
+.join-list-label{flex:none;margin-right:10px;color:var(--fg);font-size:14px;font-weight:600;line-height:20px;white-space:nowrap}
+.join-list-input{flex:1;min-width:0;height:34px;padding:0 14px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--fg);font:inherit;font-size:13px;font-weight:300;outline:none;transition:border-color .15s}
+.join-list-input::placeholder{color:var(--fg-2);opacity:.7}
+.join-list-input:focus{border-color:var(--fg-2)}
+.join-list-input[aria-invalid=true]{border-color:#ef4444}
+.join-list-input:disabled{opacity:.6}
+.join-list-button{flex:none;display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 14px 0 16px;border:0;border-radius:999px;background:#6386FE;color:#fff;font:inherit;font-size:13px;font-weight:400;cursor:pointer;white-space:nowrap;transition:background-color .15s,color .15s}
+.join-list-button:hover:not(:disabled){background:#4F74F0}
+.join-list-button:active:not(:disabled){background:#4468E0}
+.join-list-button:disabled{cursor:default;opacity:.7}
+.join-list-caption{margin:10px 0 0 0;color:var(--fg-2);font-size:12px;line-height:18px}
+.join-list-caption.is-error{color:#ef4444}
+
+/* arrow: slides out up-right and is replaced from down-left on hover / keyboard focus */
+.join-list-arrow{position:relative;display:block;width:14px;height:14px;overflow:hidden;flex:none}
+.join-list-arrow svg{position:absolute;inset:0;display:block;transition:transform 300ms cubic-bezier(.22,1,.36,1)}
+.join-list-arrow-b{transform:translate(-14px,14px)}
+.join-list-button:hover:not(:disabled) .join-list-arrow-a,.join-list-button:focus-visible:not(:disabled) .join-list-arrow-a{transform:translate(14px,-14px)}
+.join-list-button:hover:not(:disabled) .join-list-arrow-b,.join-list-button:focus-visible:not(:disabled) .join-list-arrow-b{transform:translate(0,0)}
+@media (prefers-reduced-motion:reduce){.join-list-arrow svg{transition:none}}
+
+/* touch: a taller target and 16px text so iOS doesn't zoom the page when the field is focused */
+@media (pointer:coarse){.join-list-input,.join-list-button{height:40px}.join-list-input{font-size:16px}}

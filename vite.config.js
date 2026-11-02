@@ -1,6 +1,7 @@
 import { writeFile } from "node:fs/promises"
 import { defineConfig } from "vite"
 import react from "@vitejs/plugin-react"
+import tailwindcss from "@tailwindcss/vite"
 import { siteConfig } from "./src/config/site.js"
 
 const ADMIN_BACKLOG = new URL("./docs/admin/BACKLOG.md", import.meta.url)
@@ -8,6 +9,7 @@ const ADMIN_BACKLOG = new URL("./docs/admin/BACKLOG.md", import.meta.url)
 export default defineConfig({
   plugins: [
     react(),
+    tailwindcss(),
     {
       name: "site-metadata",
       transformIndexHtml(html) {
