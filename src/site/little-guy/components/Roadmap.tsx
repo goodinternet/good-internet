@@ -24,7 +24,7 @@ const PlusIcon: IconComponent = ({ strokeWidth = 1.5, className }) => (
 const icons = { "chevron-right": PlusIcon }; // stable object, per IconProvider's note
 
 const disclaimer =
-  "Stages are a planning structure, not a release schedule. Nothing here is available yet, and statuses are kept in step with the project\u2019s roadmap.";
+  "Stages are areas of work, not a strict release schedule. Statuses shown here are illustrative until verified against the project's current roadmap.";
 
 // Fluid Functionalism single-expand accordion: opening a stage closes the one that was open, and
 // clicking the open one closes it (collapsible). The fluid hover highlight glides between triggers.
